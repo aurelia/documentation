@@ -95,7 +95,7 @@ export class CustomerDetail{
 
 Just provide a static method named `inject` that returns an array of things to inject.
 
-> **Note:** If writing in TypeScript or CofeeScript, you can use a static array property instead of a method. In ES5 you can add the property onto the constructor itself. You can also do this with ES6 but we enable the static method option since it can be located closer to the constructor in Vanilla JS. If you are using AtScript, you can actually take advantage of type annotations by defining your constructor like this: `constructor(http:HttpClient)`. (Before this will work you need to place the `atscript` attribute on your application host element or call `aurelia.use.atscript()` manually.)
+> **Note:** If writing in TypeScript or CoffeeScript, you can use a static array property instead of a method. In ES5 you can add the property onto the constructor itself. You can also do this with ES6 but we enable the static method option since it can be located closer to the constructor in Vanilla JS. If you are using AtScript, you can actually take advantage of type annotations by defining your constructor like this: `constructor(http:HttpClient)`. (Before this will work you need to place the `atscript` attribute on your application host element or call `aurelia.use.atscript()` manually.)
 
 The dependencies in your inject array don't have to be just constructor types. They can also be instances of `resolvers`. For example, have a look at this:
 
