@@ -414,10 +414,10 @@ export class App {
     this.router.configure(config => {
       config.title = 'Aurelia';
       config.map([
-        { route: ['', 'home'],               moduleId: 'home/index' },
-        { route: 'users',                    moduleId: 'users/index',                      nav: true },
-        { route: 'users/:id/detail',         moduleId: 'users/detail' },
-        { route: 'files*path',               moduleId: 'files/index',     href:'#files',   nav: true }
+        { route: ['', 'home'],               moduleId: './home/index' },
+        { route: 'users',                    moduleId: './users/index',                      nav: true },
+        { route: 'users/:id/detail',         moduleId: './users/detail' },
+        { route: 'files*path',               moduleId: './files/index',     href:'#files',   nav: true }
       ]);
     });
   }
@@ -426,7 +426,7 @@ export class App {
 
 We begin by asking for a `Router` to be injected. We then set this instance to a `router` property on the view-model. _You must name the property **router**_. Then we call the `configure` api. We pass it a function and it passes us a configuration object.
 
-We can optionally set a `title` property to be used in constructing the document's title. But the most important part is setting up the routes. The router's `map` method takes a simple JSON data structure representing your route table. The two most important properties are `route` (a string or array of strings), which defines the route pattern, and `moduleId`, which has the relative module Id path to your view-model. You can also set a `title` property, to be used when generating the document's title, a `nav` property indicating whether or not the route should be included in the navigation model (it can also be a number indicating order) and an `href` property which you can use to bind to in the _navigation model_.
+We can optionally set a `title` property to be used in constructing the document's title. But the most important part is setting up the routes. The router's `map` method takes a simple JSON data structure representing your route table. The two most important properties are `route` (a string or array of strings), which defines the route pattern, and `moduleId`, which has the *relative* module Id path to your view-model. You can also set a `title` property, to be used when generating the document's title, a `nav` property indicating whether or not the route should be included in the navigation model (it can also be a number indicating order) and an `href` property which you can use to bind to in the _navigation model_.
 
 >**Note:** Any properties that you leave off will be conventionally determined by the framework based on what you have provided.
 
