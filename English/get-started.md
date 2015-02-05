@@ -1,10 +1,12 @@
 # Get Started
 
-**Welcome to Aurelia!** This tutorial will take you through creating a simple application using Aurelia and briefly explain its main concepts. We assume you are familiar with JavaScript, HTML, and CSS. To get a quick overview, we recommend you skip down to the section titled "Setting Up The HTML Page" so you can see how to use Aurelia straight away. Then, when you are ready to actually build something, come back and read about "Configuring Your Environment" and "Setting up the Project Structure and Build". To view the completed results of this tutorial, please have a look at our [navigation skeleton project](https://github.com/aurelia/skeleton-navigation/releases). You may also wish to download it and delete the contents of the _src_ folder in order to follow this tutorial since this would incur less manual setup on your part. That's what we would do anyway...
+**Welcome to Aurelia!** This tutorial will take you through creating a simple application using Aurelia and briefly explain its main concepts. We assume you are familiar with JavaScript, HTML, and CSS. To get a quick overview, we recommend you skip down to the section titled "Setting Up The HTML Page" so you can see how to use Aurelia straight away. Then, when you are ready to actually build something, come back and read about "Configuring Your Environment" and "Setting up the Project Structure and Build". To view the completed results of this tutorial, please have a look at our [navigation skeleton project](https://github.com/aurelia/skeleton-navigation/releases).
+
+> **Note:** Looking for this guide in another language? Have a look in our [documentation repo](https://github.com/aurelia/documentation).
 
 ## Configuring Your Environment
 
-Let's start by getting you set up with a great set of tools that you can use to build modern JavaScript applications. All our tooling is built on [Node.js](http://nodejs.org/). If you have that installed aready, great! If not, you should go to [the official web site](http://nodejs.org/), download and install it. Everything else we need will be installed via Node's package manager ([npm](https://docs.npmjs.com/getting-started/what-is-npm)).
+Let's start by getting you set up with a great set of tools that you can use to build modern JavaScript applications. All our tooling is built on [Node.js](http://nodejs.org/). If you have that installed already, great! If not, you should go to [the official web site](http://nodejs.org/), download and install it. Everything else we need will be installed via Node's package manager ([npm](https://docs.npmjs.com/getting-started/what-is-npm)).
 
 First, let's begin by installing [Gulp](http://gulpjs.com/) which we'll be using for build automation. If you don't have it already, you can use npm to set it up like this (you may need to use `sudo`):
 
@@ -22,11 +24,9 @@ Next, we need to install [jspm](http://jspm.io/). This will serve as our client-
 
 ## Setting up the Project Structure and Build
 
-With the tooling installed, we can now turn our attention to setting up a basic structure for your app. Begin by creating a folder for your project. Let's call it _navigation-app_. Inside this folder we'll create a subdirectory named _src_. This will hold the raw source code for your application. Let's also create a subdirectory called _styles_. You'll want to [download the default css styles](https://raw.githubusercontent.com/aurelia/skeleton-navigation/master/styles/styles.css) for this sample and drop them into that folder.
+With the tooling installed, we can now turn our attention to setting up a basic structure for your app. Begin by [downloading the navigation skeleton](https://github.com/aurelia/skeleton-navigation/releases). Unzip it and rename the folder to _navigation-app_. Inside this folder you will find everything you need including a basic build, package configuration, styles and more. Because we want to teach you how to build your own app, please delete the contents of the _src_ folder as well as the _index.html_ file. We'll learn about how to create these in a minute.
 
-Because we want to leverage Gulp for build automation, we'll want to create a configuration file for that and install the build-related packages. We've put together a really nice starter build file for you, so you should [download that from here](https://raw.githubusercontent.com/aurelia/skeleton-navigation/master/gulpfile.js) and drop it inside _navigation-app_. You should also [download our default package manifest](https://raw.githubusercontent.com/aurelia/skeleton-navigation/master/package.json). This contains the list of modules we want to install. If you've used npm or Gulp before, this should be familar to you.
-
-With these files in place, let's run some commands.
+With all this in place, let's run some commands.
 
 1. Open a console and change your directory to _navigation-app_.
 
@@ -110,7 +110,7 @@ export class Welcome{
 }
 ```
 
-What...is that JavaScript? 
+What...is that JavaScript?
 
 Yes. Yes it is. In fact it's ECMAScript 6 (ES6), the next version of JavaScript which introduces many new features to the language. Fortunately the Gulp file you downloaded above has you set up with [6to5](https://6to5.org/), an amazing ES6 transpiler that allows you to write tomorrow's JavaScript and run it on today's browsers. Now you can use modules, classes, lambdas, string interpolation and more. Sweet! So, how do you create a _view-model_? You create a plain class and _export_ it to the framework. Piece. Of. Cake.
 
@@ -158,7 +158,7 @@ gulp watch
 You can now browse to [http://localhost:9000/](http://localhost:9000/) to see the app. Type in the form input controls and notice that the Full Name computed property updates with any change. Click the button and see that your method is invoked.
 
 > **Note:** Aurelia has a unique and powerful databinding engine that uses adaptive techniques to pick the best way to observe changes in each property. For example, if you are using a browser with [Object.observe](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/observe) support, both _firstName_ and _lastName_ will be observed with that strategy. If not, we'll generate getters and setters that batch changes to the Micro Task Queue, correctly emulating Object.observe behavior. Since the computed property _fullName_ can't be observed with either of these techniques, we use dirty checking. We'll use the best technique depending on the situation and you can even plug in custom strategies as well in order to "teach" the framework how to observe special types of model patterns. We think it's pretty cool.
-> 
+>
 The `.bind`  command uses the default binding behavior for any property. The default is one-way binding for everything except form controls, which default to two-way. You can always override this by using the explict binding commands `.one-way`, `.two-way` and `.one-time`. Similarly, you can use `.delegate` for event delegation but you can also use `.trigger` to attach directly to the target element.
 
 ## Adding Navigation
