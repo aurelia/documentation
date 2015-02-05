@@ -53,6 +53,10 @@ A _plugin_ is only a module with an exported `install` function. During startup 
 
 > **Note:** Regarding #2 and #3: Do not rely on naming conventions inside plugins. You do not know how the consumer of your plugin will change Aurelia's conventions. 3rd party plugins should be explicit in order to ensure that they function correctly in different contexts.
 
+#### Promises
+
+By default, Aurelia uses ES6 native Promises or a polyfill. However, you can replace this with the excellent [Bluebird](https://github.com/petkaantonov/bluebird) Promise library. Simply include it in your page before you reference the other scripts. It will provide its own standards-compliant Promise implementation which is currently faster than native and has better debugging support. Additionally, when used in combination with the 6to5 transpiler, you can use [coroutines](https://6to5.org/docs/usage/transformers/#bluebird-coroutines) for improved async code.
+
 ### The Aurelia Object
 
 Since both a custom _main_ module and plugins do their work by interacting with the Aurelia object, we provide a brief explanation of that API in code below:
@@ -726,7 +730,7 @@ The `ViewSlot` represents the slot or location within the DOM that the template 
 
 Take a close look at the `valueChanged` callback. Here you can see where the `if` behavior is creating the view and adding it to the slot, based on the truthiness of the value. There are a few important details of this:
 
-* The behavior always calls `bind` on the View _before_ adding it to the ViewSlot. This ensures that all internal bindings are initially evaluated outside of the live DOM. This is important for performance. 
+* The behavior always calls `bind` on the View _before_ adding it to the ViewSlot. This ensures that all internal bindings are initially evaluated outside of the live DOM. This is important for performance.
 * Similarly, always call `unbind` _after_ removing the View from the DOM.
 * After the View is initially created, the `if` behavior does not throw it away even when the value becomes false. It caches the instance. Aurelia can re-use Views and even re-target them at different binding contexts. Again, this is important for performance, since it eliminates needless re-creation of Views.
 
@@ -911,4 +915,4 @@ The `HttpResponseMessage` has the followingn properties:
 * `reviver` - A function used to transform the raw `response` content.
 * `requestMessage` - A reference to the original request message.
 
-> **Note:** By default, the `HttpClient` assumes you are expecting a JSON responseType. 
+> **Note:** By default, the `HttpClient` assumes you are expecting a JSON responseType.
