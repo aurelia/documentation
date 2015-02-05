@@ -567,8 +567,8 @@ Ok. Let's talk about conventions.
 
 * If your callback function is named {propertyName}Changed, then you don't need to specify it. So, in the above case, we could omit the value of the second parameter.
 * If your property name and attribute name are the same, then you don't need to specify it. In the above case, they are different, so we need to specify it.
-* Attached behaviors always map to a single attribute. This allows us to optmize a simple usage pattern. If you name your property "value", then you don't need to include the property metadata at all. We will autommatically map an attribute with the same name as your behavior to the `value` property.
-* If you name your class {BehaviorName}AttachedProperty, then you don't need to indlude the attached behavior metadata at all. The attribute name will be inferred from the class name by stripping off "AttachedBehavior" and lowercasing and hyphenating the remaining part of the name. ie. behavior-name
+* Attached behaviors always map to a single attribute. This allows us to optimize a simple usage pattern. If you name your property "value", then you don't need to include the property metadata at all. We will automatically map an attribute with the same name as your behavior to the `value` property.
+* If you name your class {BehaviorName}AttachedProperty, then you don't need to include the attached behavior metadata at all. The attribute name will be inferred from the class name by stripping off "AttachedBehavior" and lowercasing and hyphenating the remaining part of the name. ie. behavior-name
 
 These conventions mean that we can actually define our `show` behavior like this:
 
@@ -597,7 +597,34 @@ AttachedBehaviors can easily gain access to the HTML element they are attached t
 
 Finally, let's look at the `valueChanged` callback. We said previously that this is configured through the property metadata so that it is called whenever the value changes. The binding system will automatically update properties thus triggering the callback. So, all the implementation has to do is add/remove the appropriate class based on the value.
 
-> **Note:** You may be wondering what to do if you want to create an Attached Behavior with multiple properties...since Attached Behaviors always map to a single attribute. For this scenario, we use an `OptionsProperty` which enables your single attribute to work like the native `style` attribute, with multiple properties embedded within. Docs on that are forthcoming...
+#### Options Properties
+
+You may be wondering what to do if you want to create an Attached Behavior with multiple properties, since Attached Behaviors always map to a single attribute. For this scenario, we use an `OptionsProperty` which enables your single attribute to work like the browser's native `style` attribute, with multiple properties embedded within. Here's an examlple of how that is used:
+
+```javascript
+import {Behavior} from 'aurelia-templating';
+
+export class Show {
+  static metadata(){
+    return Behavior
+      .attachedBehavior('my-behavior')
+      .withOptions().and(x => {
+        x.withProperty('foo');
+        x.withProperty('bar');
+      });
+  }
+}
+```
+
+This creates an Attached Behavior named `my-behavior` with two properties `foo` and `bar`. Each of these properties are available directly on the class, however they are configured in HTML a bit different. Here's how that would be done:
+
+```markup
+<div my-behavior="foo: some literal value; bar.bind: some.expression"></div>
+```
+
+Notice that we don't use a binding command on the behavior itself. Instead, we can use them on each individual property inside the attribute's value. You can use literals as well as the standard binding commands.
+
+> **Note:** You don't use `delegate` or `trigger` commands inside an options attribute. Those are always attached to the element itself, since they work directly with native DOM events. However, you can use `call`.
 
 ### Custom Elements
 
