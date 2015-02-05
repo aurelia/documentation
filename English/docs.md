@@ -943,3 +943,21 @@ The `HttpResponseMessage` has the followingn properties:
 * `requestMessage` - A reference to the original request message.
 
 > **Note:** By default, the `HttpClient` assumes you are expecting a JSON responseType.
+
+## Customization
+
+### View and View-Model Conventions
+
+How are views and view-models linked? Our simple convention is based on module id. If you've got a view-model with id (essentially path) './foo/bar/baz' then that will map to `./foo/bar/baz.js` and `./foo/bar/baz.html` by default. Suppose you want to follow a different convention though. What if all your view-models live in a `view-models` folder and you want their views to live in a `views` folder? How would you do that? In order to do this, you want to change the behavior of the Conventional View Strategy. Here's how you do it:
+
+```javascript
+import {ConventionalView} from 'aurelia-framework';
+
+ConventionalView.convertModuleIdToViewUrl = function(moduleId){
+  return moduleId.replace('view-models', 'views') + '.html';
+}
+```
+
+You should execute this code as part of your bootstrapping logic so that it takes effect before any behaviors are loaded. This will affect *everything* including custom elements. So, if you need or want those to act differently, you will need to account for that in your implementation of `convertModuleIdToViewUrl`.
+
+> **Note:** This is an example of why 3rd party plugin authors should not rely on conventions. Developers may change these conventions in order to fit the needs of their own app.
