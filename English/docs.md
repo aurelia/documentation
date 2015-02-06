@@ -4,7 +4,7 @@ We've got a very rich set of docs planned for Aurelia. Unfortunately, we haven't
 
 ## browsers Compatibility
 
-Aurelia framework utilizes ES6 and and other future coding practices, therefore it will only work with evergreen browsers, that includes Google chrome, Mozilla firefox, IE11,etc... therefore it wont work with any version of IE below 11.
+Aurelia framework utilizes ES6 and and other future coding practices, therefore it will only work with evergreen browsers, that includes Google chrome, Mozilla firefox, IE11, etc... therefore it wont work with any version of IE below 11.
 
 if you really need to make it work with IE below version 11.0 then there is a repository that serves as a prove of concept that by utilizing ES6Shim we will be able to make Aurelia based websites work with IE below version 11.0.
 
