@@ -6,7 +6,7 @@ We've got a very rich set of docs planned for Aurelia. Unfortunately, we haven't
 
 Aurelia framework utilizes ES6 and and other future coding practices, therefore it will only work with evergreen browsers, that includes Google chrome, Mozilla firefox, IE11, etc... therefore it wont work with any version of IE below 11.
 
-if you really need to make it work with IE below version 11.0 then there is a repository that serves as a prove of concept that by utilizing ES6Shim we will be able to make Aurelia based websites work with IE below version 11.0.
+if you really need to make it work with IE below version 11.0 then there is a repository [Aurelia Skeleton Nav IE Polyfill Test](https://github.com/devmondo/skeleton-navigation-IE-Polyfill-Test) that serves as a prove of concept that by utilizing ES6Shim we will be able to make Aurelia based websites work with IE below version 11.0.
 
 so far it is working with IE10 and IE9 without any noticeable problems, but there might be some performance issues due to the Polyfills, so if anyone can test it, it would be great!
 
