@@ -2,6 +2,14 @@
 
 We've got a very rich set of docs planned for Aurelia. Unfortunately, we haven't quite finished them yet. However, for this early preview period, we've put together this document, containing examples of the most common tasks you might want to perform. If you have questions, we hope that you will join us on our [gitter channel](https://gitter.im/aurelia/discuss).
 
+## browsers Compatibility
+
+Aurelia framework utilizes ES6 and and other future coding practices, therefore it will only work with evergreen browsers, that includes Google chrome, Mozilla firefox, IE11,etc... therefore it wont work with any version of IE below 11.
+
+if you really need to make it work with IE below version 11.0 then there is a repository that serves as a prove of concept that by utilizing ES6Shim we will be able to make Aurelia based websites work with IE below version 11.0.
+
+so far it is working with IE10 and IE9 without any noticeable problems, but there might be some performance issues due to the Polyfills, so if anyone can test it, it would be great!
+
 ## Startup & Configuration
 
 Most platforms have a "main" or entry point for code execution. Aurelia is no different. If you've read the [Get Started](/get-started.html) page, then you've seen the `aurelia-app` attribute. Simply place this on an HTML element and Aurelia's bootstrapper will load an _app.js_ and _app.html_, databind them together and inject them into the DOM element on which you placed that attribute. If you don't want to use that convention, simply provide a value to the attribute indicating which view-model to load. For example `<body aurelia-app="todo">` will result in a _todo.js_ and _todo.html_ being loaded instead.
