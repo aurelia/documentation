@@ -500,6 +500,69 @@ All you have to do is set the `config.moduleId` property and you are good to go.
 
 >**Note:** Though not necessarily related to conventional routing, you may sometimes have a need to asynchronously configure your router. For example, you may need to call a web service to get user permissions before setting up routes. To do this, implement a callback on your router's view-model named `configureRouter`. In this callback you can configure your router and optionally return a Promise if necessary.
 
+### Configuring PushState
+
+If you'd prefer to get rid of the `#` (hashes) in your URLs, then you're going to have to enable `pushState` in your app which Aurelia is already geared up to do. You will however have to do some work on the server side to ensure it works properly. Let's start with the Aurelia side of the equation.
+
+First you need to tell Aurelia in the `router` `config` that you want to use `pushState` like so:
+
+``` javascript
+this.router.configure(config => {
+      config.title = 'First Impressions';
+      config.options.pushState = true; // <-- this is all you need here
+      config.map([
+        { route: ['','welcome'],  moduleId: 'welcome',      nav: true, title:'Welcome' },
+        { route: 'child-router',  moduleId: 'child-router', nav: true, title:'Child Router' }
+      ]);
+    });
+```
+
+Next, the server side needs to be configured to send back the same `index.html` file regardless of the request being made to the server because all the routing is done client side. So, if you're using the `gulp watch` task with `browsersync` as per the navigation sample running a node server, then you can modify your setup like so:
+
+From the console in the root of your project, run the following: `npm install --save connect-history-api-fallback` which will bring down the middleware plugin you need for this.
+
+Then open up your `gulpfile.js` in the root and put this somewhere near the top with the others:
+
+``` javascript
+var historyApiFallback = require('connect-history-api-fallback')
+```
+And lower down you can modify the `serve` task to use the new `middleware`:
+
+``` javascript
+gulp.task('serve', ['build'], function(done) {
+  browserSync({
+    open: false,
+    port: 9000,
+    server: {
+      baseDir: ['.'],
+      middleware: [historyApiFallback, function (req, res, next) { // it's the first one in the array
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        next();
+      }]
+    }
+  }, done);
+});
+```
+
+Now your node server should behave itself and let Aurelia deal with the routing.
+
+If you're using a .NET server side framework such as [Nancy FX](http://nancyfx.org), then the config is just as simple. Locate your `IndexModule.cs` or whatever you called it and make sure it looks something like this and all will be well:
+
+``` javascript
+public class IndexModule : NancyModule
+{
+    public IndexModule()
+    {
+        this.Get["/robots.txt"] = p => this.Response.AsFile("robots.txt");
+        this.Get["/sitemap.xml"] = p => this.Response.AsFile("sitemap.xml");
+        this.Get["/"] = x => this.View["index"];
+        this.Get["/{path*}"] = x => this.View["index"];
+    }
+}
+```
+And so on for your particular server environment - you just need to make sure that whatever server you're using, it needs to send back the same `index.html` regardless of the request being made. All server side frameworks should be able to achieve this. Aurelia will figure out which page to load based on its own incredibly powerful router.
+
+
 ## Extending HTML
 
 Aurelia has a powerful and extensible HTML template compiler. The compiler itself is just an algorithm for interacting with various _behavior types_ which contain the logic for manipulating HTML. Out of the box, Aurelia provides three core behavior type implementations, which we believe cover the bulk of scenarios you will encounter from day to day. The tree types are _Attached Behaviors_, _Custom Elements_ and _Template Controllers_.
