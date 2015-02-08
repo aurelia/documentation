@@ -4,7 +4,7 @@ Hemos planeado para Aurelia un conjunto muy rico de documentos. Desafortunadamen
 
 ## Arranque y configuración
 
-Muchas plataformas tienen un punto de entrada o "main" para la ejecución del código. Aurelia no es diferente. Si has leído la página, entonces ya habrás visto el atributo `aurelia-app` . Simplemente, colócalo en algún elemento HTML y el configurador inicial -bootstrapper- de Aurelia cargará _app.js_ y _app.html_, los vinculará y los inyectará en el elemento del DOM en el que incluiste dicho atributo. Si no quieres usar esta convención, provee simplemente de un valor al atributo indicando que modelo (de vista) deseas cargar. Por ejemplo, `<body aurelia-app="todo">` hará que se carguen los archivos _todo.js_ y _todo.html_.
+Muchas plataformas tienen un punto de entrada o "main" para la ejecución del código. Aurelia no es diferente. Si has leído la página [Get Started](/get-started.html), entonces ya habrás visto el atributo `aurelia-app` . Simplemente, colócalo en algún elemento HTML y el configurador inicial -bootstrapper- de Aurelia cargará _app.js_ y _app.html_, los vinculará y los inyectará en el elemento del DOM en el que incluiste dicho atributo. Si no quieres usar esta convención, provee simplemente de un valor al atributo indicando que modelo (de vista) deseas cargar. Por ejemplo, `<body aurelia-app="todo">` hará que se carguen los archivos _todo.js_ y _todo.html_.
 
 El atributo `aurelia-app` está bien para empezar, pero a menudo deseamos configurar nuestro marco de trabajo -framework- o ejecutar algún código antes de mostrarle nada al usuario. Así que cabe la posibilidad, según vaya progresando tu proyecto, de que tiendas a usar `aurelia-main`. 
 
