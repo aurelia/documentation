@@ -14,7 +14,7 @@ Most platforms have a "main" or entry point for code execution. Aurelia is no di
 
 The `aurelia-app` attribute is convenient for getting started, but often times you want to configure the framework or run some code prior to displaying anything to the user. So chances are, as your project progresses, you will migrate towards using `aurelia-main`.
 
->**Note:** If you are using AtScript, add an `atscript` attribute to the DOM element for your app. If you are using ES5 instead of ES6, add an `es5` attribute. Doing so will "turn on" functionality with makes using these languages easier.
+>**Note:** If you are using AtScript, add an `atscript` attribute to the DOM element for your app. If you are using ES5 instead of ES6, add an `es5` attribute. Doing so will "turn on" functionality, which makes using these languages easier.
 
 **What is the difference?**
 
