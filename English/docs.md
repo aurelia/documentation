@@ -2,6 +2,8 @@
 
 We've got a very rich set of docs planned for Aurelia. Unfortunately, we haven't quite finished them yet. However, for this early preview period, we've put together this document, containing examples of the most common tasks you might want to perform. If you have questions, we hope that you will join us on our [gitter channel](https://gitter.im/aurelia/discuss).
 
+> **Note:** Looking for this guide in another language? Have a look in our [documentation repo](https://github.com/aurelia/documentation).
+
 ## Browser Support
 
 Aurelia is designed for Evergreen Browsers. This includes Chrome, Firefox, IE11 and Safari 8. Out-of-the-box it wont work with any version of IE below 11.
@@ -502,31 +504,36 @@ All you have to do is set the `config.moduleId` property and you are good to go.
 
 ### Configuring PushState
 
-If you'd prefer to get rid of the `#` (hashes) in your URLs, then you're going to have to enable `pushState` in your app which Aurelia is already geared up to do. You will however have to do some work on the server side to ensure it works properly. Let's start with the Aurelia side of the equation.
+If you'd prefer to get rid of the `#` (hashes) in your URLs, then you're going to have to enable `pushState` in your app. Good thing Aurelia supports that! You will also have to do some work on the server side to ensure it works properly. Let's start with the Aurelia side of the equation.
 
 First you need to tell Aurelia in the `router` `config` that you want to use `pushState` like so:
 
 ``` javascript
 this.router.configure(config => {
-      config.title = 'First Impressions';
-      config.options.pushState = true; // <-- this is all you need here
-      config.map([
-        { route: ['','welcome'],  moduleId: 'welcome',      nav: true, title:'Welcome' },
-        { route: 'child-router',  moduleId: 'child-router', nav: true, title:'Child Router' }
-      ]);
-    });
+  config.title = 'First Impressions';
+  config.options.pushState = true; // <-- this is all you need here
+  config.map([
+    { route: ['','welcome'],  moduleId: './welcome',      nav: true, title:'Welcome' },
+    { route: 'child-router',  moduleId: './child-router', nav: true, title:'Child Router' }
+  ]);
+});
 ```
 
-Next, the server side needs to be configured to send back the same `index.html` file regardless of the request being made to the server because all the routing is done client side. So, if you're using the `gulp watch` task with `browsersync` as per the navigation sample running a node server, then you can modify your setup like so:
+Next, the server side needs to be configured to send back the same `index.html` file regardless of the request being made because all the routing is done client side. So, if you're using the `gulp watch` task with `browsersync` as per the navigation sample, then you can modify your setup like so:
 
-From the console in the root of your project, run the following: `npm install --save connect-history-api-fallback` which will bring down the middleware plugin you need for this.
+From the console in the root of your project, run the following:
 
-Then open up your `gulpfile.js` in the root and put this somewhere near the top with the others:
+```shell
+npm install --save connect-history-api-fallback
+```
+
+This will download and install the middleware plugin you need for this. Then open up your _build/tasks_ folder and locate the _serve_ task. Open that and put this somewhere near the top with the other require statements:
 
 ``` javascript
 var historyApiFallback = require('connect-history-api-fallback')
 ```
-And lower down you can modify the `serve` task to use the new `middleware`:
+
+Lower down you can modify the `serve` task to use the new `middleware`:
 
 ``` javascript
 gulp.task('serve', ['build'], function(done) {
@@ -560,7 +567,8 @@ public class IndexModule : NancyModule
     }
 }
 ```
-And so on for your particular server environment - you just need to make sure that whatever server you're using, it needs to send back the same `index.html` regardless of the request being made. All server side frameworks should be able to achieve this. Aurelia will figure out which page to load based on its own incredibly powerful router.
+
+Similar techniques can be used in other server environments - you just need to make sure that whatever server you're using, it needs to send back the same `index.html` regardless of the request being made. All server side frameworks should be able to achieve this. Aurelia will figure out which page to load based on its own route data.
 
 
 ## Extending HTML
