@@ -2,6 +2,12 @@
 
 Hemos planeado para Aurelia un conjunto muy rico de documentos. Desafortunadamente aún no los hemos terminado. En cualquier caso, para este temprano periodo de vista previa, hemos compuesto este documento, que contiene ejemplos de las tareas más comunes que puedas necesitar. Si tienes preguntas, espero que te unas a nosotros en nuestro [canal en gitter](https://gitter.im/aurelia/discuss).
 
+## Soporte a navegadores
+
+Aurelia está diseñado para navegadores con actualización automática y permanente -Evergreen Browsers-. Esto incluye Chrome, Firefox, IE11 y Safari 8. Tal y como viene no funcionará en ninguna versión de IE anterior a la 11.
+
+Si necesitas que Aurelia funcione con una versión de IE anterior a la 11 existe un repositorio [Aurelia Skeleton Nav IE Polyfill Test](https://github.com/devmondo/skeleton-navigation-IE-Polyfill-Test) que sirve como prueba de concepto usando ES6Shim. Este experimento fue realizado por la comunidad y parece permitir que (nuestro) marco de trabajo funcione sin problemas aparentes con IE10 e IE9. Esperamos investigar esto en el futuro con más detenimiento y ve si podemos elaborar una solución oficial. Te invitamos a experimentar con esto y a ayudarnos con la posibilidad de dar soporte a navegadores más antiguos.
+
 ## Arranque y configuración
 
 Muchas plataformas tienen un punto de entrada o "main" para la ejecución del código. Aurelia no es diferente. Si has leído la página [Get Started](/get-started.html), entonces ya habrás visto el atributo `aurelia-app` . Simplemente, colócalo en algún elemento HTML y el configurador inicial -bootstrapper- de Aurelia cargará _app.js_ y _app.html_, los vinculará y los inyectará en el elemento del DOM en el que incluiste dicho atributo. Si no quieres usar esta convención, provee simplemente de un valor al atributo indicando que modelo (de vista) deseas cargar. Por ejemplo, `<body aurelia-app="todo">` hará que se carguen los archivos _todo.js_ y _todo.html_.
@@ -52,6 +58,10 @@ Un _complemento_ -plugin- es solo un módulo con una función `install` exportad
 3. Proporciona explícitamente todos los metadatos, incluyendo una estrategia para vistas de elementos a medida.
 
 > **Nota:** Respecto a #2 y #3: No te fíes de las convenciones para nombres dentro de los complementos. No sabes como va a modificar el usuario de tu complemento las reglas de Aurelia. Los complementos de terceros deben ser explícitos para asegurarnos de que funcionarán correctamente en diferentes contextos.
+
+#### Promesas -promises-
+
+Aurelia usa por defecto promesas ES6 o un polyfill. En cualquier caso, puedes reemplazar esto con la excelente librería de promesa [Bluebird](https://github.com/petkaantonov/bluebird). Inclúyela simplemente en tu página antes de cualquier referencia a los otros scripts. Te proporcionará su propia implementación ajustada a los estándares de promesas -Promise- que actualmente es más rápida que la (implementación) nativa y tiene un mejor soporte para depuración. Además cuando se usa en combinación con el transpilador 6to5 (compilador de ES6 a ES5), puedes usar [coroutines](https://6to5.org/docs/usage/transformers/#bluebird-coroutines) para código asíncrono mejorado.
 
 ### El objeto Aurelia
 
@@ -410,10 +420,10 @@ export class App {
     this.router.configure(config => {
       config.title = 'Aurelia';
       config.map([
-        { route: ['', 'home'],               moduleId: 'home/index' },
-        { route: 'users',                    moduleId: 'users/index', nav: true },
-        { route: 'users/:id/detail',         moduleId: 'users/detail' },
-        { route: 'files*path',               moduleId: 'files/index',     href:'#files',   nav: true }
+        { route: ['', 'home'],         moduleId: './home/index' },
+        { route: 'users',              moduleId: './users/index', nav: true },
+        { route: 'users/:id/detail',   moduleId: './users/detail' },
+        { route: 'files*path',         moduleId: './files/index', href:'#files',   nav: true }
       ]);
     });
   }
@@ -422,7 +432,7 @@ export class App {
 
 Empezamos preguntando por un objeto del tipo `Router` para ser inyectado. Entonces asignamos este objeto a una propiedad `router` del modelo. _Tienes que llamar a esta propiedad **router**_. A continuación llamamos a la API `configure`. Le pasamos una función y esta nos pasa un objeto de configuración.
 
-Opcionalmente podemos crear una propiedad `title` para ser usada en la construcción del título del documento. Pero la parte más importante es configurar las rutas. El método `map` del sistema de gestión de rutas toma una estructura de datos JSON que representa tu tabla de rutas. Las dos propiedades más importantes son `route` (una cadena o un vector de cadenas), que define el patrón de rutas, y `moduleId`, que contiene la ruta relativa `moduleId` al modelo. También puedes poner una propiedad `title`, para ser usado al generar el título del documento, una propiedad `nav` indicadora de si la ruta debe incluirse o no debe ser incluida en el modelo de navegación (también puede ser un número indicador de orden) y una propiedad `href` que puedes usar para establecer un enlace en el modelo de navegación.
+Opcionalmente podemos crear una propiedad `title` para ser usada en la construcción del título del documento. Pero la parte más importante es configurar las rutas. El método `map` del sistema de gestión de rutas toma una estructura de datos JSON que representa tu tabla de rutas. Las dos propiedades más importantes son `route` (una cadena o un vector de cadenas), que define el patrón de rutas, y `moduleId`, que contiene la ruta *relativa* `moduleId` al modelo. También puedes poner una propiedad `title`, para ser usado al generar el título del documento, una propiedad `nav` indicadora de si la ruta debe incluirse o no debe ser incluida en el modelo de navegación (también puede ser un número indicador de orden) y una propiedad `href` que puedes usar para establecer un enlace en el modelo de navegación.
 
 >**Nota:** Cualquier propiedad que dejes fuera será determinada convencionalmente por el marco de trabajo en base a lo que hayas proporcionado.
 
@@ -593,7 +603,34 @@ Los comportamientos añadidos pueden obtener fácilmente acceso al elemento HTML
 
 Finalmente, veamos la retrollamada `valueChanged`. Dijimos anteriormente que esto está configurado mediante los metadatos de la propiedad de manera que sea llamada siempre que el valor cambie. El sistema de enlazado actualizará automáticamente las propiedades disparando la retrollamada. Así, todo lo que tiene que hacer la implementación es  añadir/eliminar la clase apropiada en función del valor.
 
-> **Nota:** Puede que te preguntes que hacer si quieres crear un comportamiento añadido con múltiples propiedades... teniendo en cuenta que los comportamientos añadidos siempre están en correspondencia con un único atributo. Para este escenario usamos una propiedad `OptionsProperty` que capacita a tu atributo único para funcionar como el atributo nativo `style`, con múltiples propiedades insertadas en él. La documentación al respecto está en camino...
+### Propiedades con opciones -options properties-
+
+Puede que te preguntes que hacer si quieres crear un comportamiento añadido con múltiples propiedades teniendo en cuenta que los comportamientos añadidos siempre están en correspondencia con un único atributo. Para este escenario usamos una propiedad `OptionsProperty` que capacita a tu atributo único para funcionar como el atributo nativo `style`, con múltiples propiedades insertadas en él. Aquí tienes un ejemplo de como se usa: 
+
+```javascript
+import {Behavior} from 'aurelia-templating';
+
+export class Show {
+  static metadata(){
+    return Behavior
+      .attachedBehavior('my-behavior')
+      .withOptions().and(x => {
+        x.withProperty('foo');
+        x.withProperty('bar');
+      });
+  }
+}
+```
+
+Esto crea un comportamiento añadido de nombre `my-behavior` con dos propiedades `foo` and `bar`. Cada una de estas propiedades están disponibles directamente en la clase, aunque su configuración en HTML es algo distinta. Aquí está como lo haríamos:
+
+```markup
+<div my-behavior="foo: some literal value; bar.bind: some.expression"></div>
+```
+
+Fíjate en que no usamos la orden de enlace sobre el comando mismo. En lugar de eso, lo usamos con cada propiedad individual dentro del valor del atributo. Puedes utilizar literales u órdenes de enlazado estándar.
+
+>**Note:** No se usan las órdenes `delegate` y `trigger` dentro de un atributo de opción. Estas están siempre añadidas al elemento mismo, puesto que trabajan directamente con eventos nativos del DOM. En cambio si puedes usar `call`. 
 
 ### Elementos a medida -custom elements-
 
@@ -726,7 +763,7 @@ La función `BoundViewFactory` es capaz de generar objetos del tipo plantilla HT
 
 Mira con atención la función de retrollamada `valueChanged`. Aquí puedes ver donde está el comportamiento `if` creando la vista y añadiéndola al hueco, en base a la verdad del valor. Hay algunos detalles importantes de esto:
 
-* El comportamiento siempre llama a `bind` en la vista View _antes de_ añadirla a la posición ViewSlot. Esto garantiza que todos los enlaces internos se evalúan fuera del DOM activo. Esto es importante para el rendimiento. 
+* El comportamiento siempre llama a `bind` en la vista View _antes de_ añadirla a la posición ViewSlot. Esto garantiza que todos los enlaces internos se evalúan fuera del DOM activo. Esto es importante para el rendimiento.
 * De forma parecida, siempre llama a `unbind` _después de_ eliminar la vista View del DOM.
 * Después de que la vista View sea creada inicialmente, el comportamiento `if` no la desecha cuando el valor se vuelve falso. Mantiene el objeto del tipo View en memoria (cache). Aurelia puede hacer un nuevo uso de estos objetos View y re-dirigirlos  a diferentes contextos de enlazado. Nuevamente, esto es importante para el rendimiento, puesto que elimina la necesidad de recrear estos objetos del tipo View.
 
@@ -911,4 +948,22 @@ El `HttpResponseMessage` -mensaje de respuesta HTTP- tiene las siguientes propie
 * `reviver` - Una función usada para transformar el contenido crudo de la `response` -respuesta-.
 * `requestMessage` - Una referencia al mensaje de petición original.
 
-> **Nota:** Por defecto, el `HttpClient` -cliente HTTP- asume que estás esperando una respuesta de tipo JSON -responseType-. 
+> **Nota:** Por defecto, el `HttpClient` -cliente HTTP- asume que estás esperando una respuesta de tipo JSON -responseType-.
+
+## Ejecución a medida -customization-
+
+### Convenciones relativas a las vistas y a los modelos (de vista)
+
+¿Como se enlazan vistas y modelos? Nuestra sencilla convención se basa en la identidad de módulo -module id-. Si cuentas con un modelo de identidad `./foo/bar/baz` (su ruta básicamente) esté será mapeado por defecto con `./foo/bar/baz.js` y `./foo/bar/baz.html`. Supón que quieres seguir otra convención diferente. ¿Que pasa si todos tus modelos están en una carpeta `view-models` y quieres que tus vista estén en una carpeta `views`? ¿Que tendrías que hacer? Para esto necesitas modificar el comportamiento de la estrategia convencional de vistas -Conventional View Strategy-. Así es como lo harías:
+
+
+```javascript
+import {ConventionalView} from 'aurelia-framework';
+
+ConventionalView.convertModuleIdToViewUrl = function(moduleId){
+  return moduleId.replace('view-models', 'views') + '.html';
+}
+```
+Este código tendrías que ejecutarlo como parte de tu lógica de configuración inicial -bootstrapping logic- para que surtiera efecto antes de que se carguen los comportamientos. Esto afectará a *todo* incluido a los elementos a medida. Así que si necesitas o quieres que estos actúen de otra manera, tendrás que tenerlo en cuenta en tu implementación de `convertModuleIdToViewUrl`.
+
+>**Nota:** Este es un ejemplo de por que los autores de complementos externos no deben fiarse de las convenciones. Los desarrolladores pueden modificar estas convenciones para adaptarse a las necesidades de su propia aplicación.     
