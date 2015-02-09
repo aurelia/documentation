@@ -2,6 +2,12 @@
 
 We've got a very rich set of docs planned for Aurelia. Unfortunately, we haven't quite finished them yet. However, for this early preview period, we've put together this document, containing examples of the most common tasks you might want to perform. If you have questions, we hope that you will join us on our [gitter channel](https://gitter.im/aurelia/discuss).
 
+## Browser Support
+
+Aurelia is designed for Evergreen Browsers. This includes Chrome, Firefox, IE11 and Safari 8. Out-of-the-box it wont work with any version of IE below 11.
+
+If you need to make Aurelia work with a version of IE below 11 then there is a repository [Aurelia Skeleton Nav IE Polyfill Test](https://github.com/devmondo/skeleton-navigation-IE-Polyfill-Test) that serves as a proof of concept by utilizing ES6Shim. This experiment was submitted by the community and appears to have the framework working with IE10 and IE9 without any noticeable problems. In the future we hope to investigate this more thoroughly and see if we can work out an official solution. We invite you to experiment with it and assist us in the possibility of supporting older browsers.
+
 ## Startup & Configuration
 
 Most platforms have a "main" or entry point for code execution. Aurelia is no different. If you've read the [Get Started](/get-started.html) page, then you've seen the `aurelia-app` attribute. Simply place this on an HTML element and Aurelia's bootstrapper will load an _app.js_ and _app.html_, databind them together and inject them into the DOM element on which you placed that attribute. If you don't want to use that convention, simply provide a value to the attribute indicating which view-model to load. For example `<body aurelia-app="todo">` will result in a _todo.js_ and _todo.html_ being loaded instead.
@@ -53,6 +59,10 @@ A _plugin_ is only a module with an exported `install` function. During startup 
 
 > **Note:** Regarding #2 and #3: Do not rely on naming conventions inside plugins. You do not know how the consumer of your plugin will change Aurelia's conventions. 3rd party plugins should be explicit in order to ensure that they function correctly in different contexts.
 
+#### Promises
+
+By default, Aurelia uses ES6 native Promises or a polyfill. However, you can replace this with the excellent [Bluebird](https://github.com/petkaantonov/bluebird) Promise library. Simply include it in your page before you reference the other scripts. It will provide its own standards-compliant Promise implementation which is currently faster than native and has better debugging support. Additionally, when used in combination with the 6to5 transpiler, you can use [coroutines](https://6to5.org/docs/usage/transformers/#bluebird-coroutines) for improved async code.
+
 ### The Aurelia Object
 
 Since both a custom _main_ module and plugins do their work by interacting with the Aurelia object, we provide a brief explanation of that API in code below:
@@ -95,7 +105,7 @@ export class CustomerDetail{
 
 Just provide a static method named `inject` that returns an array of things to inject.
 
-> **Note:** If writing in TypeScript or CofeeScript, you can use a static array property instead of a method. In ES5 you can add the property onto the constructor itself. You can also do this with ES6 but we enable the static method option since it can be located closer to the constructor in Vanilla JS. If you are using AtScript, you can actually take advantage of type annotations by defining your constructor like this: `constructor(http:HttpClient)`. (Before this will work you need to place the `atscript` attribute on your application host element or call `aurelia.use.atscript()` manually.)
+> **Note:** If writing in TypeScript or CoffeeScript, you can use a static array property instead of a method. In ES5 you can add the property onto the constructor itself. You can also do this with ES6 but we enable the static method option since it can be located closer to the constructor in Vanilla JS. If you are using AtScript, you can actually take advantage of type annotations by defining your constructor like this: `constructor(http:HttpClient)`. (Before this will work you need to place the `atscript` attribute on your application host element or call `aurelia.use.atscript()` manually.)
 
 The dependencies in your inject array don't have to be just constructor types. They can also be instances of `resolvers`. For example, have a look at this:
 
@@ -410,10 +420,10 @@ export class App {
     this.router.configure(config => {
       config.title = 'Aurelia';
       config.map([
-        { route: ['', 'home'],               moduleId: 'home/index' },
-        { route: 'users',                    moduleId: 'users/index',                      nav: true },
-        { route: 'users/:id/detail',         moduleId: 'users/detail' },
-        { route: 'files*path',               moduleId: 'files/index',     href:'#files',   nav: true }
+        { route: ['', 'home'],               moduleId: './home/index' },
+        { route: 'users',                    moduleId: './users/index',                      nav: true },
+        { route: 'users/:id/detail',         moduleId: './users/detail' },
+        { route: 'files*path',               moduleId: './files/index',     href:'#files',   nav: true }
       ]);
     });
   }
@@ -422,7 +432,7 @@ export class App {
 
 We begin by asking for a `Router` to be injected. We then set this instance to a `router` property on the view-model. _You must name the property **router**_. Then we call the `configure` api. We pass it a function and it passes us a configuration object.
 
-We can optionally set a `title` property to be used in constructing the document's title. But the most important part is setting up the routes. The router's `map` method takes a simple JSON data structure representing your route table. The two most important properties are `route` (a string or array of strings), which defines the route pattern, and `moduleId`, which has the relative module Id path to your view-model. You can also set a `title` property, to be used when generating the document's title, a `nav` property indicating whether or not the route should be included in the navigation model (it can also be a number indicating order) and an `href` property which you can use to bind to in the _navigation model_.
+We can optionally set a `title` property to be used in constructing the document's title. But the most important part is setting up the routes. The router's `map` method takes a simple JSON data structure representing your route table. The two most important properties are `route` (a string or array of strings), which defines the route pattern, and `moduleId`, which has the *relative* module Id path to your view-model. You can also set a `title` property, to be used when generating the document's title, a `nav` property indicating whether or not the route should be included in the navigation model (it can also be a number indicating order) and an `href` property which you can use to bind to in the _navigation model_.
 
 >**Note:** Any properties that you leave off will be conventionally determined by the framework based on what you have provided.
 
@@ -563,8 +573,8 @@ Ok. Let's talk about conventions.
 
 * If your callback function is named {propertyName}Changed, then you don't need to specify it. So, in the above case, we could omit the value of the second parameter.
 * If your property name and attribute name are the same, then you don't need to specify it. In the above case, they are different, so we need to specify it.
-* Attached behaviors always map to a single attribute. This allows us to optmize a simple usage pattern. If you name your property "value", then you don't need to include the property metadata at all. We will autommatically map an attribute with the same name as your behavior to the `value` property.
-* If you name your class {BehaviorName}AttachedProperty, then you don't need to indlude the attached behavior metadata at all. The attribute name will be inferred from the class name by stripping off "AttachedBehavior" and lowercasing and hyphenating the remaining part of the name. ie. behavior-name
+* Attached behaviors always map to a single attribute. This allows us to optimize a simple usage pattern. If you name your property "value", then you don't need to include the property metadata at all. We will automatically map an attribute with the same name as your behavior to the `value` property.
+* If you name your class {BehaviorName}AttachedProperty, then you don't need to include the attached behavior metadata at all. The attribute name will be inferred from the class name by stripping off "AttachedBehavior" and lowercasing and hyphenating the remaining part of the name. ie. behavior-name
 
 These conventions mean that we can actually define our `show` behavior like this:
 
@@ -593,7 +603,34 @@ AttachedBehaviors can easily gain access to the HTML element they are attached t
 
 Finally, let's look at the `valueChanged` callback. We said previously that this is configured through the property metadata so that it is called whenever the value changes. The binding system will automatically update properties thus triggering the callback. So, all the implementation has to do is add/remove the appropriate class based on the value.
 
-> **Note:** You may be wondering what to do if you want to create an Attached Behavior with multiple properties...since Attached Behaviors always map to a single attribute. For this scenario, we use an `OptionsProperty` which enables your single attribute to work like the native `style` attribute, with multiple properties embedded within. Docs on that are forthcoming...
+#### Options Properties
+
+You may be wondering what to do if you want to create an Attached Behavior with multiple properties, since Attached Behaviors always map to a single attribute. For this scenario, we use an `OptionsProperty` which enables your single attribute to work like the browser's native `style` attribute, with multiple properties embedded within. Here's an examlple of how that is used:
+
+```javascript
+import {Behavior} from 'aurelia-templating';
+
+export class Show {
+  static metadata(){
+    return Behavior
+      .attachedBehavior('my-behavior')
+      .withOptions().and(x => {
+        x.withProperty('foo');
+        x.withProperty('bar');
+      });
+  }
+}
+```
+
+This creates an Attached Behavior named `my-behavior` with two properties `foo` and `bar`. Each of these properties are available directly on the class, however they are configured in HTML a bit different. Here's how that would be done:
+
+```markup
+<div my-behavior="foo: some literal value; bar.bind: some.expression"></div>
+```
+
+Notice that we don't use a binding command on the behavior itself. Instead, we can use them on each individual property inside the attribute's value. You can use literals as well as the standard binding commands.
+
+> **Note:** You don't use `delegate` or `trigger` commands inside an options attribute. Those are always attached to the element itself, since they work directly with native DOM events. However, you can use `call`.
 
 ### Custom Elements
 
@@ -726,7 +763,7 @@ The `ViewSlot` represents the slot or location within the DOM that the template 
 
 Take a close look at the `valueChanged` callback. Here you can see where the `if` behavior is creating the view and adding it to the slot, based on the truthiness of the value. There are a few important details of this:
 
-* The behavior always calls `bind` on the View _before_ adding it to the ViewSlot. This ensures that all internal bindings are initially evaluated outside of the live DOM. This is important for performance. 
+* The behavior always calls `bind` on the View _before_ adding it to the ViewSlot. This ensures that all internal bindings are initially evaluated outside of the live DOM. This is important for performance.
 * Similarly, always call `unbind` _after_ removing the View from the DOM.
 * After the View is initially created, the `if` behavior does not throw it away even when the value becomes false. It caches the instance. Aurelia can re-use Views and even re-target them at different binding contexts. Again, this is important for performance, since it eliminates needless re-creation of Views.
 
@@ -911,4 +948,22 @@ The `HttpResponseMessage` has the followingn properties:
 * `reviver` - A function used to transform the raw `response` content.
 * `requestMessage` - A reference to the original request message.
 
-> **Note:** By default, the `HttpClient` assumes you are expecting a JSON responseType. 
+> **Note:** By default, the `HttpClient` assumes you are expecting a JSON responseType.
+
+## Customization
+
+### View and View-Model Conventions
+
+How are views and view-models linked? Our simple convention is based on module id. If you've got a view-model with id (essentially path) './foo/bar/baz' then that will map to `./foo/bar/baz.js` and `./foo/bar/baz.html` by default. Suppose you want to follow a different convention though. What if all your view-models live in a `view-models` folder and you want their views to live in a `views` folder? How would you do that? In order to do this, you want to change the behavior of the Conventional View Strategy. Here's how you do it:
+
+```javascript
+import {ConventionalView} from 'aurelia-framework';
+
+ConventionalView.convertModuleIdToViewUrl = function(moduleId){
+  return moduleId.replace('view-models', 'views') + '.html';
+}
+```
+
+You should execute this code as part of your bootstrapping logic so that it takes effect before any behaviors are loaded. This will affect *everything* including custom elements. So, if you need or want those to act differently, you will need to account for that in your implementation of `convertModuleIdToViewUrl`.
+
+> **Note:** This is an example of why 3rd party plugin authors should not rely on conventions. Developers may change these conventions in order to fit the needs of their own app.
