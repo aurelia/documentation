@@ -186,7 +186,7 @@ En este caso `nav-bar` es un _Custom Element_ -elemento a medida- de Aurelia que
     - p.ej. `<import from="./nav-bar" as="foo-bar"></import>` - Ahora en vez de usar un elemento `nav-bar` puedes usar un elemento `foo-bar`. (Esto está basado en ES6 para el cual renombrar es considerado un sustitutivo al uso de un alias porque lo que hace es estrictamente renombrar el tipo.)
 * Empaquetado - La importación puede señalar a un módulo con múltiples recursos que serán todos importados a la misma vista.
 * Extensibilidad - Puedes definir nuevos tipos de recursos que cuando son importados de esta manera pueden ejecutar la carga (asíncronamente única) y el registro (único por vista) a medida.
-* ES6 - El código es cargado por el cargador (loader) de ES6 en lugar de por el mecanismo _HTMLImport_, habilitándose todas las características y extensibilidad de tu cargador.
+* ES6 - El código es cargado por el cargador -loader- de ES6 en lugar de por el mecanismo _HTMLImport_, habilitándose todas las características y extensibilidad de tu cargador.
 
 En tus vistas harás aprovechamiento frecuente de los diferentes tipos de recursos mencionados con anterioridad así como del enlazado de datos -databinding-.
 
@@ -194,13 +194,13 @@ En tus vistas harás aprovechamiento frecuente de los diferentes tipos de recurs
 
 ### Enlazado de datos -databinding-
 
-El enlazado de datos te permite enlazar el estado y el comportamiento de un objeto Javascript y una vista HTML. Cuando se establece este enlace, cualquier cambio en las propiedades enlazadas puede sincronizarse en una o dos direcciones. Los cambios en el objeto JavaScript pueden reflejarse en la vista y los cambios en la vista pueden reflejarse en el objeto JavaScript. Para establecer este vínculo, harás uso de las órdenes de enlazado -binding commands- en tu HTML. Los órdenes de enlazado son claramente identificables por su uso de "." como una especie de operador de enlace. Siempre que un atributo HTML contenga un ".", el compilador pasará el nombre y el valor del atributo al lenguaje de enlazado para su interpretación. El resultado es una o más expresiones de enlazado capaces de establecer el enlace cuando se crea la vista.
+El enlazado de datos te permite enlazar el estado y el comportamiento de un objeto Javascript y una vista HTML. Cuando se establece este enlace, cualquier cambio en las propiedades enlazadas puede sincronizarse en una o dos direcciones. Los cambios en el objeto JavaScript pueden reflejarse en la vista y los cambios en la vista pueden reflejarse en el objeto JavaScript. Para establecer este vínculo, harás uso de las órdenes de enlazado -binding commands- en tu HTML. Las órdenes de enlazado son claramente identificables por su uso de "." como una especie de operador de enlace. Siempre que un atributo HTML contenga un ".", el compilador pasará el nombre y el valor del atributo al lenguaje de enlazado para su interpretación. El resultado es una o más expresiones de enlazado capaces de establecer el enlace cuando se crea la vista.
 
 Puedes ampliar el sistema con tus propias órdenes de enlazado, pero Aurelia proporciona una colección para cubrir los casos de uso más frecuentes.
 
 #### bind, one-way, two-way & one-time
 
-La orden de enlazado más común es `.bind` (enlaza). Esta hará que la propiedad sea vinculada usando un enlace uni-direccional ("one-way") para todos sus atributos, excepto para el caso de valores de elementos de formulario, que reciben un enlace bi-direccional ("two-way").
+La orden de enlazado más común es `.bind` -enlaza-. Esta hará que la propiedad sea vinculada usando un enlace uni-direccional -"one-way"- para todos sus atributos, excepto para el caso de valores de elementos de formulario, que reciben un enlace bi-direccional -"two-way"-.
 
 _¿Pero que significa esto?_
 
@@ -213,7 +213,7 @@ Enlace uni-direccional significa que los cambios fluyen de tus modelos (de vista
 
 En el ejemplo anterior, el elemento `input` tendrá su `value` -valor- vinculado a la propiedad `firstName` en el modelo. Cambios en la propiedad `firstName` actualizarán el `input.value` y cambios en el `input.value` actualizarán la propiedad `firstName` en el modelo. Por otro lado, la etiqueta `a` tendrá su `href` vinculado a la propiedad `url` en el modelo. Solo los cambios en la propiedad `url` fluirán hacia el `href` de la etiqueta `a`, no al revés.
 
-Aunque siempre puedes ser explícito y usar `.one-way` o `.two-way` en lugar de `.bind`. Un caso común en que se requiere esto es con los componentes web (Web Components) que funcionan como controles de tipo input. Asi que podrás imaginarte haciendo algo como esto:
+Aunque siempre puedes ser explícito y usar `.one-way` o `.two-way` en lugar de `.bind`. Un caso común en que se requiere esto es con los componentes web -Web Components- que funcionan como controles de tipo input. Asi que podrás imaginarte haciendo algo como esto:
 
 ```markup
 <markdown-editor value.two-way="markdown"></markdown-editor>
@@ -235,7 +235,7 @@ Cuando se pulsa el botón, se invoca el método `sayHello` en el modelo. Dicho e
 <button click.delegate="sayHello()">Say Hello</button>
 ```
 
-> **Nota:** Si no estás familiarizado con la delegación de eventos, se trata de una técnica que usa la naturaleza "burbujeante" de los eventos DOM. Cuando usamos `.delegete` se añade un único gestor de eventos al documento, en lugar de a cada elemento. Cuando se dispara el evento del elemento, este "asciende" a través del DOM hasta que alcanza el (nivel de) documento, donde es gestionado (por el gestor asignado). Esta es una manera más eficiente en memoria de gestionar eventos y se recomienda que lo uses como tu mecanismo por defecto.
+> **Nota:** Si no estás familiarizado con la delegación de eventos, se trata de una técnica que usa la naturaleza "burbujeante" de los eventos DOM. Cuando usamos `.delegate` se añade un único gestor de eventos al documento, en lugar de a cada elemento. Cuando se dispara el evento del elemento, este "asciende" a través del DOM hasta que alcanza el (nivel de) documento, donde es gestionado (por el gestor asignado). Esta es una manera más eficiente en memoria de gestionar eventos y se recomienda que lo uses como tu mecanismo por defecto.
 
 Todo esto va de una u otra manera en contra de los eventos de DOM. Ocasionalmente puedes encontrarte con un comportamiento a medida de Aurelia que necesite directamente una referencia a tu función de forma que pueda ser invocada posteriormente. Para pasar una referencia de función, usa el enlazador `.`call` (puesto que el comportamiento la _llamará -call-_ más tarde):
 
@@ -282,9 +282,9 @@ También puedes usar el enlace especial `.view-model` combinado con `ref` para o
 
 Junto al enlazado de datos -databinding-, cuentas con el poder de los comportamientos de Aurelia para usarlo en tus vistas. Son tres los tipos de comportamiento incluidos:
 
-* Elementos a medida (Custom Elements) - ¡Amplía HTML mediante nuevas etiquetas! Tus elementos a medida pueden tener sus propias vistas (que usan el enlazado de datos y otros comportamientos) y, opcionalmente, hacer uso del [ShadowDOM](http://www.html5rocks.com/en/tutorials/webcomponents/shadowdom/) (incluso aunque el navegador no lo soporte).
-* Comportamientos añadidos (Attached Behavior) - Amplía HTML con atributos nuevos que pueden añadirse a los elementos, ya sean normales o a medida. Estos atributos "añaden" -attach- nuevo comportamiento a los elementos.
-* Controles de plantillas (Template Controllers) - Crean mecanismos nuevos para desplegar las plantillas. Un control de plantillas es una clase capaz de crear interfaz de usuario dinámicamente y de inyectarla en el DOM.
+* Elementos a medida -Custom Elements- ¡Amplía HTML mediante nuevas etiquetas! Tus elementos a medida pueden tener sus propias vistas (que usan el enlazado de datos y otros comportamientos) y, opcionalmente, hacer uso del [ShadowDOM](http://www.html5rocks.com/en/tutorials/webcomponents/shadowdom/) (incluso aunque el navegador no lo soporte).
+* Comportamientos añadidos -Attached Behavior- Amplía HTML con atributos nuevos que pueden añadirse a los elementos, ya sean normales o a medida. Estos atributos "añaden" -attach- nuevo comportamiento a los elementos.
+* Controles de plantillas -Template Controllers- Crean mecanismos nuevos para desplegar las plantillas. Un control de plantillas es una clase capaz de crear interfaz de usuario dinámicamente y de inyectarla en el DOM.
 
 Naturalmente, todos funcionan sin problemas con el enlazado de datos. Echemos un vistazo a los comportamientos que te proporciona Aurelia y que están disponibles globalmente en todas las vistas.
 
@@ -308,7 +308,7 @@ El control de plantillas `if` permite añadir/eliminar un elemento HTML condicio
 
 Este ejemplo es parecido al anterior con `show`. La diferencia estriba en que si la evaluación de la expresión de enlace resulta falsa, el `div`será eliminado del DOM, en lugar de solo quedar ocultado.
 
-Si necesitas añadir/eliminar condicionalmente un grupo de elementos y no puedes colocar el comportamiento (behavior) `if` en un elemento padre, entonces puedes envolver esos elementos en una etiqueta `template` que incluya el comportamiento `if`. Así es como quedaría:
+Si necesitas añadir/eliminar condicionalmente un grupo de elementos y no puedes colocar el comportamiento -behavior- `if` en un elemento padre, entonces puedes envolver esos elementos en una etiqueta `template` que incluya el comportamiento `if`. Así es como quedaría:
 
 ```markup
 <template if.bind="hasErrors">
@@ -333,7 +333,7 @@ Una consideración importante acerca del comportamiento `repeat` es que trabaja 
 
 #### compose
 
-El elemento a medida `compose` te capacita para mostrar dinámicamente interfaz de usuario dentro del DOM. Imagínate que tienes un vector heterogeneo de elementos, pero que cada uno tiene una propiedad `type` que nos dice que es lo que es. Entonces puedes hacer algo así:
+El elemento a medida `compose` te capacita para mostrar dinámicamente interfaz de usuario dentro del DOM. Imagínate que tienes un vector heterogéneo de elementos, pero que cada uno tiene una propiedad `type` que nos dice que es lo que es. Entonces puedes hacer algo así:
 
 ```markup
 <template repeat.for="item of items">
@@ -344,7 +344,7 @@ El elemento a medida `compose` te capacita para mostrar dinámicamente interfaz 
 </template>
 ```
 
-Ahora, dependiendo del _type_ del elemento, el elemento `compose` cargará un modelo (y vista) diferente y mostrado en el DOM. Si el modelo tiene un método `activate`, el elemento `compose` lo llamará y le`pasará el `model` como parámetro. El método `activate` puede devolver incluso una `Promise` (promesa) que hace que el proceso de composición espere hasta que alguna tarea asíncrona concluya antes de ejecutar realmente los enlaces de datos y el despliegue en el DOM.
+Ahora, dependiendo del _type_ del elemento, el elemento `compose` cargará un modelo (y vista) diferente y mostrado en el DOM. Si el modelo tiene un método `activate`, el elemento `compose` lo llamará y le`pasará el `model` como parámetro. El método `activate` puede devolver incluso una `Promise` -promesa- que hace que el proceso de composición espere hasta que alguna tarea asíncrona concluya antes de ejecutar realmente los enlaces de datos y el despliegue en el DOM.
 
 El elemento `compose` también tiene un atributo `view` que puede ser usado de la misma manera que `view-model` si no deseas aprovechar la convención estándar de vista/modelo.
 
@@ -394,7 +394,7 @@ Cuando el sistema de enlazado encuentra una orden de enlace que no reconoce, ent
 
 ## Gestión de rutas -routing-
 
-Te pueden pedir que crees muchos estilos diferentes de aplicaciones. Desde aplicaciones de navegación, a escritorios, a interfaces MDI (multiple documents interface), Aurelia puede manejarlas todas. En muchos de estos casos una pieza clave de tu arquitectura es un sistema de gestión de rutas (router) del lado del cliente, capaz de traducir cambios en URLs en estados de la aplicación.
+Te pueden pedir que crees muchos estilos diferentes de aplicaciones. Desde aplicaciones de navegación, a escritorios, a interfaces MDI -multiple documents interface-, Aurelia puede manejarlas todas. En muchos de estos casos una pieza clave de tu arquitectura es un sistema de gestión de rutas -router- del lado del cliente, capaz de traducir cambios en URLs en estados de la aplicación.
 
 Si leíste la guía para empezar, sabrás que hay dos partes en la gestión de rutas. Primero, está el (objeto) `Router` que se encuentra en tu modelo. Está configurado con información de rutas y controla la navegación. Luego, tenemos `router-view` (vista del gestor de rutas) que se encuentra en la vista y que es responsable de mostrar lo que sea que el sistema (de gestión de rutas) identifica como el estado actual.
 
@@ -422,7 +422,7 @@ export class App {
 
 Empezamos preguntando por un objeto del tipo `Router` para ser inyectado. Entonces asignamos este objeto a una propiedad `router` del modelo. _Tienes que llamar a esta propiedad **router**_. A continuación llamamos a la API `configure`. Le pasamos una función y esta nos pasa un objeto de configuración.
 
-Opcionalmente podemos crear una propiedad `title` para ser usada en la construcción del título del documento. Pero la parte más importante es configurar las rutas. El método `map` del sistema de gestión de rutas toma una estructura de datos JSON que representa tu tabla de rutas. Las dos propiedades más importantes son `route` (una cadena o un vector de cadenas), que define el patrón de rutas, y `moduleId`, que contiene la ruta relativa `moduleId` al modelo. También puedes poner una propiedad `title`, para ser usado al generar el título del documento, una propiedad `nav` indicadora de si la ruta debe incluirse o no debe ser incluida en el modelo de navegación (también puede ser un número indicador de orden) y una propiedad `href` que puedes usar para establecer un enlace en el modelo de navegación (_navigation model_).
+Opcionalmente podemos crear una propiedad `title` para ser usada en la construcción del título del documento. Pero la parte más importante es configurar las rutas. El método `map` del sistema de gestión de rutas toma una estructura de datos JSON que representa tu tabla de rutas. Las dos propiedades más importantes son `route` (una cadena o un vector de cadenas), que define el patrón de rutas, y `moduleId`, que contiene la ruta relativa `moduleId` al modelo. También puedes poner una propiedad `title`, para ser usado al generar el título del documento, una propiedad `nav` indicadora de si la ruta debe incluirse o no debe ser incluida en el modelo de navegación (también puede ser un número indicador de orden) y una propiedad `href` que puedes usar para establecer un enlace en el modelo de navegación.
 
 >**Nota:** Cualquier propiedad que dejes fuera será determinada convencionalmente por el marco de trabajo en base a lo que hayas proporcionado.
 
@@ -488,7 +488,7 @@ router.configure(config => {
 
 Todo lo que tienes que hacer es establecer la propiedad `config.moduleId` y estarás listo. También puedes devolver una promesa desde `mapUnknownRoutes` para determinar el destino asíncronamente.
 
->**Nota:** Aunque no necesariamente relacionado con el enrutamiento convencional, puedes necesitar a veces configurar tu enrutador asíncronamente. Por ejemplo, puedes necesitar llamar a un servicio web para obtener permisos de usuario antes de establecer las rutas. Para hacer esto, implementa una retrollamada en tu modelo de enrutador llamada `configureRouter`. En esta retrollamada puedes configurar tu enrutador y devolver opcionalmente una promesa (`Promise`) si fuera necesario.
+>**Nota:** Aunque no necesariamente relacionado con el enrutamiento convencional, puedes necesitar a veces configurar tu enrutador asíncronamente. Por ejemplo, puedes necesitar llamar a un servicio web para obtener permisos de usuario antes de establecer las rutas. Para hacer esto, implementa una retrollamada en tu modelo de enrutador llamada `configureRouter`. En esta retrollamada puedes configurar tu enrutador y devolver opcionalmente una promesa -`Promise`- si fuera necesario.
 
 ## Extendiendo HTML
 
@@ -521,7 +521,7 @@ Los comportamientos añadidos añaden nuevo comportamiento o función a un eleme
 
 Los comportamientos añadidos tienden a representar competencias transversales. Por ejemplo, puedes crear un comportamiento recomendado a medida que puedes añadir a cualquier elemento. Esta idea es mejor que la de crear la función recomendada directamente en cada elemento a medida que crees.
 
-Veamos la implementación de uno de los comportamientos añadidos (propio) de Aurelia: `show`. Aquí tienes como se usa:
+Veamos la implementación de uno de los comportamientos añadidos (propios) de Aurelia: `show`. Aquí tienes como se usa:
 
 ```markup
 <div show.bind="isSaving" class="spinner"></div>
@@ -718,7 +718,7 @@ Antes de profundizar en los aspectos únicos de los controles de plantilla, déj
 
 Bien, que es distinto? Observa el constructor. Nuestro control de plantilla recibe inyectados únicamente dos elementos: `BoundViewFactory` y `ViewSlot`.
 
-La función `BoundViewFactory` es capaz de generar objetos del tipo plantilla HTML a la que está vinculado el control. No hay necesidad de preocuparse por el compilado, etc. Ya nos hemos ocupado de ello por ti. ¿Pero por qué se llama "Bound" View Factory (factoría de vista enlazada)? Bien, se está refiriendo al contexto (padre) de enlazado. Este está enlazado ("bound") en cierto sentido. Así, si llamas a su método `create` este va a generar una nueva vista a partir de la plantilla que va a estar enlazada a ese contexto. Esto es lo que quieres cuando usas un comportamiento `if`. Esto no es lo que quieres con un comportamiento `repeat`. En ese caso, cada vez que llamas a `create` quieres una vista vinculada a un elemento (de vector) en particular. Para conseguir esto, simplemente pásale al método `create` cualquier objeto al que quieras vincular la vista.
+La función `BoundViewFactory` es capaz de generar objetos del tipo plantilla HTML a la que está vinculado el control. No hay necesidad de preocuparse por el compilado, etc. Ya nos hemos ocupado de ello por ti. ¿Pero por qué se llama "Bound" View Factory (factoría de vista enlazada)? Bien, se está refiriendo al contexto (padre) de enlazado. Este está enlazado -"bound"- en cierto sentido. Así, si llamas a su método `create` este va a generar una nueva vista a partir de la plantilla que va a estar enlazada a ese contexto. Esto es lo que quieres cuando usas un comportamiento `if`. Esto no es lo que quieres con un comportamiento `repeat`. En ese caso, cada vez que llamas a `create` quieres una vista vinculada a un elemento (de vector) en particular. Para conseguir esto, simplemente pásale al método `create` cualquier objeto al que quieras vincular la vista.
 
 `ViewSlot` (espacio para vista) representa el espacio o ubicación dentro del DOM del que la plantilla fue extraída. Esta es usualmente la ubicación en la que quieres añadir los objetos de tipo View.
 
@@ -736,7 +736,7 @@ El sistema de gestión de eventos es una poderosa herramienta cuando necesitas q
 
 ### Eventos del DOM
 
-Los eventos DOM deben usarse cuando han de enviarse mensajes específicos de la interfaz de usuario. No deben ser usados para enviar mensajes específicos de la aplicación. Aurelia no añade ninguna funcionalidad más allá del DOM para eventos de interfaz. Cualquier comportamiento puede tener su elemento (`Element`) asociado inyectado en su constructor. Entonces puedes usar el `Element` para lanzar eventos. Para aprender más acerca de la creación y el lanzamiento de eventos DOM a medida [lee por favor este artículo](https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Creating_and_triggering_events).
+Los eventos DOM deben usarse cuando han de enviarse mensajes específicos de la interfaz de usuario. No deben ser usados para enviar mensajes específicos de la aplicación. Aurelia no añade ninguna funcionalidad más allá del DOM para eventos de interfaz. Cualquier comportamiento puede tener su elemento -`Element`- asociado inyectado en su constructor. Entonces puedes usar el `Element` para lanzar eventos. Para aprender más acerca de la creación y el lanzamiento de eventos DOM a medida [lee por favor este artículo](https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Creating_and_triggering_events).
 
 ### El agregador de eventos
 
@@ -760,7 +760,7 @@ export class APublisher{
 }
 ```
 
-Empezamos por recibir a través de la inyección de dependencias una función singular (singleton) Event Aggregator. A continuación llamamos a su método `publish`, pasándole el nombre del canal de mensajes y el conjunto de datos a enviar por ese canal. Aquí está como se auto-configura un suscriptor para recibir por determinado canal:
+Empezamos por recibir a través de la inyección de dependencias una función singular -singleton- Event Aggregator. A continuación llamamos a su método `publish`, pasándole el nombre del canal de mensajes y el conjunto de datos a enviar por ese canal. Aquí está como se auto-configura un suscriptor para recibir por determinado canal:
 
 ```javascript
 import {EventAggregator} from 'aurelia-event-aggregator';
@@ -781,7 +781,7 @@ export class ASubscriber{
 
 Como puedes ver, se usa el mismo nombre de canal, pero se proporciona una función de retrollamada, que será invocada con cada mensaje enviado por este canal.
 
-Alternativamente, puedes publicar y suscribirte a mensajes fuertemente tipificados. Aquí tienes un ejemplo de editor (publisher):
+Alternativamente, puedes publicar y suscribirte a mensajes fuertemente tipificados. Aquí tienes un ejemplo de editor -publisher:
 
 ```javascript
 export class SomeMessage{ }
@@ -823,9 +823,9 @@ export class ASubscriber{
 }
 ```
 
-El (receptor) suscriptor (subscriber) será llamado cada vez que se publica un objeto del tipo `SomeMessage` (AlgúnMensaje). La suscripción (subscription) es polimórfica, así que si se publica un objeto de un tipo subclase de `SomeMessage`, este (suscriptor)también recibirá notificación de ello.
+El (receptor) suscriptor -subscriber- será llamado cada vez que se publica un objeto del tipo `SomeMessage`. La suscripción -subscription- es polimórfica, así que si se publica un objeto de un tipo subclase de `SomeMessage`, este (suscriptor) también recibirá notificación de ello.
 
->**Nota:** Todas las formas del método `subscribe` devuelven una _función desechar (dispose function_). Puedes llamar a esta función para desechar la suscripción y dejar de recibir mensajes. Un lugar adecuado para desechar (una suscripción) es en una (función de) de retrollamada `deactivate` -desactivar- del modelo, si este es manejado por un enrutador, o en su retrollamada `detached`, si se encuentra en cualquier otro modelo.
+>**Nota:** Todas las formas del método `subscribe` devuelven una _función desechar_ -dispose function-. Puedes llamar a esta función para desechar la suscripción y dejar de recibir mensajes. Un lugar adecuado para desechar (una suscripción) es en una (función de) de retrollamada `deactivate` -desactivar- del modelo, si este es manejado por un enrutador, o en su retrollamada `detached`, si se encuentra en cualquier otro modelo.
 
 ## Cliente HTTP
 
