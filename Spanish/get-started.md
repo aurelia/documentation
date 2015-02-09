@@ -1,6 +1,8 @@
 # Para empezar
 
-**¡Bienvenido a Aurelia!** Este tutorial te guiará a través de la creación de una aplicación sencilla usando Aurelia y explicará brevemente sus conceptos principales. Damos por supuesto que te manejas con Javascript, HTML y CSS. Para obtener una rápida visión de conjunto, te recomendamos que vayas directamente a la sección titulada "Configurar la página HTML" de manera que puedas ver sin más como se usa Aurelia. Luego, cuando ya estés listo para montar realmente algo, vuelve aquí y lee acerca de "Configurar tu entorno" y de "Configurar la estructura y el montaje del proyecto". Para ver el resultado completo de este tutorial, échale por favor un vistazo a nuestro [proyecto de esqueleto de navegación](https://github.com/aurelia/skeleton-navigation/releases). Es posible que te apetezca descargártelo y borrar los contenidos de la carpeta _src_ para seguir este tutorial, ya que así tendrás menos que configurar manualmente. En cualquier caso, eso es lo que haríamos nosotros... 
+**¡Bienvenido a Aurelia!** Este tutorial te guiará a través de la creación de una aplicación sencilla usando Aurelia y explicará brevemente sus conceptos principales. Damos por supuesto que te manejas con Javascript, HTML y CSS. Para obtener una rápida visión de conjunto, te recomendamos que vayas directamente a la sección titulada "Configurar la página HTML" de manera que puedas ver sin más como se usa Aurelia. Luego, cuando ya estés listo para montar realmente algo, vuelve aquí y lee acerca de "Configurar tu entorno" y de "Configurar la estructura y el montaje del proyecto". Para ver el resultado completo de este tutorial, échale por favor un vistazo a nuestro [proyecto de esqueleto de navegación](https://github.com/aurelia/skeleton-navigation/releases).
+
+>**Nota:** ¿Buscas esta guía en otro idioma? Échale un vistazo a nuestro repositorio [documentation](https://github.com/aurelia/documentation).
 
 ## Configurar tu entorno
 
@@ -22,9 +24,7 @@ A continuación, necesitamos instalar [jspm](http://jspm.io/). Este nos servirá
 
 ## Configurar la estructura y el montaje del proyecto
 
-Con el conjunto de herramientas instaladas, podemos ocuparnos ya de la creación de una estructura básica para tu aplicación. Empieza creando un carpeta para tu proyecto. Vamos a llamarla _navigation-app_. Dentro de esta carpeta vamos a crear un subdirectorio denominado _src_. Este va a contener el código fuente en bruto para tu aplicación. Creamos también un subdirectorio llamado _styles_. Puedes [descargarte los estilos CSS por defecto](https://raw.githubusercontent.com/aurelia/skeleton-navigation/master/styles/styles.css) para este ejemplo y meterlos en esa carpeta.
-
-Como queremos aprovechar Gulp para automatizar el montaje, necesitamos crear un archivo de configuración para ello e instalar los paquetes relacionados con el montaje. Hemos creado para ti un archivo de montaje inicial realmente estupendo, que puedes [descargarte de aquí](https://raw.githubusercontent.com/aurelia/skeleton-navigation/master/gulpfile.js) y meter en _navigation-app_. También puedes [descargarte nuestro manifiesto por defecto de paquetes](https://raw.githubusercontent.com/aurelia/skeleton-navigation/master/package.json). Este contiene la lista de módulos que queremos instalar. Si ya has usado npm o Gulp anteriormente, esto te resultará familiar.
+Con las herramientas ya instaladas, podemos ocuparnos ahora de la creación de una estructura básica para tu aplicación. Empieza [descargándote el esqueleto de navegación](https://github.com/aurelia/skeleton-navigation/releases). Descomprímelo y renombra la carpeta a _navigation-app_. Dentro de esta carpeta encontrarás todo lo que necesitas, incluyendo un montaje básico, una configuración de paquetes, estilos y demás. Como queremos enseñarte a construir tu propia aplicación, borra por favor el contenido de la carpeta _src_ y el archivo `index.html`. En un minuto aprenderemos a crearlos.
 
 Con estos archivos colocados en su sitio, vamos a ejecutar algunos comandos.
 
@@ -110,7 +110,7 @@ export class Welcome{
 }
 ```
 
-¿Que... eso es Javascript? 
+¿Que... eso es Javascript?
 
 Si. Lo es. De hecho es ECMAScript 6 (ES6), la próxima versión de Javascript que incorpora numerosas características nuevas al lenguaje. Afortunadamente el archivo Gulp que te descargaste más arriba te ha equipado con [6to5](https://6to5.org/), un sorprendente transpilador (transpiler) -compilador de código fuente a código fuente- de ES6 a ES5 que nos permite escribir Javascript del futuro y ejecutarlo en navegadores actuales. De esta manera podemos utilizar módulos, clases, lambdas, interpolación de cadenas y otros. ¡Que bueno! Bien, como se crea un modelo (de vista) _view-model_? Creamos una simple clase y la exportamos con _export_ al marco de trabajo (framework). Pedazo. De. Tarta.
 
