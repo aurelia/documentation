@@ -2,7 +2,7 @@
 
 Hemos planeado para Aurelia un conjunto muy rico de documentos. Desafortunadamente aún no los hemos terminado. En cualquier caso, para este temprano periodo de vista previa, hemos compuesto este documento, que contiene ejemplos de las tareas más comunes que puedas necesitar. Si tienes preguntas, espero que te unas a nosotros en nuestro [canal en gitter](https://gitter.im/aurelia/discuss).
 
->**Note:** ¿Estás buscando esta guía en otro idioma? Echa un vistazo a nuestro repositorio [documentation](https://github.com/aurelia/documentation).
+>**Nota:** ¿Estás buscando esta guía en otro idioma? Echa un vistazo a nuestro repositorio [documentation](https://github.com/aurelia/documentation).
 
 ## Soporte a navegadores
 
