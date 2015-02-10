@@ -245,7 +245,7 @@ With this in place, go ahead and start the dev server with `gulp watch`. Open th
 
 ## Adding a Second Page
 
-Well, we've technically got a navigation application now...but it's not very interesting because there's only one page. Let's add a second page. Can you guess how to do it? I be you can...
+Well, we've technically got a navigation application now...but it's not very interesting because there's only one page. Let's add a second page. Can you guess how to do it? I bet you can...
 
 Let's display some images from Flickr. To do that, let's first configure our router for the hypothetical page:
 
