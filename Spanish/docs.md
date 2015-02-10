@@ -2,6 +2,8 @@
 
 Hemos planeado para Aurelia un conjunto muy rico de documentos. Desafortunadamente aún no los hemos terminado. En cualquier caso, para este temprano periodo de vista previa, hemos compuesto este documento, que contiene ejemplos de las tareas más comunes que puedas necesitar. Si tienes preguntas, espero que te unas a nosotros en nuestro [canal en gitter](https://gitter.im/aurelia/discuss).
 
+>**Note:** ¿Estás buscando esta guía en otro idioma? Echa un vistazo a nuestro repositorio [documentation](https://github.com/aurelia/documentation).
+
 ## Soporte a navegadores
 
 Aurelia está diseñado para navegadores con actualización automática y permanente -Evergreen Browsers-. Esto incluye Chrome, Firefox, IE11 y Safari 8. Tal y como viene no funcionará en ninguna versión de IE anterior a la 11.
@@ -499,6 +501,74 @@ router.configure(config => {
 Todo lo que tienes que hacer es establecer la propiedad `config.moduleId` y estarás listo. También puedes devolver una promesa desde `mapUnknownRoutes` para determinar el destino asíncronamente.
 
 >**Nota:** Aunque no necesariamente relacionado con el enrutamiento convencional, puedes necesitar a veces configurar tu enrutador asíncronamente. Por ejemplo, puedes necesitar llamar a un servicio web para obtener permisos de usuario antes de establecer las rutas. Para hacer esto, implementa una retrollamada en tu modelo de enrutador llamada `configureRouter`. En esta retrollamada puedes configurar tu enrutador y devolver opcionalmente una promesa -`Promise`- si fuera necesario.
+
+### Configurando PushState
+
+Si prefieres desprenderte de los `#` (almohadilla) en tus URLs, entonces vas a tener que habilitar `pushState` en tu aplicación. ¡Por suerte Aurelia admite esto! Tendrás que hacer algún ajuste también del lado del servidor para que esto funcione correctamente. Empecemos por el lado de Aurelia en la ecuación.
+
+Primero necesitas decirle a Aurelia en el `router` `config` que quieres usar `pushState` de esta manera:
+
+``` javascript
+this.router.configure(config => {
+  config.title = 'First Impressions';
+  config.options.pushState = true; // <-- this is all you need here
+  config.map([
+    { route: ['','welcome'],  moduleId: './welcome',      nav: true, title:'Welcome' },
+    { route: 'child-router',  moduleId: './child-router', nav: true, title:'Child Router' }
+  ]);
+});
+```
+
+A continuación, el lado del servidor tiene que ser configurado para devolver el mismo archivo `index.html` independientemente de la petición que se haga desde el lado del cliente. Asi que, si estás usando la tarea `gulp watch` con `browsersync` como en el ejemplo de navegación , entonces puedes modificar tu configuración de esta manera:
+
+Desde la consola en la raíz del proyecto, ejecuta lo siguiente:
+
+```shell
+npm install --save connect-history-api-fallback
+```
+
+Esto descargará e instalará el componente de intermediación -middleware- que necesitas para ello. Luego abre tu carpeta _build/tasks_ y coloca la tarea _serve_. Abre la primera y pon esta en algún sitio cerca del inicio junto a los otros sentencias `require`:
+
+``` javascript
+var historyApiFallback = require('connect-history-api-fallback')
+```
+
+Más abajo puedes modificar la tarea `serve` para usar el complemento de intermediación -middleware-:
+
+``` javascript
+gulp.task('serve', ['build'], function(done) {
+  browserSync({
+    open: false,
+    port: 9000,
+    server: {
+      baseDir: ['.'],
+      middleware: [historyApiFallback, function (req, res, next) { // it's the first one in the array
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        next();
+      }]
+    }
+  }, done);
+});
+```
+
+Ahora tu servidor node puede comportarse tal cual es y dejar que Aurelia se ocupe del enrutamiento.
+
+Si estás usando un marco de trabajo .NET del lado del servidor como [Nancy FX](http://nancyfx.org), entonces la configuración es muy sencilla. Localiza tu `IndexModule.cs` o como quiera que lo hayas llamado y asegúrate de que se parezca a lo que sigue para que todo vaya bien:
+
+``` javascript
+public class IndexModule : NancyModule
+{
+    public IndexModule()
+    {
+        this.Get["/robots.txt"] = p => this.Response.AsFile("robots.txt");
+        this.Get["/sitemap.xml"] = p => this.Response.AsFile("sitemap.xml");
+        this.Get["/"] = x => this.View["index"];
+        this.Get["/{path*}"] = x => this.View["index"];
+    }
+}
+```
+
+Técnicas similares las puedes emplear en entornos con otros servidores - solo necesitas asegurarte de que cualquiera que sea el servidor que estás usando, este devuelve siempre el mismo `index.html` independientemente de la petición que reciba. Todos los marcos de trabajo del lado del servidor deberían ser capaces de esto. Aurelia encontrará la página que ha de devolver en base a los datos de enrutamiento.
 
 ## Extendiendo HTML
 
