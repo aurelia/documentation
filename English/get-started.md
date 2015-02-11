@@ -188,7 +188,7 @@ Ok, there's some really interesting new stuff here. We want to use the router, s
 
 Aurelia creates the UI components as needed to render your app. It does this by using a [Dependency Injection](http://en.wikipedia.org/wiki/Dependency_injection) container capable of providing constructor dependencies like this. How does the DI system know what to provide? All you have to do is add a static method named _inject_ that returns an array of types to provide instances of. There should be one entry in the array for each constructor parameter. In the above example, we needed a router instance, so we added the `Router` type to the inject array.
 
-> **Note:** If you happen to be using AtScript, you'll be pleased to know that Aurelia understands AtScript type annotations and can use those for dependency injection. As other main stream JavaScript transpilers adopt type or annotation metadata we'll continue to enhance our platform and teach it to understand your choice language's format.
+> **Note:** If you happen to be using AtScript, you'll be pleased to know that Aurelia understands AtScript type annotations and can use those for dependency injection. As other mainstream JavaScript transpilers adopt type or annotation metadata we'll continue to enhance our platform and teach it to understand your choice language's format.
 
 We need to set the router to a public property on the class. The property must be named _router_. This is important. Don't get any fancy ideas here like naming it _taco_ or something like that ok? It's a router..so name it _router_ and everyone will be happy. Did we mention you **must** name it _router_?
 
@@ -374,7 +374,7 @@ export class NavBar {
 }
 ```
 
-To create a custom element, you create and export a class. Since this class is going to be used in HTML as an element, we need to tell the framework what properties on the class should appear as attributes on the element. To do that, we use the _metadata_ method. Like _inject_ metadata is a way to provide information about your class to the Aurelia framework. Aurelia is smart and can infer many things, but when it can't or when you want to do something different than the conventions, you use some form of metadata. To leverage this capability, add a static `metadata` method on the class and return an array of metadata instances (really just regular objects). In this case we are using Aurelia's `Behavior` metadata helper. The `withProperty` method adds a `BehaviorProperty` which tells the framework that we want our class's `router` property to be surfaced as an attribute in the HTML. Once it's surfaced as an attribute, we can databind to it in the view.
+To create a custom element, you create and export a class. Since this class is going to be used in HTML as an element, we need to tell the framework what properties on the class should appear as attributes on the element. To do that, we use the _metadata_ method. Like _inject_, metadata is a way to provide information about your class to the Aurelia framework. Aurelia is smart and can infer many things, but when it can't or when you want to do something different than the conventions, you use some form of metadata. To leverage this capability, add a static `metadata` method on the class and return an array of metadata instances (really just regular objects). In this case we are using Aurelia's `Behavior` metadata helper. The `withProperty` method adds a `BehaviorProperty` which tells the framework that we want our class's `router` property to be surfaced as an attribute in the HTML. Once it's surfaced as an attribute, we can databind to it in the view.
 
 ### nav-bar.html
 
@@ -429,7 +429,7 @@ This is a very simple custom element with no real behavior, but it is complete a
 </template>
 ```
 
-To recap: First we have an `import` element. Aurelia uses this to load the custom element via the relative source indicated in the `from` attribute. It's following our simple conventions so it will know how to load our _nav-bar.js_ and _nav-bar.html_ files. Anything imported into a view in this way is local to the view. As a result, you don't have to worry about name conflicts. The second point is the actual use of the element which uses databinding against the `App`'s router. We are pipling the router instance on our `App` class through to the corresponding property on the `NavBar` element for internal rendering. Sweet!
+To recap: First we have an `import` element. Aurelia uses this to load the custom element via the relative source indicated in the `from` attribute. It's following our simple conventions so it will know how to load our _nav-bar.js_ and _nav-bar.html_ files. Anything imported into a view in this way is local to the view. As a result, you don't have to worry about name conflicts. The second point is the actual use of the element which uses databinding against the `App`'s router. We are piping the router instance on our `App` class through to the corresponding property on the `NavBar` element for internal rendering. Sweet!
 
 > **Note:** You can also load app-wide elements and other behaviors for convenience so you don't have to import common resources into every view.
 
