@@ -245,7 +245,7 @@ With this in place, go ahead and start the dev server with `gulp watch`. Open th
 
 ## Adding a Second Page
 
-Well, we've technically got a navigation application now...but it's not very interesting because there's only one page. Let's add a second page. Can you guess how to do it? I be you can...
+Well, we've technically got a navigation application now...but it's not very interesting because there's only one page. Let's add a second page. Can you guess how to do it? I bet you can...
 
 Let's display some images from Flickr. To do that, let's first configure our router for the hypothetical page:
 
@@ -344,7 +344,7 @@ Let's recap. To add a page to your app:
 
 ## Bonus: Creating a Custom Element
 
-Look at you, you overachiever! I see you're interested in the learning some extra awesome on this fine day. In that case, let's create a custom HTML element. I think a good candidate for this is our navbar. That's a lot of HTML in our _app.html_ file. Why not extract a custom `<nav-bar>` element to make things a bit more declarative? Here's what we want to be able to write in the end:
+Look at you, you overachiever! I see you're interested in learning some extra awesome on this fine day. In that case, let's create a custom HTML element. I think a good candidate for this is our navbar. That's a lot of HTML in our _app.html_ file. Why not extract a custom `<nav-bar>` element to make things a bit more declarative? Here's what we want to be able to write in the end:
 
 ### app.html
 
