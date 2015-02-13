@@ -473,7 +473,7 @@ Nothing new there. The interesting part is what's inside _child-router.js_...
 ```javascript
 import {Router} from 'aurelia-router';
 
-export class Welcome{
+export class ChildRouter{
   static inject() { return [Router]; }
   constructor(router){
     this.heading = 'Child Router';
