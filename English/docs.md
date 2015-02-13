@@ -555,44 +555,39 @@ Now your node server should behave itself and let Aurelia deal with the routing.
 
 If you're using a .NET server side framework such as ASP.NET MVC then config is as follows:
 
-* create a Controller and call it ApplicationController or what ever you want to call it, it should look something like this
+* Create a Controller and call it ApplicationController or what ever you want to call it. It should look something like this:
 
 ```javascript
-public class ApplicationController : Controller
-	{
-		public ActionResult Index()
-		{
-		return View();
-		}
-	}
+public class ApplicationController : Controller {
+  public ActionResult Index() {
+    return View();
+  }
+}
 ```
 
-* create a "index.cshtml" view in Views folder
+* Create an "index.cshtml" view in your Views folder.
 
-* now set your routing configuration like this
+* Setup your routing configuration like this:
 
 ```javascript
-        context.MapRoute(
-            name: "AureliaRouting",
-            url: "{*.}",
-            defaults: new { controller = "Application", action = "Index" }
-        );
+context.MapRoute(
+  name: "AureliaRouting",
+  url: "{*.}",
+  defaults: new { controller = "Application", action = "Index" }
+);
 ```
-note that with the above you will be forced to use a Razor view file, if you want to use regular HTML file there are different ways to do it, but this Stack Over Flow article might help you
-[return html file](http://stackoverflow.com/questions/20871938/render-html-file-in-asp-net-mvc-view)
+Note that with the above you will be forced to use a Razor view file. If you want to use a regular HTML file, there are different ways to do it. [This SO article might help you](http://stackoverflow.com/questions/20871938/render-html-file-in-asp-net-mvc-view).
 
-and if you are using [Nancy FX](http://nancyfx.org), then the config is just as simple. Locate your `IndexModule.cs` or whatever you called it and make sure it looks something like this and all will be well:
+If you are using [Nancy FX](http://nancyfx.org), then the config is just as simple. Locate your `IndexModule.cs` or whatever you called it and make sure it looks something like this and all will be well:
 
 ``` javascript
-public class IndexModule : NancyModule
-{
-    public IndexModule()
-    {
-        this.Get["/robots.txt"] = p => this.Response.AsFile("robots.txt");
-        this.Get["/sitemap.xml"] = p => this.Response.AsFile("sitemap.xml");
-        this.Get["/"] = x => this.View["index"];
-        this.Get["/{path*}"] = x => this.View["index"];
-    }
+public class IndexModule : NancyModule {
+  public IndexModule()     {
+    this.Get["/robots.txt"] = p => this.Response.AsFile("robots.txt");
+    this.Get["/sitemap.xml"] = p => this.Response.AsFile("sitemap.xml");
+    this.Get["/"] = x => this.View["index"];
+    this.Get["/{path*}"] = x => this.View["index"];
+  }
 }
 ```
 
