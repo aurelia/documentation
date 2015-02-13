@@ -163,7 +163,14 @@ The `.bind`  command uses the default binding behavior for any property. The def
 
 ## Adding Navigation
 
-Since this is a navigation app, we should probably add some more screens and set up a client-side router don't you think? Let's begin by renaming our _app.js_ and _app.html_ to _welcome.js_ and _welcome.html_ respectively. This will be the first page of our app. Now, lets create a new _app.js_ and _app.html_ which will serve as our "layout" or "master page". The view will contain our navigation UI and the content placeholder for the current page and the view-model will have a router instance, configured with our routes. We'll start with the view-model so you can see how to set up the router:
+Since this is a navigation app, we should probably add some more screens and set up a client-side router don't you think? Let's begin by renaming our _app.js_ and _app.html_ to _welcome.js_ and _welcome.html_ respectively.
+
+```
+mv src/app.js src/welcome.js
+mv src/app.html src/welcome.html
+```
+
+This will be the first page of our app. Now, lets create a new _app.js_ and _app.html_ which will serve as our "layout" or "master page". The view will contain our navigation UI and the content placeholder for the current page and the view-model will have a router instance, configured with our routes. We'll start with the view-model so you can see how to set up the router:
 
 ### app.js
 
