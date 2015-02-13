@@ -553,18 +553,41 @@ gulp.task('serve', ['build'], function(done) {
 
 Ahora tu servidor node puede comportarse tal cual es y dejar que Aurelia se ocupe del enrutamiento.
 
-Si estás usando un marco de trabajo .NET del lado del servidor como [Nancy FX](http://nancyfx.org), entonces la configuración es muy sencilla. Localiza tu `IndexModule.cs` o como quiera que lo hayas llamado y asegúrate de que se parezca a lo que sigue para que todo vaya bien:
+Si estás usando un marco de trabajo .NET del lado del servidor como ASP.NET MVC, entonces configuralo de esta manera:
+
+* Crea un `Controller` y llámalo `ApplicationController` o como a tí te apetezca. Debe quedar algo así:
+
+```javascript
+public class ApplicationController : Controller {
+  public ActionResult Index() {
+    return View();
+  }
+}
+`
+``
+* Crea una vista "index.cshtml" en tu carpeta `View`.
+
+* Configura tu sistema de enrutado -routing- así:
+
+```javascript
+context.MapRoute(
+  name: "AureliaRouting",
+  url: "{*.}",
+  defaults: new { controller = "Application", action = "Index" }
+);
+```
+Ten en cuenta que lo anterior te obliga a usar un archivo de vista Razor. Si quieres usar un archivo HTML convencional, hay diferentes maneras de hacerlo. [Este artículo de SO te ayudará a hacerlo](http://stackoverflow.com/questions/20871938/render-html-file-in-asp-net-mvc-view).
+
+Si estás usando [Nancy FX](http://nancyfx.org), entonces la configuración es así de simple. Localiza tu `IndexModule.cs` o comoquiera que lo hayas llamado y asegúrate de que se asemeja a esto y todo irá bien:
 
 ``` javascript
-public class IndexModule : NancyModule
-{
-    public IndexModule()
-    {
-        this.Get["/robots.txt"] = p => this.Response.AsFile("robots.txt");
-        this.Get["/sitemap.xml"] = p => this.Response.AsFile("sitemap.xml");
-        this.Get["/"] = x => this.View["index"];
-        this.Get["/{path*}"] = x => this.View["index"];
-    }
+public class IndexModule : NancyModule {
+  public IndexModule()     {
+    this.Get["/robots.txt"] = p => this.Response.AsFile("robots.txt");
+    this.Get["/sitemap.xml"] = p => this.Response.AsFile("sitemap.xml");
+    this.Get["/"] = x => this.View["index"];
+    this.Get["/{path*}"] = x => this.View["index"];
+  }
 }
 ```
 
