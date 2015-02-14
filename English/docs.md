@@ -553,6 +553,16 @@ class AuthorizeStep {
 }
 ```
 
+These extensibility points are in and of themselves small pipelines, and multiple steps can be added to each of them. For instance, if in addition to the `AuthorizeStep` above (which would just check that a user is logged in), you could add a `IsAdminStep` to the `authorize` extensibility point. They would then run in succession.
+
+It's also possible to create your own named filters by simply passing a different name into `addPipelineStep`. This can be used like in the example below:
+
+```javascript
+config.addPipelineStep('myname', MyFirstStep); // Transparently creates the pipeline "myname" if it doesn't already exist.
+config.addPipelineStep('myname', MySecondStep); // Adds another step to it.
+config.addPipelineStep('modelbind', 'myname'); // Makes the entire `myname` pipeline run as part of the `modelbind` pipeline.
+```
+
 ### Configuring PushState
 
 If you'd prefer to get rid of the `#` (hashes) in your URLs, then you're going to have to enable `pushState` in your app. Good thing Aurelia supports that! You will also have to do some work on the server side to ensure it works properly. Let's start with the Aurelia side of the equation.
