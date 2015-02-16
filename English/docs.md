@@ -502,6 +502,67 @@ All you have to do is set the `config.moduleId` property and you are good to go.
 
 >**Note:** Though not necessarily related to conventional routing, you may sometimes have a need to asynchronously configure your router. For example, you may need to call a web service to get user permissions before setting up routes. To do this, implement a callback on your router's view-model named `configureRouter`. In this callback you can configure your router and optionally return a Promise if necessary.
 
+### Adding steps to the pipeline
+
+The router pipeline is composed out of separate steps that runs in succession. Each of these steps has the ability to modify what happens during routing, or stop the routing alltogether. The pipeline also contains a few extensibility points where you can add your own steps. These are `authorize` and `bindmodel`. `authorize` happens before `bindmodel`. These extensions are called route filters.
+
+The sample below shows how you can add authorization to your application:
+
+```javascript
+import {Router, Redirect} from 'aurelia-router';
+import {Container} from 'aurelia-dependency-injection';
+import bootstrap from 'bootstrap';
+
+export class App {
+  static inject() { return [Router]; }
+  constructor(router) {
+    this.router = router;
+    this.router.configure(config => {
+      config.title = 'Aurelia';
+      config.addPipelineStep('authorize', AuthorizeStep); // Add a route filter to the authorize extensibility point.
+      config.map([
+        { route: ['welcome'],     moduleId: 'welcome',      nav: true, title:'Welcome' },
+        { route: 'flickr',        moduleId: 'flickr',       nav: true, auth: true },
+        { route: 'child-router',  moduleId: 'child-router', nav: true, title:'Child Router' },
+        { route: '',              redirect: 'welcome' }
+      ]);
+    });
+  }
+}
+
+class AuthorizeStep {
+  static inject() { return []; }
+  constructor() {
+  }
+
+  run(routingContext, next) {
+    // Check if the route has an "auth" key
+    // The reason for using `nextInstructions` is because
+    // this includes child routes.
+    if (routingContext.nextInstructions.some(i => i.config.auth)) { 
+      var isLoggedIn = /* insert magic here */false;
+      if (!isLoggedIn) {
+        return next.cancel(new Redirect('login'));
+      }
+      
+      return next();
+    } else {
+      return next();
+    }
+  }
+}
+```
+
+These extensibility points are in and of themselves small pipelines, and multiple steps can be added to each of them. For instance, if in addition to the `AuthorizeStep` above (which would just check that a user is logged in), you could add a `IsAdminStep` to the `authorize` extensibility point. They would then run in succession.
+
+It's also possible to create your own named filters by simply passing a different name into `addPipelineStep`. This can be used like in the example below:
+
+```javascript
+config.addPipelineStep('myname', MyFirstStep); // Transparently creates the pipeline "myname" if it doesn't already exist.
+config.addPipelineStep('myname', MySecondStep); // Adds another step to it.
+config.addPipelineStep('modelbind', 'myname'); // Makes the entire `myname` pipeline run as part of the `modelbind` pipeline.
+```
+
 ### Configuring PushState
 
 If you'd prefer to get rid of the `#` (hashes) in your URLs, then you're going to have to enable `pushState` in your app. Good thing Aurelia supports that! You will also have to do some work on the server side to ensure it works properly. Let's start with the Aurelia side of the equation.
@@ -557,7 +618,7 @@ If you're using a .NET server side framework such as ASP.NET MVC then config is 
 
 * Create a Controller and call it ApplicationController or what ever you want to call it. It should look something like this:
 
-```javascript
+```csharp
 public class ApplicationController : Controller {
   public ActionResult Index() {
     return View();
@@ -569,7 +630,7 @@ public class ApplicationController : Controller {
 
 * Setup your routing configuration like this:
 
-```javascript
+```csharp
 context.MapRoute(
   name: "AureliaRouting",
   url: "{*.}",
@@ -580,7 +641,7 @@ Note that with the above you will be forced to use a Razor view file. If you wan
 
 If you are using [Nancy FX](http://nancyfx.org), then the config is just as simple. Locate your `IndexModule.cs` or whatever you called it and make sure it looks something like this and all will be well:
 
-``` javascript
+``` csharp
 public class IndexModule : NancyModule {
   public IndexModule()     {
     this.Get["/robots.txt"] = p => this.Response.AsFile("robots.txt");
