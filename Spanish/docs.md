@@ -502,6 +502,67 @@ Todo lo que tienes que hacer es establecer la propiedad `config.moduleId` y esta
 
 >**Nota:** Aunque no necesariamente relacionado con el enrutamiento convencional, puedes necesitar a veces configurar tu enrutador asíncronamente. Por ejemplo, puedes necesitar llamar a un servicio web para obtener permisos de usuario antes de establecer las rutas. Para hacer esto, implementa una retrollamada en tu modelo de enrutador llamada `configureRouter`. En esta retrollamada puedes configurar tu enrutador y devolver opcionalmente una promesa -`Promise`- si fuera necesario.
 
+### Añadiendo pasos al procesado de rutas -pipeline-
+
+El procesado -pipeline- de rutas se compone de pasos separados que se ejecutan sucesivamente. Cada uno de estos pasos tiene la capacidad tanto de modificar lo que ocurre durante el enrutamiento, como de detenerlo. El procesado cuenta con algunos puntos para su ampliación por los que se nos permite añadir nuestros propios pasos. Están `` authorize` -autoriza- y `bindmodel` -enlazamodelo-. `authorize` ocurre antes que `bindmodel`. Estas extensiones se denominan filtros de rutas -route filters-.
+
+El ejemplo a continuación muestra como añadir una autorización a tu aplicación:
+
+```javascript
+import {Router, Redirect} from 'aurelia-router';
+import {Container} from 'aurelia-dependency-injection';
+import bootstrap from 'bootstrap';
+
+export class App {
+  static inject() { return [Router]; }
+  constructor(router) {
+    this.router = router;
+    this.router.configure(config => {
+      config.title = 'Aurelia';
+      config.addPipelineStep('authorize', AuthorizeStep); // Add a route filter to the authorize extensibility point.
+      config.map([
+        { route: ['welcome'],     moduleId: 'welcome',      nav: true, title:'Welcome' },
+        { route: 'flickr',        moduleId: 'flickr',       nav: true, auth: true },
+        { route: 'child-router',  moduleId: 'child-router', nav: true, title:'Child Router' },
+        { route: '',              redirect: 'welcome' }
+      ]);
+    });
+  }
+}
+
+class AuthorizeStep {
+  static inject() { return []; }
+  constructor() {
+  }
+
+  run(routingContext, next) {
+    // Check if the route has an "auth" key
+    // The reason for using `nextInstructions` is because
+    // this includes child routes.
+    if (routingContext.nextInstructions.some(i => i.config.auth)) { 
+      var isLoggedIn = /* insert magic here */false;
+      if (!isLoggedIn) {
+        return next.cancel(new Redirect('login'));
+      }
+      
+      return next();
+    } else {
+      return next();
+    }
+  }
+}
+```
+
+Estos puntos de ampliación -extensibility points- son en si mismos pequeños procesados -pipelines- que nos permiten añadir múltiples pasos a cada uno de ellos. Por ejemplo, si ,además de `AuthorizeStep` -PasoAutorizar- (que solo comprobaría que el usuario ha accedido), podrías añadir un `IsAdminStep` -PasoEsAdmin- al punto de ampliación `authorize`. Estos se ejecutarían sucesivamente.
+
+También es posible crear tus propios filtros con nombre simplemente pasando un nombre diferente a `addPipelineStep` -añadirPasoAlProcesado-. Esto lo puedes usar de la siguiente manera:
+
+```javascript
+config.addPipelineStep('myname', MyFirstStep); // Transparently creates the pipeline "myname" if it doesn't already exist.
+config.addPipelineStep('myname', MySecondStep); // Adds another step to it.
+config.addPipelineStep('modelbind', 'myname'); // Makes the entire `myname` pipeline run as part of the `modelbind` pipeline.
+```
+
 ### Configurando PushState
 
 Si prefieres desprenderte de los `#` (almohadilla) en tus URLs, entonces vas a tener que habilitar `pushState` en tu aplicación. ¡Por suerte Aurelia admite esto! Tendrás que hacer algún ajuste también del lado del servidor para que esto funcione correctamente. Empecemos por el lado de Aurelia en la ecuación.
@@ -557,7 +618,7 @@ Si estás usando un marco de trabajo .NET del lado del servidor como ASP.NET MVC
 
 * Crea un `Controller` y llámalo `ApplicationController` o como a tí te apetezca. Debe quedar algo así:
 
-```javascript
+```csharp
 public class ApplicationController : Controller {
   public ActionResult Index() {
     return View();
@@ -569,7 +630,7 @@ public class ApplicationController : Controller {
 
 * Configura tu sistema de enrutado -routing- así:
 
-```javascript
+```csharp
 context.MapRoute(
   name: "AureliaRouting",
   url: "{*.}",
@@ -580,7 +641,7 @@ Ten en cuenta que lo anterior te obliga a usar un archivo de vista Razor. Si qui
 
 Si estás usando [Nancy FX](http://nancyfx.org), entonces la configuración es así de simple. Localiza tu `IndexModule.cs` o comoquiera que lo hayas llamado y asegúrate de que se asemeja a esto y todo irá bien:
 
-``` javascript
+```csharp
 public class IndexModule : NancyModule {
   public IndexModule()     {
     this.Get["/robots.txt"] = p => this.Response.AsFile("robots.txt");
