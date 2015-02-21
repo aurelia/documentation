@@ -4,13 +4,28 @@ Hemos planeado para Aurelia un conjunto muy rico de documentos. Desafortunadamen
 
 >**Nota:** ¿Estás buscando esta guía en otro idioma? Echa un vistazo a nuestro repositorio [documentation](https://github.com/aurelia/documentation).
 
+ 1. [Soporte a navegadores](#suporte_a_navegadores)
+ 1. [Arranque y Configuración](#arranque_y_configuración)
+ 1. [Vistas y modelos](#vistas_y_modelos)
+ 1. [Uso de plantilla -templating-](#uso_de_plantillas_templating)
+ 1. [Gestión de rutas -routing-](#gestión_de_rutas_routing)
+ 1. [Extendiendo HTML](#extendiendo_html)
+ 1. [La gestión de eventos -eventing-](#la_gestión_de_eventos_eventing)
+ 1. [Cliente HTTP](#cliente_http)
+ 1. [Ejecución a medida -customization-](#ejecución_a_medida_customization)
+
+
+<span id="soporte_a_navegadores">
 ## Soporte a navegadores
+</span>
 
 Aurelia está diseñado para navegadores con actualización automática y permanente -Evergreen Browsers-. Esto incluye Chrome, Firefox, IE11 y Safari 8. Tal y como viene no funcionará en ninguna versión de IE anterior a la 11.
 
 Si necesitas que Aurelia funcione con una versión de IE anterior a la 11 existe un repositorio [Aurelia Skeleton Nav IE Polyfill Test](https://github.com/devmondo/skeleton-navigation-IE-Polyfill-Test) que sirve como prueba de concepto usando ES6Shim. Este experimento fue realizado por la comunidad y parece permitir que (nuestro) marco de trabajo funcione sin problemas aparentes con IE10 e IE9. Esperamos investigar esto en el futuro con más detenimiento y ve si podemos elaborar una solución oficial. Te invitamos a experimentar con esto y a ayudarnos con la posibilidad de dar soporte a navegadores más antiguos.
 
+<span id="arranque_y_configuración">
 ## Arranque y configuración
+</span>
 
 Muchas plataformas tienen un punto de entrada o "main" para la ejecución del código. Aurelia no es diferente. Si has leído la página [Get Started](/get-started.html), entonces ya habrás visto el atributo `aurelia-app` . Simplemente, colócalo en algún elemento HTML y el configurador inicial -bootstrapper- de Aurelia cargará _app.js_ y _app.html_, los vinculará y los inyectará en el elemento del DOM en el que incluiste dicho atributo. Si no quieres usar esta convención, provee simplemente de un valor al atributo indicando que modelo (de vista) deseas cargar. Por ejemplo, `<body aurelia-app="todo">` hará que se carguen los archivos _todo.js_ y _todo.html_.
 
@@ -84,7 +99,9 @@ export class Aurelia {
 }
 ```
 
+<span id="vistas_y_modelos">
 ## Vistas y modelos
+</span>
 
 En Aurelia, los elementos de interfaz de usuario están compuestos por parejas de _vista_ y _modelo_ . La _vista_ se escribe con HTML y se despliega en el DOM. El _modelo_ se escribe con JavaScript y provee datos y comportamiento a la _vista_. El motor de plantillas y/o la inyección de dependencias son responsables de la creación de estas parejas y la aplicación de un ciclo de vida previsible para el proceso. Una vez generado, el poderoso _sistema de enlace -databinding-_ enlaza las dos partes permitiendo que los cambios en los datos se reflejen en la _vista_ y viceversa.
 
@@ -153,7 +170,9 @@ Ahora, cada vez que se le solicita al contenedor de inyección de dependencias u
 
 > **Nota:** Este último ejemplo introduce _metadata_ -metadatos- para proporcionar información sobre el contexto al marco de trabajo. Verás otra vez _metadata_ cuando hablemos acerca de los _comportamientos_ -behaviors-.
 
+<span id="uso_de_plantillas_templating">
 ## Uso de plantillas -templating-
+</span>
 
 El motor de plantillas de Aurelia es responsable de cargar las vistas y sus recursos importados, compilando tu HTML para un rendimiento óptimo y mostrando la interfaz de usuario (UI) en pantalla. Para crear una vista, todo lo que tienes que hacer es escribir un archivo HTML que incluya un `HTMLTemplate`. Aquí tienes una vista sencilla:
 
@@ -404,7 +423,9 @@ Cuando el sistema de enlazado encuentra una orden de enlace que no reconoce, ent
 
 > **Nota:** `global-behavior` tiene una lista de gestores que tienes que configurar. Por defecto, solo está configurado para jQuery. Puedes desactivarlo todo, si quieres, pero resulta más fácil sacar partido de los complementos básicos jQuery sin necesidad de hacer algo por tu parte.
 
+<span id="gestión_de_rutas_routing">
 ## Gestión de rutas -routing-
+</span>
 
 Te pueden pedir que crees muchos estilos diferentes de aplicaciones. Desde aplicaciones de navegación, a escritorios, a interfaces MDI -multiple documents interface-, Aurelia puede manejarlas todas. En muchos de estos casos una pieza clave de tu arquitectura es un sistema de gestión de rutas -router- del lado del cliente, capaz de traducir cambios en URLs en estados de la aplicación.
 
@@ -654,7 +675,9 @@ public class IndexModule : NancyModule {
 
 Técnicas similares las puedes emplear en entornos con otros servidores - solo necesitas asegurarte de que cualquiera que sea el servidor que estás usando, este devuelve siempre el mismo `index.html` independientemente de la petición que reciba. Todos los marcos de trabajo del lado del servidor deberían ser capaces de esto. Aurelia encontrará la página que ha de devolver en base a los datos de enrutamiento.
 
+<span id="extendiendo_html">
 ## Extendiendo HTML
+</span>
 
 Aurelia tiene un compilador de plantillas HTML poderoso y extensible. El compilador en si mismo es un algoritmo para interactuar con varios _tipos de comportamiento_ que contiene la lógica para manipular el HTML. A priori, Aurelia proporciona implementaciones para tres tipos de comportamientos del núcleo, los cuales creemos que cubre la mayoría de escenarios que encontrarás en el día a día. Los tres tipos son _Attached Behaviors -comportamientos añadidos-_, _Custom Elements -elementos a medida-_ y _Template Controllers -controles de plantilla-_.
 
@@ -921,7 +944,9 @@ Mira con atención la función de retrollamada `valueChanged`. Aquí puedes ver 
 * De forma parecida, siempre llama a `unbind` _después de_ eliminar la vista View del DOM.
 * Después de que la vista View sea creada inicialmente, el comportamiento `if` no la desecha cuando el valor se vuelve falso. Mantiene el objeto del tipo View en memoria (cache). Aurelia puede hacer un nuevo uso de estos objetos View y re-dirigirlos  a diferentes contextos de enlazado. Nuevamente, esto es importante para el rendimiento, puesto que elimina la necesidad de recrear estos objetos del tipo View.
 
+<span id="la_gestión_de_eventos_eventing">
 ## La gestión de eventos -eventing-
+</span>
 
 El sistema de gestión de eventos es una poderosa herramienta cuando necesitas que componentes inconexos de tu aplicación se comuniquen entre si. Aurelia soporta tanto eventos estándar del DOM como eventos más específicos de aplicación a través de `EventAggregator` (agregador de eventos).
 
@@ -1018,7 +1043,9 @@ El (receptor) suscriptor -subscriber- será llamado cada vez que se publica un o
 
 >**Nota:** Todas las formas del método `subscribe` devuelven una _función desechar_ -dispose function-. Puedes llamar a esta función para desechar la suscripción y dejar de recibir mensajes. Un lugar adecuado para desechar (una suscripción) es en una (función de) de retrollamada `deactivate` -desactivar- del modelo, si este es manejado por un enrutador, o en su retrollamada `detached`, si se encuentra en cualquier otro modelo.
 
+<span id="cliente_http">
 ## Cliente HTTP
+</span>
 
 Como ventaja, Aurelia incluye un cliente HTTP `HttpClient` básico para proporcionarnos una interfaz confortable para el objeto XMLHttpRequest del navegador. `HttpClient` no está incluido en el módulo que instala Aurelia con el configurador inicial -bootstrapper-, ya que es completamente opcional y muchas aplicaciones pueden querer usar una estrategia diferente para la recuperación de datos. Así, si quieres usarlo, primero necesitas instalarlo con la orden siguiente:
 
@@ -1104,7 +1131,9 @@ El `HttpResponseMessage` -mensaje de respuesta HTTP- tiene las siguientes propie
 
 > **Nota:** Por defecto, el `HttpClient` -cliente HTTP- asume que estás esperando una respuesta de tipo JSON -responseType-.
 
+<span id="">
 ## Ejecución a medida -customization-
+</span>
 
 ### Convenciones relativas a las vistas y a los modelos (de vista)
 

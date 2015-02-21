@@ -4,13 +4,28 @@ We've got a very rich set of docs planned for Aurelia. Unfortunately, we haven't
 
 > **Note:** Looking for this guide in another language? Have a look in our [documentation repo](https://github.com/aurelia/documentation).
 
+ 1. [Browser Support](#browser_support)
+ 1. [Startup & Configuration](#startup_and_configuration)
+ 1. [Views and View Models](#views_and_view_models)
+ 1. [Templating](#templating)
+ 1. [Routing](#routing)
+ 1. [Extending HTML](#extending_html)
+ 1. [Eventing](#eventing)
+ 1. [HTTP Client](#http_client)
+ 1. [Customization](#customization)
+
+
+<span id="browser_support">
 ## Browser Support
+</span>
 
 Aurelia is designed for Evergreen Browsers. This includes Chrome, Firefox, IE11 and Safari 8. Out-of-the-box it wont work with any version of IE below 11.
 
 If you need to make Aurelia work with a version of IE below 11 then there is a repository [Aurelia Skeleton Nav IE Polyfill Test](https://github.com/devmondo/skeleton-navigation-IE-Polyfill-Test) that serves as a proof of concept by utilizing ES6Shim. This experiment was submitted by the community and appears to have the framework working with IE10 and IE9 without any noticeable problems. In the future we hope to investigate this more thoroughly and see if we can work out an official solution. We invite you to experiment with it and assist us in the possibility of supporting older browsers.
 
+<span id="startup_and_configuration">
 ## Startup & Configuration
+</span>
 
 Most platforms have a "main" or entry point for code execution. Aurelia is no different. If you've read the [Get Started](/get-started.html) page, then you've seen the `aurelia-app` attribute. Simply place this on an HTML element and Aurelia's bootstrapper will load an _app.js_ and _app.html_, databind them together and inject them into the DOM element on which you placed that attribute. If you don't want to use that convention, simply provide a value to the attribute indicating which view-model to load. For example `<body aurelia-app="todo">` will result in a _todo.js_ and _todo.html_ being loaded instead.
 
@@ -84,7 +99,9 @@ export class Aurelia {
 }
 ```
 
+<span id="views_and_view_models">
 ## Views and View Models
+</span>
 
 In Aurelia, user interface elements are composed of _view_ and _view-model_ pairs. The _view_ is written with HTML and is rendered into the DOM. The _view-model_ is written with JavaScript and provides data and behavior to the _view_. The templating engine and/or DI are responsible for creating these pairs and enforcing a predictable lifecycle for the process. Once instantiated, Aurelia's powerful _databinding_ links the two pieces together allowing changes in your data to be reflected in the _view_ and vice versa.
 
@@ -153,7 +170,9 @@ Now, each time the DI container is asked for an instance of `CustomerDetail` the
 
 > **Note:** This last example introduces _metadata_ to provide contextual information to the framework. You will see metadata again when we talk about behaviors.
 
+<span id="templating">
 ## Templating
+</span>
 
 Aurelia's templating engine is responsible for loading your views and their imported resources, compiling your HTML for optimal performance and rendering your UI to the screen. To create a view, all you need to do is author an HTML file with an `HTMLTemplate` inside. Here's a simple view:
 
@@ -404,7 +423,9 @@ When the binding system sees a binding command that it doesn't recognize, it dyn
 
 > **Note:** The `global-behavior` has a handlers list you must configure. It is only configured with jQuery by default. You can turn all of this off, if you desire, but it makes it easy to take advantage of basic jQuery plugins without any work on your part.
 
+<span id="routing">
 ## Routing
+</span>
 
 There are many different application styles you could be called upon to create. From navigation apps, to dashboards, to MDI interfaces, Aurelia can handle them all. In many of these cases a key component of your architecture is a client-side router, capable of translating url changes into application state.
 
@@ -654,8 +675,9 @@ public class IndexModule : NancyModule {
 
 Similar techniques can be used in other server environments - you just need to make sure that whatever server you're using, it needs to send back the same `index.html` regardless of the request being made. All server side frameworks should be able to achieve this. Aurelia will figure out which page to load based on its own route data.
 
-
+<span id="extending_html"></span>
 ## Extending HTML
+</span>
 
 Aurelia has a powerful and extensible HTML template compiler. The compiler itself is just an algorithm for interacting with various _behavior types_ which contain the logic for manipulating HTML. Out of the box, Aurelia provides three core behavior type implementations, which we believe cover the bulk of scenarios you will encounter from day to day. The tree types are _Attached Behaviors_, _Custom Elements_ and _Template Controllers_.
 
@@ -922,7 +944,9 @@ Take a close look at the `valueChanged` callback. Here you can see where the `if
 * Similarly, always call `unbind` _after_ removing the View from the DOM.
 * After the View is initially created, the `if` behavior does not throw it away even when the value becomes false. It caches the instance. Aurelia can re-use Views and even re-target them at different binding contexts. Again, this is important for performance, since it eliminates needless re-creation of Views.
 
+<span id="eventing">
 ## Eventing
+</span>
 
 Eventing is a powerful tool when you need decoupled components of your application to talk to one another. Aurelia supports both standard DOM events as well as more application-specific events via the `EventAggregator`.
 
@@ -1019,7 +1043,9 @@ The subscriber will be called any time an instance of `SomeMessage` is published
 
 >**Note:** All forms of the `subscribe` method return a _dispose function_. You can call this function to dispose of the subscription and discontinue receiving messages. A good place to dispose is either in a view-model's `deactivate` callback, if it is managed by a router, or in its `detached` callback, if it is any other view-model.
 
+<span id="http_client">
 ## HTTP Client
+</span>
 
 As a convenience, Aurelia includes a basic `HttpClient` to provide a comfortable interface to the browser's XMLHttpRequest object. `HttpClient` is not included in the modules that Aurelia's bootstrapper installs, since its completely optional and many apps may choose to use a different strategy for data retrieval. So, if you want to use it, first you must install it with the following command:
 
@@ -1105,7 +1131,9 @@ The `HttpResponseMessage` has the followingn properties:
 
 > **Note:** By default, the `HttpClient` assumes you are expecting a JSON responseType.
 
+<span id="customization">
 ## Customization
+</span>
 
 ### View and View-Model Conventions
 

@@ -4,7 +4,19 @@
 
 > **Note:** Looking for this guide in another language? Have a look in our [documentation repo](https://github.com/aurelia/documentation).
 
+ 1. [Configuring Your Environment](#configuring_your_environment)
+ 1. [Setting up the Project Structure and Build](#setting_up_the_project_structure_and_build)
+ 1. [Setting Up The HTML Page](#setting_up_the_html_page)
+ 1. [Creating Your First Screen](#creating_your_first_screen)
+ 1. [Adding Navigation](#adding_navigation)
+ 1. [Adding a Second Page](#adding_a_second_page)
+ 1. [Bonus: Creating a Custom Element](#bonus_creating_a_custom_element)
+ 1. [Bonus: Leveraging Child Routers](#bonus_leveraging_child_routers)
+ 1. [Conclusion](#conclusion)
+
+<span id="configuring_your_environment">
 ## Configuring Your Environment
+</span>
 
 Let's start by getting you set up with a great set of tools that you can use to build modern JavaScript applications. All our tooling is built on [Node.js](http://nodejs.org/). If you have that installed already, great! If not, you should go to [the official web site](http://nodejs.org/), download and install it. Everything else we need will be installed via Node's package manager ([npm](https://docs.npmjs.com/getting-started/what-is-npm)).
 
@@ -22,7 +34,9 @@ Next, we need to install [jspm](http://jspm.io/). This will serve as our client-
 
 > **Note:** jspm, like Bower and Yeoman, leverages [git](http://git-scm.com/) so you need to install that if you don't have it. Also, jspm queries GitHub to install packages, but GitHub has a rate limit on anonymous API requests. It is advised that you configure jspm with your GitHub credentials in order to avoid problems. You can do this by executing `jspm endpoint config github` and following the prompts. Don't want to use jspm? No problem. All Aurelia packages are available via [Bower](http://bower.io/) as well.
 
+<span id="setting_up_the_project_structure_and_build">
 ## Setting up the Project Structure and Build
+</span>
 
 With the tooling installed, we can now turn our attention to setting up a basic structure for your app. Begin by [downloading the navigation skeleton](https://github.com/aurelia/skeleton-navigation/releases). Unzip it and rename the folder to _navigation-app_. Inside this folder you will find everything you need including a basic build, package configuration, styles and more. Because we want to teach you how to build your own app, please delete the contents of the _src_ folder as well as the _index.html_ file. We'll learn about how to create these in a minute.
 
@@ -45,7 +59,9 @@ Everything we've done so far is standard Node.js build and package management pr
 
 > **Note:** Bootstrap and Font-Awesome are **not** dependencies of Aurelia. We only leverage them as part of this tutorial in order to quickly achieve a decent look out-of-the-box.
 
+<span id="setting_up_the_html_page">
 ## Setting Up The HTML Page
+</span>
 
 If you've followed along this far, you now have all the libraries, build configuration and tools you need to create amazing JavaScript apps with Aurelia. The next thing we need to do is create our _index.html_ file in the root of our project folder. Create that now and use the markup below.
 
@@ -83,7 +99,9 @@ When the bootstrapper loads it inspects the HTML document for _aurelia_ attribut
 
 Wait a minute....we don't have an _app_ view-model or view. Ummm...WHAT NOW!?
 
+<span id="creating_your_first_screen">
 ## Creating Your First Screen
+</span>
 
 In Aurelia, user interface elements are composed of _view_ and _view-model_ pairs. The _view_ is written with HTML and is rendered into the DOM. The _view-model_ is written with JavaScript and provides data and behavior to the _view_. Aurelia's powerful _databinding_ links the two pieces together allowing changes in your data to be reflected in the _view_ and vice versa.
 
@@ -161,7 +179,9 @@ You can now browse to [http://localhost:9000/](http://localhost:9000/) to see th
 >
 The `.bind`  command uses the default binding behavior for any property. The default is one-way binding for everything except form controls, which default to two-way. You can always override this by using the explict binding commands `.one-way`, `.two-way` and `.one-time`. Similarly, you can use `.delegate` for event delegation but you can also use `.trigger` to attach directly to the target element.
 
+<span id="adding_navigation">
 ## Adding Navigation
+</span>
 
 Since this is a navigation app, we should probably add some more screens and set up a client-side router don't you think? Let's begin by renaming our _app.js_ and _app.html_ to _welcome.js_ and _welcome.html_ respectively. This will be the first page of our app. Now, lets create a new _app.js_ and _app.html_ which will serve as our "layout" or "master page". The view will contain our navigation UI and the content placeholder for the current page and the view-model will have a router instance, configured with our routes. We'll start with the view-model so you can see how to set up the router:
 
@@ -243,7 +263,9 @@ With this in place, go ahead and start the dev server with `gulp watch`. Open th
 
 > **Note:** If you left your gulp watch task running during this time, you may have noticed your browser auto-refreshing whenever you made changes. That's thanks to `browser-sync`, which we've conveniently configured for you as part of the default gulp configuration.
 
+<span id="adding_a_second_page">
 ## Adding a Second Page
+</span>
 
 Well, we've technically got a navigation application now...but it's not very interesting because there's only one page. Let's add a second page. Can you guess how to do it? I bet you can...
 
@@ -342,7 +364,9 @@ Let's recap. To add a page to your app:
 3. Add a view with the same name (but with an .html extension).
 4. Celebrate.
 
+<span id="creating_a_custom_element">
 ## Bonus: Creating a Custom Element
+</span>
 
 Look at you, you overachiever! I see you're interested in learning some extra awesome on this fine day. In that case, let's create a custom HTML element. I think a good candidate for this is our navbar. That's a lot of HTML in our _app.html_ file. Why not extract a custom `<nav-bar>` element to make things a bit more declarative? Here's what we want to be able to write in the end:
 
@@ -439,7 +463,9 @@ In addition to creating custom elements, you can also create standalone attribut
 
 > **Note:** AtScript users can leverage language annotations and Aurelia will pick those up. Users of languages that support static class properties, such as TypeScript, can use a `metadata` property instead of a method, for convenience. This also applies to the `inject` designation used by the dependency injection container.
 
+<span id="leveraging_child_routers">
 ## Bonus: Leveraging Child Routers
+</span>
 
 Can't get enough can you? Well, I've got a treat for you. Let's add a third page to our app...with its own router! We call this a child router. Child routers have their own route configuration and navigate relative to the parent router. Prepare thyself for insantity....
 
@@ -517,7 +543,9 @@ For completness, here's the view:
 
 Run the app and see the magic....and pray the universe doesn't explode.
 
+<span id="conclusion">
 ## Conclusion
+</span>
 
 With its strong focus on developer experience, Aurelia can enable you to not only create amazing applications, but also enjoy the process. We've designed it with simple conventions in mind so you don't need to waste time with tons of configuration or write boilerplate code just to satisfy a stubborn or restrictive framework. You'll never hit a roadblock with Aurelia either. It's been carefully designed to be pluggable and customizable.
 
