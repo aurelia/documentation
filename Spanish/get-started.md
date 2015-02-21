@@ -4,7 +4,19 @@
 
 >**Nota:** ¿Buscas esta guía en otro idioma? Échale un vistazo a nuestro repositorio [documentation](https://github.com/aurelia/documentation).
 
+ 1. [Configurar tu entorno](#configurar_tu_entorno)
+ 1. [Configurar la estructura y el montaje del proyecto](#configurar_la_estructura_y_el_montaje_del_proyecto)
+ 1. [Configurar la página HTML](#configurar_la_página_html)
+ 1. [Creación de nuestra primera pantalla](#creación_de_nuestra_primera_pantalla)
+ 1. [Añadiendo la navegación](#añadiendo_la_navegación)
+ 1. [Añadiendo una segunda página](#añadiendo_una_segunda_página)
+ 1. [Bonificación: creación de un elemento personalizado](#bonificación_creación_de_un_elemento_personalizado)
+ 1. [Bonificación: aprovechamiento de enrutadores hijos](#bonificación_aprovechamiento_de_enrutadores_hijos)
+ 1. [Conclusión](#conclusión)
+
+<span id="configurar_tu_entorno">
 ## Configurar tu entorno
+</span>
 
 Empecemos configurando un gran conjunto de herramientas que podrás usar para crear aplicaciones Javascript modernas. Todo nuestro equipamiento está basado en [Node.js](http://nodejs.org/). Si ya lo tienes instalado, estupendo! Si no es así, vete a la [página web oficial](http://nodejs.org/), descárgatelo e instálalo. Todo lo demás que vamos a necesitar lo instalaremos usando el gestor de paquetes de Node ([npm](https://docs.npmjs.com/getting-started/what-is-npm)).
 
@@ -22,7 +34,9 @@ A continuación, necesitamos instalar [jspm](http://jspm.io/). Este nos servirá
 
 > **Nota:** Igual que Bower y Yeoman, jspm aprovecha [git](http://git-scm.com/), así que necesitas instalarlo si no lo tuvieras. Además, jspm busca en Github para instalar paquetes, pero Github admite un número limitado de peticiones anónimas de la API. Te recomendamos que configures jspm con tus credenciales de Github para evitarte problemas. Puedes hacerlo ejecutando `jspm endpoint config github` y respondiendo a la linea de comandos. ¿Que no quieres usar jspm? No hay problema. Todos los paquetes de Aurelia están también disponibles vía [Bower](http://bower.io/).
 
+<span id="configurar_la_estructura_y_el_montaje_del_proyecto">
 ## Configurar la estructura y el montaje del proyecto
+</span>
 
 Con las herramientas ya instaladas, podemos ocuparnos ahora de la creación de una estructura básica para tu aplicación. Empieza [descargándote el esqueleto de navegación](https://github.com/aurelia/skeleton-navigation/releases). Descomprímelo y renombra la carpeta a _navigation-app_. Dentro de esta carpeta encontrarás todo lo que necesitas, incluyendo un montaje básico, una configuración de paquetes, estilos y demás. Como queremos enseñarte a construir tu propia aplicación, borra por favor el contenido de la carpeta _src_ y el archivo `index.html`. En un minuto aprenderemos a crearlos.
 
@@ -45,7 +59,9 @@ Hasta aquí todo lo que hemos hecho son procedimientos Node.js normales de monta
 
 > **Nota:** Aurelia **no depende** ni de Bootstrap ni de Font-Awesome. Simplemente los hemos aprovechado como parte de este tutorial para disponer con rapidez de un aspecto aceptable listo para ser usado.
 
+<span id="configurar_la_página_html">
 ## Configurar la página HTML
+</span>
 
 Si nos has seguido hasta aquí, ahora dispones de todas las librerías, configuración de montaje y herramientas necesarias para crear aplicaciones sorprendentes con Aurelia. Lo próximo que has de hacer es crear el archivo _index.html_ en la raíz de nuestra carpeta de proyecto. Créalo ahora y utiliza el código que viene a continuación.
 
@@ -83,7 +99,9 @@ Cuando se carga el iniciador (boostrapper) este inspecciona el documento HTML en
 
 Un momento... si no tenemos ningún modelo (de la vista) ni vista de nuestra _app_ (aplicación). Ummm... ¿¡Y AHORA QUE!? 
 
+<span id="creación_de_nuestra_primera_pantalla">
 ## Creación de nuestra primera pantalla
+</span>
 
 En Aurelia, los elementos de la interfaz de usuario están compuestos por parejas de vista (_view_) y modelo (de vista) (_view-model_). La vista se escribe en HTML y se muestra en el DOM. El modelo (de vista) está escrito en Javascript y provee de datos y comportamiento (lógica) a la vista. El potente enlazado de datos (_databinding_) vincula las dos partes permitiendo que los cambios en tus datos se reflejen en la vista y viceversa. 
 
@@ -161,7 +179,9 @@ Ahora puedes ir en el navegador a [http://localhost:9000/](http://localhost:9000
 >
 El comando `.bind` usa el comportamiento por defecto de enlace para cualquier propiedad. El tipo de enlace por defecto es uni-direccional para todo excepto para controles de formulario, para los que es bi-direccional. Esto puede modificarse en cualquier momento mediante los comandos de enlace `.one-way`, `.two-way` y `.one-time`. Análogamente, podemos usar `.delegate` para la delegación de eventos, pero también podemos usar `.trigger` para asignarlo directamente al elemento objetivo. 
 
+<span id="navegación">
 ## Añadiendo la navegación
+</span>
 
 Ya que se trata de una aplicación de navegación, probablemente deberíamos añadir algunas pantallas más y montar un enrutador del lado del cliente, no te parece? Empecemos por renombrar _app.js_ y _app.html_ a _welcome.js_ y _welcome.html_ respectivamente. Esta será la primera página de nuestra aplicación. Ahora creamos unos nuevos archivos _app.js_ y _app.html_ que nos servirán de "diseño" o "página maestra". La vista contendrá nuestra UI (interfaz de usuario) para la navegación y el emplazamiento para contenido de la página actual y el modelo contendrá una instancia del enrutador, configurado con nuestras rutas. Empezaremos por el modelo para que veas como montamos el enrutador: 
 
@@ -243,7 +263,9 @@ Con esto en su sitio, sigue adelante e inicia el servidor de desarrollo con `gul
 
 > **Nota:** Si mientras tanto has dejado ejecutándose la tarea _gulp_, habrás comprobado que el navegador se actualiza automáticamente cada vez que haces un cambio. Esto ocurre gracias a `browser-sync`, él cual hemos configurado convenientemente para ti como parte de la configuración por defecto de _gulp_. 
 
+<span id="añadiendo_una_segunda_página">
 ## Añadiendo una segunda página
+</span>
 
 Bueno, técnicamente hemos montado una aplicación de navegación... pero no es demasiado interesante porque solo hay una página. Vamos a añadir una segunda página. ¿Puedes adivinar como hacerlo? Apuesto a que si... 
 
@@ -342,7 +364,9 @@ Recapitulemos. Para añadir una página a nuestra aplicación:
 3. Añade una vista con el mismo nombre (pero con la extensión .html).
 4. Celébralo.
 
+<span id="bonificación_creación_de_un_elemento_personalizado">
 ## Bonificación: creación de un elemento personalizado
+</span>
 
 ¡Mírate, empollón! Te veo interesado en aprender alguna maravilla extra en este día estupendo. En ese caso, vamos a crear un elemento HTML personalizado. Opino que un buen candidato para ello sería nuestra barra de navegación. Hay un montón de HTML en nuestro archivo _app.html_. ¿Por qué no extraer un elemento `<nav-bar>` a medida para hacer las cosas algo más declarativas? Esto es lo que queremos tener al final: 
 
@@ -439,7 +463,9 @@ Además de crear elementos a medida, también puedes crear atributos aislados qu
 
 > **Nota:** Los usuarios de AtScript pueden aprovechar las anotaciones del lenguaje y Aurelia las pillará. Los usuarios de lenguajes que soporten propiedades estáticas de clase, como TypeScript, puede usar una propiedad `metadata` en lugar de un método, por comodidad. Esto se aplica también a la designación `inject` usada por el contenedor de la inyección de dependencias. 
 
+<span id="bonificación_aprovechamiento_de_enrutadores_hijos">
 ## Bonificación: aprovechamiento de enrutadores hijos
+</span>
 
 ¿No tienes suficiente? Bueno, tengo un trato que ofrecerte. Añadamos una tercera página a nuestra aplicación... con su propio enrutador! Esto es lo que llamamos un enrutador hijo. Los enrutadores hijos tienen su propia configuración de rutas y navegan relativamente a su enrutador padre. Prepárate para la locura... 
 
@@ -517,7 +543,9 @@ Para terminar, aquí está la vista:
 
 Lanza la aplicación y contempla la magia... y ruega para que el universo no explote.
 
+<span id="conclusión">
 ## Conclusión
+</span>
 Con su gran atención a la experiencia de desarrollador, Aurelia te puede capacitar no solo para crear aplicaciones sorprendentes, sino también para disfrutar en ese proceso. Lo hemos diseñado con reglas simples en mente de manera que no necesitas perder tiempo con toneladas de configuración o en escribir código modelo solo para satisfacer un marco de trabajo complejo o restrictivo. Nunca chocarás con Aurelia contra barrera alguna. Ha sido cuidadosamente diseñado para que admita complementos y personalizaciones.  
 
 Gracias por tomarte el tiempo de leer nuestra guía. Esperamos que explores la documentación y que construyas algo sorprendente. Estaremos atentos para ver todo 
