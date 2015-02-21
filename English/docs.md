@@ -4,13 +4,13 @@ We've got a very rich set of docs planned for Aurelia. Unfortunately, we haven't
 
 > **Note:** Looking for this guide in another language? Have a look in our [documentation repo](https://github.com/aurelia/documentation).
 
-## Browser Support
+<h2 id="browser-support"><a href="#browser-support">Browser Support</a></h2>
 
 Aurelia is designed for Evergreen Browsers. This includes Chrome, Firefox, IE11 and Safari 8. Out-of-the-box it wont work with any version of IE below 11.
 
 If you need to make Aurelia work with a version of IE below 11 then there is a repository [Aurelia Skeleton Nav IE Polyfill Test](https://github.com/devmondo/skeleton-navigation-IE-Polyfill-Test) that serves as a proof of concept by utilizing ES6Shim. This experiment was submitted by the community and appears to have the framework working with IE10 and IE9 without any noticeable problems. In the future we hope to investigate this more thoroughly and see if we can work out an official solution. We invite you to experiment with it and assist us in the possibility of supporting older browsers.
 
-## Startup & Configuration
+<h2 id="startup-and-configuration"><a href="#startup-and-configuration">Startup & Configuration</a></h2>
 
 Most platforms have a "main" or entry point for code execution. Aurelia is no different. If you've read the [Get Started](/get-started.html) page, then you've seen the `aurelia-app` attribute. Simply place this on an HTML element and Aurelia's bootstrapper will load an _app.js_ and _app.html_, databind them together and inject them into the DOM element on which you placed that attribute. If you don't want to use that convention, simply provide a value to the attribute indicating which view-model to load. For example `<body aurelia-app="todo">` will result in a _todo.js_ and _todo.html_ being loaded instead.
 
@@ -45,13 +45,13 @@ With the exception of the custom plugin, this code is essentially what `aurelia-
 
 >**Note:** To turn on AtScript when manually configuring, call `aurelia.use.atscript()` and to turn on ES5, call `aurelia.use.es5()`.
 
-### Logging
+<h3 id="logging"><a href="#logging">Logging</a></h3>
 
 Aurelia has a simple logging abstraction that the framework itself uses. By default it is a no-op. The configuration above shows how to install an appender which will take the log data and output it the console. You can also see how to set the log level. Options for this setting include: `none`, `error`, `warn`, `info` and `debug`.
 
 You can easily create your own appenders. Simply implement a class that matches the appender interface. The best way to see how to do this is to look at our own [console log appender's source](https://github.com/aurelia/logging-console/blob/master/src/index.js).
 
-### Plugins
+<h3 id="plugins"><a href="#plugins">Plugins</a></h3>
 
 A _plugin_ is only a module with an exported `install` function. During startup Aurelia will load all plugin modules and call their `install` functions, passing to them the Aurelia instance so that they can configure the framework appropriately. Plugins can optionally return a `Promise` from their `install` function in order to perform asynchronous configuration tasks. When writing a plugin, be sure to follow these rules:
 
@@ -61,11 +61,11 @@ A _plugin_ is only a module with an exported `install` function. During startup 
 
 > **Note:** Regarding #2 and #3: Do not rely on naming conventions inside plugins. You do not know how the consumer of your plugin will change Aurelia's conventions. 3rd party plugins should be explicit in order to ensure that they function correctly in different contexts.
 
-#### Promises
+<h4 id="promises"><a href="#promises">Promises</a></h4>
 
 By default, Aurelia uses ES6 native Promises or a polyfill. However, you can replace this with the excellent [Bluebird](https://github.com/petkaantonov/bluebird) Promise library. Simply include it in your page before you reference the other scripts. It will provide its own standards-compliant Promise implementation which is currently faster than native and has better debugging support. Additionally, when used in combination with the 6to5 transpiler, you can use [coroutines](https://6to5.org/docs/usage/transformers/#bluebird-coroutines) for improved async code.
 
-### The Aurelia Object
+<h3 id="the-aurelia-object"><a href="#the-aurelia-object">The Aurelia Object</a></h3>
 
 Since both a custom _main_ module and plugins do their work by interacting with the Aurelia object, we provide a brief explanation of that API in code below:
 
@@ -84,11 +84,11 @@ export class Aurelia {
 }
 ```
 
-## Views and View Models
+<h2 id="views-and-view-models"><a href="#views-and-view-models">Views and View Models</a></h2>
 
 In Aurelia, user interface elements are composed of _view_ and _view-model_ pairs. The _view_ is written with HTML and is rendered into the DOM. The _view-model_ is written with JavaScript and provides data and behavior to the _view_. The templating engine and/or DI are responsible for creating these pairs and enforcing a predictable lifecycle for the process. Once instantiated, Aurelia's powerful _databinding_ links the two pieces together allowing changes in your data to be reflected in the _view_ and vice versa.
 
-### Dependency Injection (DI)
+<h3 id="dependency-injection"><a href="#dependency-injection">Dependency Injection (DI)</a></h3>
 
 View-models and other interface elements, such as Template Controllers and Attached Behaviors, are created as classes which are instantiated by the framework using a dependency injection container. Code written in this style is easy to modularize and test. Rather than creating large classes, you can break things down into small objects that collaborate to achieve a goal. The DI can then put the pieces together for you at runtime.
 
@@ -153,7 +153,7 @@ Now, each time the DI container is asked for an instance of `CustomerDetail` the
 
 > **Note:** This last example introduces _metadata_ to provide contextual information to the framework. You will see metadata again when we talk about behaviors.
 
-## Templating
+<h2 id="templating"><a href="#templating">Templating</a></h2>
 
 Aurelia's templating engine is responsible for loading your views and their imported resources, compiling your HTML for optimal performance and rendering your UI to the screen. To create a view, all you need to do is author an HTML file with an `HTMLTemplate` inside. Here's a simple view:
 
@@ -204,13 +204,13 @@ In your view you will often leverage the different types of resources mentioned 
 
 >**Note:** You may be concerned about the tediousness of having to import things into each view. Remember, during the bootstrapping phase you can configure Aurelia with global resources to be available in every view.
 
-### Databinding
+<h2 id="databinding"><a href="#databinding">Databinding</a></h2>
 
 Databinding allows you to link the state and behavior in a JavaScript object to an HTML view. When this link is established, any changes in linked properties can be synced in one or both directions. Changes in the JavaScript object can be reflected in the view and changes in the view can be reflected in the JavaScript object. To establish this link, you will leverage "binding commands" in your HTML. Binding commands are clearly identifiable via their use of the "." as a kind of binding operator. Whenever an HTML attribute contains a ".", the compiler will pass the attribute name and value off to the binding language for interpretation. The result is one or more binding expressions that are capable of establishing the linkage when the view is created.
 
 You can extend the system with your own binding commands, but Aurelia provides a collection to cover the most common use cases.
 
-#### bind, one-way, two-way & one-time
+<h4 id="binding-modes"><a href="#binding-modes">bind, one-way, two-way & one-time</a></h4>
 
 The most common binding command is `.bind`. This will cause the property to be bound using a "one-way" binding for all attributes, except form element values, which are bound with a "two-way" binding.
 
@@ -233,7 +233,7 @@ You can always be explicit and use `.one-way` or `.two-way` in place of `.bind`t
 
 In order to optimize performance and minimize CPU and memory usage, you can alternatively leverage the `.one-time` binding command to flow data from the view-model into the view "one time". This will happen during the initial binding phase, after which no synchronization will occur.
 
-#### delegate, trigger & call
+<h4 id="event-modes"><a href="#event-modes">delegate, trigger & call</a></h4>
 
 Binding commands don't only connect properties and attributes, but can be used to trigger behavior. For example, if you want to invoke a method on the view-model when a button is clicked, you would use the `trigger` command like this:
 
@@ -257,7 +257,7 @@ All of this works against DOM events in some way or another. Occasionally you ma
 
 Now the attached behavior will get a function that it can call to invoke your `sayHello()` code.
 
-#### string interpolation
+<h4 id="string-interpolation"><a href="#string-interpolation">string interpolation</a></h4>
 
 Sometimes you need to bind properties directly into the content of the document or interleave them within an attribute value. For this, you can use the string interpolation syntax `${expression}`. String interpolation is a one-way binding, the output of which is converted to a string. Here's an example:
 
@@ -275,7 +275,7 @@ In this snippet "dot" is a statically present class and "green" is present only 
 
 > **Note:** You can use simple expressions inside your bindings. Don't try to do anything too fancy. You don't want code in your view. You only want to establish the linkage between the view and its view-model.
 
-#### ref
+<h4 id="ref"><a href="#ref">ref</a></h4>
 
 In addition to commands and interpolation, the binding language recognizes the use of a special attribute: `ref`. By using `ref` you can create a local name for an element which can then be referenced in another binding expression. It will also be set as a property on the view-model, so you can access it through code. Here's a neat example of using `ref`:
 
@@ -290,7 +290,7 @@ You can also use the special `.view-model` binding in conjuction with `ref` to g
 <i-consume-a-value input.bind="producer.output"></i-consume-a-value>
 ```
 
-### Behaviors
+<h3 id="behaviors"><a href="#behaviors">Behaviors</a></h3>
 
 In addition to databinding, you also have the power of Aurelia behaviors to use in your views. There are three types of behaviors provided out of the box:
 
@@ -300,7 +300,7 @@ In addition to databinding, you also have the power of Aurelia behaviors to use 
 
 Naturally, all of this works seemlessly with databinding. Let's look at the behaviors that Aurelia provides for you and which are available globally in every view.
 
-#### show
+<h4 id="show"><a href="#show">show</a></h4>
 
 The `show` Attached Behavior allows you to conditionally display an HTML element. If the value of show is `true` the element will be displayed, otherwise it will be hidden. This behavior does not add/remove the element from the DOM, but only changes its visibility. Here's an example:
 
@@ -310,7 +310,7 @@ The `show` Attached Behavior allows you to conditionally display an HTML element
 
 When the `isSaving` property is true, the `div` will be visible, otherwise it will be hidden.
 
-#### if
+<h4 id="if"><a href="#if">if</a></h4>
 
 The `if` Template Controller allows you to conditionally add/remove an HTML element. If the value is true, the element will also be present in the DOM, otherwise it will not.
 
@@ -329,7 +329,7 @@ If you need to conditionally add/remove a group of elements and you cannot place
 </template>
 ```
 
-#### repeat
+<h4 id="repeat"><a href="#repeat">repeat</a></h4>
 
 The `repeat` Template Controller allows you to render a template multiple times, once for each item in an array. Here's an example that renders out a list of customer names:
 
@@ -343,7 +343,7 @@ An important note about the repeat behavior is that it works in conjuction with 
 
 > **Note:**: Like the `if` behavior, you can also use a `template` tag to group a collection of elements that don't have a parent element. In fact this is true of all Template Controllers. When you place a Template Controller on an element, it transforms it into an HTMLTemplate during compilation, so you can always explicitly add the template in your markup if you want or need to.
 
-#### compose
+<h4 id="compose"><a href="#compose">compose</a></h4>
 
 The `compose` Custom Element enables you to dynamically render UI into the DOM. Imagine you have a heterogeneous array of items, but each has a type property which tells you what it is. You can then do something like this:
 
@@ -362,7 +362,7 @@ The `compose` element also has a `view` attribute which can be used in the same 
 
 What if you want to determine the view dynamically based on data though? or runtime conditions? You can do that too by implementing a `getViewStrategy()` method on your view-model. It can return a relative path to the view or an instance of a `ViewStrategy` for custom view loading behavior. The nice part is that this method is executed after the `activate` callback, so you have access to the model data when determining the view.
 
-#### selected-item
+<h4 id="selected-item"><a href="#selected-item">selected-item</a></h4>
 
 HTMLSelectElement is an interesting beast. Usually, you can databind these by combining a `repeat` for the options with a binding on the value, like this:
 
@@ -386,7 +386,7 @@ First, we specify the `.bind` binding command on `selected-item`. We then use a 
 
 > **Note:** We said earlier that only form element values bind two-way by default, but in this case our custom attribute `selected-item` is also bound with a two-way mode by default. How did that work? It turns out that when you define Aurelia behaviors, you can optionally specify the default binding mode on properties.
 
-#### global-behavior
+<h4 id="global-behavior"><a href="#global-behavior">global-behavior</a></h4>
 
 This is not an Attached Behavior that you will use directly. Rather, it works in conjunction with a custom binding command to dynamically enable the use of jQuery plugins and similar APIs declaratively in HTML. Let's look at an example in order to help clarify the idea:
 
@@ -404,7 +404,7 @@ When the binding system sees a binding command that it doesn't recognize, it dyn
 
 > **Note:** The `global-behavior` has a handlers list you must configure. It is only configured with jQuery by default. You can turn all of this off, if you desire, but it makes it easy to take advantage of basic jQuery plugins without any work on your part.
 
-## Routing
+<h2 id="routing"><a href="#routing">Routing</a></h2>
 
 There are many different application styles you could be called upon to create. From navigation apps, to dashboards, to MDI interfaces, Aurelia can handle them all. In many of these cases a key component of your architecture is a client-side router, capable of translating url changes into application state.
 
@@ -464,7 +464,7 @@ All routes with a truthy `nav` property are assembled into a `navigation` array.
 </template>
 ```
 
-### The Screen Activation Lifecycle
+<h3 id="the-screen-activation-lifecycle"><a href="#the-screen-activation-lifecycle">The Screen Activation Lifecycle</a></h3>
 
 Whenever the router processes a navigation, it enforces a strict lifecycle on the view-models that it is navigating to and from. There are four stages in the lifecycle. You can opt-in to any of them by implementing the appropriate method on your view-model's class. Here's a list of the lifecycle callbacks:
 
@@ -477,7 +477,7 @@ The `params` object will have a property for each parameter of the route that wa
 
 > **Note:** A _Navigation Command_ is any object with a `navigate(router)` method. When one is encountered, the navigation will be cancelled and control will be passed to the navigation command. One navigation command is provided out of the box: `Redirect`.
 
-### Child Routers
+<h3 id="child-routers"><a href="#child-routers">Child Routers</a></h3>
 
 If you haven't read the "Get Started" guide, we recommend that you do that now and pay special attention to the section titled "Bonus: Leveraging Child Routers".
 
@@ -485,7 +485,7 @@ Whenever you set up a route to map to a view-model, that view-model can actually
 
 A child router is just a router like any other. So, everything we've discussed above applies. To add a child router, just ask for a `Router` to be injected and configure it with your child routes. The screen activation lifecycle discussed above applies to child routers as well. Each phase of the lifecycle is run against the entire router hierarchy before moving on to the next phase. The activate hooks run from top to bottom and the deactivate hooks run from bottom to top.
 
-### Conventional Routing
+<h3 id="conventional-routing"><a href="#conventional-routing">Conventional Routing</a></h3>
 
 As with everything in Aurelia, we have strong support for conventions. So, you can actually choose to dynamically route rather than pre-configuring all your routes up front. Here's how you configure a router to do that:
 
@@ -502,7 +502,7 @@ All you have to do is set the `config.moduleId` property and you are good to go.
 
 >**Note:** Though not necessarily related to conventional routing, you may sometimes have a need to asynchronously configure your router. For example, you may need to call a web service to get user permissions before setting up routes. To do this, implement a callback on your router's view-model named `configureRouter`. In this callback you can configure your router and optionally return a Promise if necessary.
 
-### Adding steps to the pipeline
+<h3 id="customizing-the-navigation-pipeline"><a href="#customizing-the-navigation-pipeline">Customizing the Navigation Pipeline</a></h3>
 
 The router pipeline is composed out of separate steps that runs in succession. Each of these steps has the ability to modify what happens during routing, or stop the routing alltogether. The pipeline also contains a few extensibility points where you can add your own steps. These are `authorize` and `bindmodel`. `authorize` happens before `bindmodel`. These extensions are called route filters.
 
@@ -539,12 +539,12 @@ class AuthorizeStep {
     // Check if the route has an "auth" key
     // The reason for using `nextInstructions` is because
     // this includes child routes.
-    if (routingContext.nextInstructions.some(i => i.config.auth)) { 
+    if (routingContext.nextInstructions.some(i => i.config.auth)) {
       var isLoggedIn = /* insert magic here */false;
       if (!isLoggedIn) {
         return next.cancel(new Redirect('login'));
       }
-      
+
       return next();
     } else {
       return next();
@@ -563,7 +563,7 @@ config.addPipelineStep('myname', MySecondStep); // Adds another step to it.
 config.addPipelineStep('modelbind', 'myname'); // Makes the entire `myname` pipeline run as part of the `modelbind` pipeline.
 ```
 
-### Configuring PushState
+<h3 id="configuring-push-state"><a href="#configuring-push-state">Configuring PushState</a></h3>
 
 If you'd prefer to get rid of the `#` (hashes) in your URLs, then you're going to have to enable `pushState` in your app. Good thing Aurelia supports that! You will also have to do some work on the server side to ensure it works properly. Let's start with the Aurelia side of the equation.
 
@@ -654,8 +654,7 @@ public class IndexModule : NancyModule {
 
 Similar techniques can be used in other server environments - you just need to make sure that whatever server you're using, it needs to send back the same `index.html` regardless of the request being made. All server side frameworks should be able to achieve this. Aurelia will figure out which page to load based on its own route data.
 
-
-## Extending HTML
+<h2 id="extending-html"><a href="#extending-html">Extending HTML</a></h2>
 
 Aurelia has a powerful and extensible HTML template compiler. The compiler itself is just an algorithm for interacting with various _behavior types_ which contain the logic for manipulating HTML. Out of the box, Aurelia provides three core behavior type implementations, which we believe cover the bulk of scenarios you will encounter from day to day. The tree types are _Attached Behaviors_, _Custom Elements_ and _Template Controllers_.
 
@@ -665,14 +664,14 @@ Behaviors are not visible to the compiler by default. There are three main ways 
 * Use the Aurelia object during your bootstrapping phase to call `.withResources(resources)` to register behaviors with global visibility in your application.
 * Install a plugin that registers behaviors with global visibility in your application.
 
->**Note:** A reccommended practice for your own apps is to place all your app-specific behaviors, value converters, etc. into a _resources_ folder. Then create an _index.js_ file that turns them all into an internal plugin. Finally, install that plugin during your app's bootstrapping phase. This will keep your resources located in a known location, along with their registration code. It will also keep your _main.js_ file clean and simple.
+>**Note:** A recommended practice for your own apps is to place all your app-specific behaviors, value converters, etc. into a _resources_ folder. Then create an _index.js_ file that turns them all into an internal plugin. Finally, install that plugin during your app's bootstrapping phase. This will keep your resources located in a known location, along with their registration code. It will also keep your _main.js_ file clean and simple.
 
-All behaviors can opt into the view lifecycle by implementing any of the followinging hooks:
+All behaviors can opt into the view lifecycle by implementing any of the following hooks:
 
 * `bind(bindingContext)` - Invoked when the databinding engine binds the view. The binding context is the instance that the view is databound to.
 * `unbind()` - Invoked when the databinding engine unbinds the view.
 * `attached()` - Invoked when the view that contains the behavior is attached to the DOM.
-* `detached()` - Invoked whtn the view that contains the behavior is detached from the DOM.
+* `detached()` - Invoked when the view that contains the behavior is detached from the DOM.
 
 >**Note:** If you choose to implement the `bind` callback, the initial binding of your behavior will flow a little differently. Usually, if you have callbacks for your Behavior Properties, these are each individually called during the bind phase. However, if you add the `bind` callback, they will not be called during initialization. Rather, the `bind` callback will be called once all properties have their initial bound values set. This is an important and useful characteristic, particularly for complex behaviors which may not want to "act" until they have all evaluated values available.
 
