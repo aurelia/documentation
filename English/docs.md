@@ -675,7 +675,7 @@ All behaviors can opt into the view lifecycle by implementing any of the followi
 
 >**Note:** If you choose to implement the `bind` callback, the initial binding of your behavior will flow a little differently. Usually, if you have callbacks for your Behavior Properties, these are each individually called during the bind phase. However, if you add the `bind` callback, they will not be called during initialization. Rather, the `bind` callback will be called once all properties have their initial bound values set. This is an important and useful characteristic, particularly for complex behaviors which may not want to "act" until they have all evaluated values available.
 
-### Attached Behaviors
+<h3 id="attached-behaviors"><a href="#attached-behaviors">Attached Behaviors</a></h3>
 
 Attached behaviors "attach" new behavior or functionality to existing HTML elements by adding a custom attribute to your markup. Common uses for attached behaviors include:
 
@@ -757,7 +757,7 @@ AttachedBehaviors can easily gain access to the HTML element they are attached t
 
 Finally, let's look at the `valueChanged` callback. We said previously that this is configured through the property metadata so that it is called whenever the value changes. The binding system will automatically update properties thus triggering the callback. So, all the implementation has to do is add/remove the appropriate class based on the value.
 
-#### Options Properties
+<h4 id="options-properties"><a href="#options-properties">Options Properties</a></h4>
 
 You may be wondering what to do if you want to create an Attached Behavior with multiple properties, since Attached Behaviors always map to a single attribute. For this scenario, we use an `OptionsProperty` which enables your single attribute to work like the browser's native `style` attribute, with multiple properties embedded within. Here's an examlple of how that is used:
 
@@ -786,7 +786,7 @@ Notice that we don't use a binding command on the behavior itself. Instead, we c
 
 > **Note:** You don't use `delegate` or `trigger` commands inside an options attribute. Those are always attached to the element itself, since they work directly with native DOM events. However, you can use `call`.
 
-### Custom Elements
+<h3 id="custom-elements"><a href="#custom-elements">Custom Elements</a></h3>
 
 Custom Elements add new tags to your HTML markup. Each Custom Element can have its own view template which can be rendered into the Light DOM or the Shadow DOM. Custom Elements can also have any number of properties which they surface as attributes in HTML for databinding support and which they can databind to inside their view template.
 
@@ -854,7 +854,7 @@ That's really all there is to it. You follow the same view-model/view naming con
 * `.noView()` - If your custom element doesn't have a view, because all its behavior is implemented in code, then use this option.
 * `.useView(relativePath)` - If you want to use a different view than the one that would be conventionally used, you can use this metadata option to specify a relative path to the view you want to use.
 
-### Template Controllers
+<h3 id="template-controllers"><a href="#template-controllers">Template Controllers</a></h3>
 
 Template Controllers convert DOM into an inert HTML template. The controller can then decided when and where (or how many times) to instantiate the template in the DOM. Examples of this are the `if` and `repeat` behaviors. Simply place one of these behavior on a DOM node and it becomes a template, controlled by the behavior.
 
@@ -921,15 +921,15 @@ Take a close look at the `valueChanged` callback. Here you can see where the `if
 * Similarly, always call `unbind` _after_ removing the View from the DOM.
 * After the View is initially created, the `if` behavior does not throw it away even when the value becomes false. It caches the instance. Aurelia can re-use Views and even re-target them at different binding contexts. Again, this is important for performance, since it eliminates needless re-creation of Views.
 
-## Eventing
+<h2 id="eventing"><a href="#eventing">Eventing</a></h2>
 
 Eventing is a powerful tool when you need decoupled components of your application to talk to one another. Aurelia supports both standard DOM events as well as more application-specific events via the `EventAggregator`.
 
-### DOM Events
+<h3 id="dom-events"><a href="#dom-events">DOM Events</a></h3>
 
 DOM events should be used when UI-specific messages need to be sent. They should not be used for application-specific messages. Aurelia doesn't add any functionality beyond the DOM for UI events. Any behavior can have its associated `Element` injected into its constructor. You can then use the `Element` to trigger events. To learn more about creating and triggering custom DOM events, [please read this article](https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Creating_and_triggering_events).
 
-### The Event Aggregator
+<h3 id="the-event-aggregator"><a href="#the-event-aggregator">The Event Aggregator</a></h3>
 
 If you need loosely coupled application-events, you want to use the `EventAggregator`. Its streamlined pub/sub interface makes it ideal for a wide range of messaging scenarios.
 
@@ -1018,7 +1018,7 @@ The subscriber will be called any time an instance of `SomeMessage` is published
 
 >**Note:** All forms of the `subscribe` method return a _dispose function_. You can call this function to dispose of the subscription and discontinue receiving messages. A good place to dispose is either in a view-model's `deactivate` callback, if it is managed by a router, or in its `detached` callback, if it is any other view-model.
 
-## HTTP Client
+<h2 id="http-client"><a href="#http-client">HTTP Client</a></h2>
 
 As a convenience, Aurelia includes a basic `HttpClient` to provide a comfortable interface to the browser's XMLHttpRequest object. `HttpClient` is not included in the modules that Aurelia's bootstrapper installs, since its completely optional and many apps may choose to use a different strategy for data retrieval. So, if you want to use it, first you must install it with the following command:
 
@@ -1104,9 +1104,9 @@ The `HttpResponseMessage` has the followingn properties:
 
 > **Note:** By default, the `HttpClient` assumes you are expecting a JSON responseType.
 
-## Customization
+<h2 id="customization"><a href="#customization">Customization</a></h2>
 
-### View and View-Model Conventions
+<h2 id="view-and-view-model-conventions"><a href="#view-and-view-model-conventions">View and View-Model Conventions</a></h2>
 
 How are views and view-models linked? Our simple convention is based on module id. If you've got a view-model with id (essentially path) './foo/bar/baz' then that will map to `./foo/bar/baz.js` and `./foo/bar/baz.html` by default. Suppose you want to follow a different convention though. What if all your view-models live in a `view-models` folder and you want their views to live in a `views` folder? How would you do that? In order to do this, you want to change the behavior of the Conventional View Strategy. Here's how you do it:
 
