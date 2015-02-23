@@ -1090,7 +1090,7 @@ export class HttpClient {
 
 As you can see, it provides convenience methods for `get`, `put`, `patch`, `post`, `delete` and `jsonp`. Each of these methods sends an `HttpRequestMessage` except `jsonp` which sends a `JSONPRequestMessage`. The result of sending a message is a `Promise` for an `HttpResponseMessage`.
 
-The `HttpResponseMessage` has the followingn properties:
+The `HttpResponseMessage` has the following properties:
 
 * `response` - Returns the raw conent sent from the server.
 * `responseType` - The expected response type.
