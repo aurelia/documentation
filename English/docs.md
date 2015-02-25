@@ -257,6 +257,12 @@ All of this works against DOM events in some way or another. Occasionally you ma
 
 Now the attached behavior will get a function that it can call to invoke your `sayHello()` code.
 
+The `$event` property can be passed as an argument to a delegated function call if you need to access the event object.
+
+```markup
+<button click.delegate="sayHello($event)">Say Hello</button>
+```
+
 <h4 id="string-interpolation"><a href="#string-interpolation">string interpolation</a></h4>
 
 Sometimes you need to bind properties directly into the content of the document or interleave them within an attribute value. For this, you can use the string interpolation syntax `${expression}`. String interpolation is a one-way binding, the output of which is converted to a string. Here's an example:
