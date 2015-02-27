@@ -112,9 +112,9 @@ export class Welcome{
 
 What...is that JavaScript?
 
-Yes. Yes it is. In fact it's ECMAScript 6 (ES6), the next version of JavaScript which introduces many new features to the language. Fortunately the Gulp file you downloaded above has you set up with [6to5](https://6to5.org/), an amazing ES6 transpiler that allows you to write tomorrow's JavaScript and run it on today's browsers. Now you can use modules, classes, lambdas, string interpolation and more. Sweet! So, how do you create a _view-model_? You create a plain class and _export_ it to the framework. Piece. Of. Cake.
+Yes. Yes it is. In fact it's ECMAScript 6 (ES6), the next version of JavaScript which introduces many new features to the language. Fortunately the Gulp file you downloaded above has you set up with [Babel](https://babeljs.io/), an amazing ES6 transpiler that allows you to write tomorrow's JavaScript and run it on today's browsers. Now you can use modules, classes, lambdas, string interpolation and more. Sweet! So, how do you create a _view-model_? You create a plain class and _export_ it to the framework. Piece. Of. Cake.
 
-> **Note:** You don't have to use 6to5 or even ES6 to write an Aurelia app. You can use AtScript, TypeScript, CoffeeScript...or today's browser language: ES5. All you have to do is follow the language's standard pattern for creating classes and everything will work fine. We think ES6 is awesome though and hope you will consider it first. To learn more about the newest version of JavaScript including features like module exports and classes we recommend reading through [Luke Hoban's feature repo](https://github.com/lukehoban/es6features#readme).
+> **Note:** You don't have to use Babel or even ES6 to write an Aurelia app. You can use AtScript, TypeScript, CoffeeScript...or today's browser language: ES5. All you have to do is follow the language's standard pattern for creating classes and everything will work fine. We think ES6 is awesome though and hope you will consider it first. To learn more about the newest version of JavaScript including features like module exports and classes we recommend reading through [Luke Hoban's feature repo](https://github.com/lukehoban/es6features#readme).
 
 Ok. Now that we have a _view-model_ with some basic data and behavior, let's have a look at its partner in crime...the _view_.
 

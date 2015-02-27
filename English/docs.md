@@ -63,7 +63,7 @@ A _plugin_ is only a module with an exported `install` function. During startup 
 
 <h4 id="promises"><a href="#promises">Promises</a></h4>
 
-By default, Aurelia uses ES6 native Promises or a polyfill. However, you can replace this with the excellent [Bluebird](https://github.com/petkaantonov/bluebird) Promise library. Simply include it in your page before you reference the other scripts. It will provide its own standards-compliant Promise implementation which is currently faster than native and has better debugging support. Additionally, when used in combination with the 6to5 transpiler, you can use [coroutines](https://6to5.org/docs/usage/transformers/#bluebird-coroutines) for improved async code.
+By default, Aurelia uses ES6 native Promises or a polyfill. However, you can replace this with the excellent [Bluebird](https://github.com/petkaantonov/bluebird) Promise library. Simply include it in your page before you reference the other scripts. It will provide its own standards-compliant Promise implementation which is currently faster than native and has better debugging support. Additionally, when used in combination with the Babel transpiler, you can use [coroutines](https://babeljs.io/docs/usage/transformers/#bluebird-coroutines) for improved async code.
 
 <h3 id="the-aurelia-object"><a href="#the-aurelia-object">The Aurelia Object</a></h3>
 
