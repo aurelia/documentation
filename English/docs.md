@@ -510,7 +510,7 @@ All you have to do is set the `config.moduleId` property and you are good to go.
 
 <h3 id="customizing-the-navigation-pipeline"><a href="#customizing-the-navigation-pipeline">Customizing the Navigation Pipeline</a></h3>
 
-The router pipeline is composed out of separate steps that runs in succession. Each of these steps has the ability to modify what happens during routing, or stop the routing alltogether. The pipeline also contains a few extensibility points where you can add your own steps. These are `authorize` and `bindmodel`. `authorize` happens before `bindmodel`. These extensions are called route filters.
+The router pipeline is composed out of separate steps that run in succession. Each of these steps has the ability to modify what happens during routing, or stop the routing altogether. The pipeline also contains a few extensibility points where you can add your own steps. These are `authorize` and `bindmodel`. `authorize` happens before `bindmodel`. These extensions are called route filters.
 
 The sample below shows how you can add authorization to your application:
 
