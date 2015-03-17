@@ -1127,3 +1127,54 @@ ConventionalView.convertModuleIdToViewUrl = function(moduleId){
 You should execute this code as part of your bootstrapping logic so that it takes effect before any behaviors are loaded. This will affect *everything* including custom elements. So, if you need or want those to act differently, you will need to account for that in your implementation of `convertModuleIdToViewUrl`.
 
 > **Note:** This is an example of why 3rd party plugin authors should not rely on conventions. Developers may change these conventions in order to fit the needs of their own app.
+
+
+<h3 id="reusing-an-existing-vm"><a href="#reusing-an-existing-vm">Reusing an existing VM</a></h3>
+
+Sometimes you might wan't to use the same VM for multiple routes. By default Aurelia will see those routes as aliases to the same VM and thus only perform the build and attach process as well as the complete life-cycle once. This might not be exactly what you are looking for. Take the following router example:
+
+```javascript
+import {Router} from 'aurelia-router';
+
+export class App {
+  static inject() { return [Router]; }
+  constructor(router) {
+    this.router = router;
+    this.router.configure(config => {
+      config.title = 'Aurelia';
+      config.map([
+        { route: 'product/a',         moduleId: 'product'      nav: true },
+        { route: 'product/b',         moduleId: 'product',     nav: true },
+      ]);
+    });
+  }
+}
+```
+
+Since the VM's life-cycle is called only once you may have problems to recognize that the user switched the route from `Product A` to `Product B`.
+
+To work around this issue implement the method `determineActivationStrategy` in your VM and return hints for the router about what you'd like to happen. E.g in order to force a rebuild of the VM implement it like this:
+
+```javascript
+import {REPLACE} from 'aurelia-router';
+
+export class YourViewModel {
+  determineActivationStrategy(){
+    return REPLACE;
+  }
+}
+```
+
+If you just want to force a refresh of the life-cycle (useful with `<compose>` bindings) you may do something like the following:
+
+```javascript
+import {INVOKE_LIFECYCLE} from 'aurelia-router';
+
+export class YourViewModel {
+  determineActivationStrategy(){
+    return INVOKE_LIFECYCLE;
+  }
+}
+```
+
+> **Note:** Keep in mind that by forcing refreshes, Aurelia has to rebuild the complete VM. As for performance reasons a simple observer on the `router.currentInstruction` might be sufficient for scenarios where you'd simply like to exchange some data.
