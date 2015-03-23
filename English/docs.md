@@ -586,6 +586,8 @@ this.router.configure(config => {
 });
 ```
 
+You will also want to add [a base tag](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base) to the head of your html document.
+
 Next, the server side needs to be configured to send back the same `index.html` file regardless of the request being made because all the routing is done client side. So, if you're using the `gulp watch` task with `browsersync` as per the navigation sample, then you can modify your setup like so:
 
 From the console in the root of your project, run the following:
