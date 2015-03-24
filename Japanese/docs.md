@@ -1131,9 +1131,9 @@ ConventionalView.convertModuleIdToViewUrl = function(moduleId){
 > **注:** これが、なぜサードパーティのプラグインは規約に頼ってはいけないかという例です。開発者は彼らのアプリケーションのニーズに合わせて、規約を変更するかもしれないためです。
 
 
-<h3 id="reusing-an-existing-vm"><a href="#reusing-an-existing-vm">VMの再利用</a></h3>
+<h3 id="reusing-an-existing-vm"><a href="#reusing-an-existing-vm">ビューモデルの再利用</a></h3>
 
-複数のルートに対して、同じVMを使いたくないケースもあるでしょう。デフォルトでは、Aureliaはこれらのルートを同一VMのエイリアスとみなすので、ビルドと付加プロセス、およびライフサイクルは一度のみ実行されます。これに満足できないこともあるでしょう。次の例を見てください:
+複数のルートに対して、同じビューモデルを使いたくないケースもあるでしょう。デフォルトでは、Aureliaはこれらのルートを同一ビューモデルのエイリアスとみなすので、ビルドと付加プロセス、およびライフサイクルは一度のみ実行されます。これに満足できないこともあるでしょう。次の例を見てください:
 
 ```javascript
 import {Router} from 'aurelia-router';
@@ -1153,9 +1153,9 @@ export class App {
 }
 ```
 
-VMのライフラサイクルが呼ばれるのは一度だけですから、ユーザーがルートを `Product A` から `Product B` に変える場合、それを認識できないという問題があります。
+ビューモデルのライフラサイクルが呼ばれるのは一度だけですから、ユーザーがルートを `Product A` から `Product B` に変えた場合、それを認識できないという問題があります。
 
-この問題に対処するには、 `determineActivationStrategy` メソッドを実装し、ルーターに何をすればいいかのヒントを返す必要があります。例として、VMの再構成を行う場合は、次のように書きます:
+この問題に対処するには、 `determineActivationStrategy` メソッドを実装し、ルーターに何をすればいいかのヒントを返す必要があります。例として、ビューモデルの再構成を行う場合は、次のように書きます:
 
 ```javascript
 import {REPLACE} from 'aurelia-router';
@@ -1179,4 +1179,4 @@ export class YourViewModel {
 }
 ```
 
-> **注:** リフレッシュを強制することで、AureliaはVMを再構成することに注意してください。 性能の観点からすると、データをやりとりするだけなら、 `router.currentInstruction` のシンプルなオブザーバーで十分です。
+> **注:** リフレッシュを強制することで、Aureliaはビューモデルを再構成することに注意してください。 性能の観点からすると、データをやりとりするだけなら、 `router.currentInstruction` のシンプルなオブザーバーで十分です。
