@@ -385,6 +385,39 @@ Two-way data-binding is supported with `contenteditable` elements:
 <div textcontent.bind="stringProperty" contenteditable="true"></div>
 ```
 
+<h4 id="style"><a href="#style">style</a></h4>
+
+You can bind a css string or object to an element's `style` attribute:
+
+``` javascript
+export class Foo {
+  constructor() {
+    this.styleString = 'color: red; background-color: blue';
+    
+    this.styleObject = {
+      color: 'red',
+      'background-color': 'blue'
+    };
+  }
+}
+```
+
+``` markup
+<div style.bind="styleString"></div>
+<div style.bind="styleObject"></div>
+```
+
+Use the `style` attribute's alias, `css` when doing string interpolation to ensure your application is compatible with Internet Explorer:
+
+``` markup
+<!-- good: -->
+<div css="width: ${width}px; height: ${height}px;"></div>
+
+<!-- incompatible with Internet Explorer: -->
+<div style="width: ${width}px; height: ${height}px;"></div>
+```
+
+
 <h3 id="behaviors"><a href="#behaviors">Behaviors</a></h3>
 
 In addition to databinding, you also have the power of Aurelia behaviors to use in your views. There are three types of behaviors provided out of the box:
