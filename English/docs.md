@@ -157,7 +157,7 @@ Now, each time the DI container is asked for an instance of `CustomerDetail` the
 
 Aurelia's templating engine is responsible for loading your views and their imported resources, compiling your HTML for optimal performance and rendering your UI to the screen. To create a view, all you need to do is author an HTML file with an `HTMLTemplate` inside. Here's a simple view:
 
-```markup
+```html
 <template>
     <div>Hello World!</div>
 </template>
@@ -165,7 +165,7 @@ Aurelia's templating engine is responsible for loading your views and their impo
 
 Everything inside the `template` tag will be managed by Aurelia. However, since Aurelia uses HTMLImport technology to load views, you can also include links, and they will be properly loaded, including relative resource resolution semantics. In other words, you can do this:
 
-```markup
+```html
 <link rel="stylesheet" type="text/css" href="./hello.css">
 
 <template>
@@ -177,7 +177,7 @@ This enables you to dynamically load per-view style sheets and even Web Componen
 
 Any time you want to import an Aurelia-specific resource, such as an Aurelia _Custom Element_, _Attached Behavior_, _Template Controller_ or _Value Converter_, you should use an `import` element inside your view instead. Here's an example:
 
-```markup
+```html
 <template>
   <import from='./nav-bar'></import>
 
@@ -218,7 +218,7 @@ _What does this mean though?_
 
 One-way binding means that changes flow from your JavaScript view-models into the view, not from the view into the view-model. Two-way binding means that changes flow in both directions. `.bind` attempts to use a sensible default by assuming that if you are binding to a form element's value property then you probably wish the changes made in the form to flow into your view-model. For everything else it uses one-way binding, especially since, in many cases, two-way binding to non-form elements would be nonsensical. Here's a small binding example using `.bind`:
 
-```markup
+```html
 <input type="text" value.bind="firstName">
 <a href.bind="url">Aurelia</a>
 ```
@@ -227,7 +227,7 @@ In the above example, the `input` will have its `value` bound to the `firstName`
 
 You can always be explicit and use `.one-way` or `.two-way` in place of `.bind`though. A common case where this is required is with Web Components that function as input-type controls. So, you can imagine doing something like this:
 
-```markup
+```html
 <markdown-editor value.two-way="markdown"></markdown-editor>
 ```
 
@@ -237,13 +237,13 @@ In order to optimize performance and minimize CPU and memory usage, you can alte
 
 Binding commands don't only connect properties and attributes, but can be used to trigger behavior. For example, if you want to invoke a method on the view-model when a button is clicked, you would use the `trigger` command like this:
 
-```markup
+```html
 <button click.trigger="sayHello()">Say Hello</button>
 ```
 
 When the button is clicked, the `sayHello` method on the view-model will be invoked. That said, adding event handlers to every single element like this isn't very efficient, so often times you will want to use event delegation. To do that, use the `.delegate` command. Here's the same example but with event delegation instead:
 
-```markup
+```html
 <button click.delegate="sayHello()">Say Hello</button>
 ```
 
@@ -251,7 +251,7 @@ When the button is clicked, the `sayHello` method on the view-model will be invo
 
 All of this works against DOM events in some way or another. Occasionally you may have a custom Aurelia behavior that wants a reference to your function directly so that it can invoke it manually at a later time. To pass a function reference, use the `.call` binding (since the behavior will _call_ it later):
 
-```markup
+```html
 <div touch.call="sayHello()">Say Hello</button>
 ```
 
@@ -259,7 +259,7 @@ Now the attached behavior will get a function that it can call to invoke your `s
 
 The `$event` property can be passed as an argument to a delegated function call if you need to access the event object.
 
-```markup
+```html
 <button click.delegate="sayHello($event)">Say Hello</button>
 ```
 
@@ -267,13 +267,13 @@ The `$event` property can be passed as an argument to a delegated function call 
 
 Sometimes you need to bind properties directly into the content of the document or interleave them within an attribute value. For this, you can use the string interpolation syntax `${expression}`. String interpolation is a one-way binding, the output of which is converted to a string. Here's an example:
 
-```markup
+```html
 <span>${fullName}</span>
 ```
 
 The `fullName` property will be interpolated directly into the span's content. You can also use this to handle css class bindings like so:
 
-```markup
+```html
 <div class="dot ${color} ${isHappy ? 'green' : 'red'}"></div>
 ```
 
@@ -285,13 +285,13 @@ In this snippet "dot" is a statically present class and "green" is present only 
 
 In addition to commands and interpolation, the binding language recognizes the use of a special attribute: `ref`. By using `ref` you can create a local name for an element which can then be referenced in another binding expression. It will also be set as a property on the view-model, so you can access it through code. Here's a neat example of using `ref`:
 
-```markup
+```html
 <input type="text" ref="name"> ${name.value}
 ```
 
 You can also use the special `.view-model` binding in conjuction with `ref` to get the view-model instance that backs an Aurelia Custom Element. By using this technique, you can connect different components to each other like so:
 
-```markup
+```html
 <i-produce-a-value ref.view-model="producer"></i-produce-a-value>
 <i-consume-a-value input.bind="producer.output"></i-consume-a-value>
 ```
@@ -310,7 +310,7 @@ Naturally, all of this works seemlessly with databinding. Let's look at the beha
 
 The `show` Attached Behavior allows you to conditionally display an HTML element. If the value of show is `true` the element will be displayed, otherwise it will be hidden. This behavior does not add/remove the element from the DOM, but only changes its visibility. Here's an example:
 
-```markup
+```html
 <div show.bind="isSaving" class="spinner"></div>
 ```
 
@@ -320,7 +320,7 @@ When the `isSaving` property is true, the `div` will be visible, otherwise it wi
 
 The `if` Template Controller allows you to conditionally add/remove an HTML element. If the value is true, the element will also be present in the DOM, otherwise it will not.
 
-```markup
+```html
 <div if.bind="isSaving" class="spinner"></div>
 ```
 
@@ -328,7 +328,7 @@ This example looks similar to that of `show` above. The difference is that if th
 
 If you need to conditionally add/remove a group of elements and you cannot place the `if` behavior on a parent element, then you can wrap those elements in a template tag which has the `if` behavior. Here's what that would look like:
 
-```markup
+```html
 <template if.bind="hasErrors">
     <i class="icon error"></i>
     ${errorMessage}
@@ -339,7 +339,7 @@ If you need to conditionally add/remove a group of elements and you cannot place
 
 The `repeat` Template Controller allows you to render a template multiple times, once for each item in an array. Here's an example that renders out a list of customer names:
 
-```markup
+```html
 <ul>
     <li repeat.for="customer of customers">${customer.fullName}</li>
 </ul>
@@ -353,7 +353,7 @@ An important note about the repeat behavior is that it works in conjuction with 
 
 The `compose` Custom Element enables you to dynamically render UI into the DOM. Imagine you have a heterogeneous array of items, but each has a type property which tells you what it is. You can then do something like this:
 
-```markup
+```html
 <template repeat.for="item of items">
     <compose
       model.bind="item"
@@ -372,7 +372,7 @@ What if you want to determine the view dynamically based on data though? or runt
 
 HTMLSelectElement is an interesting beast. Usually, you can databind these by combining a `repeat` for the options with a binding on the value, like this:
 
-```markup
+```html
 <select value.bind="favoriteNumber">
     <option>Select A Number</option>
     <option repeat.for="number of numbers" value.bind="number">${number}</option>
@@ -381,7 +381,7 @@ HTMLSelectElement is an interesting beast. Usually, you can databind these by co
 
 But sometimes you want to work with selecting object instances rather than primitives. For that you can use the `selected-item` attached behavior. Here's how you would configure that for a theoretical list of employees:
 
-```markup
+```html
 <select selected-item.bind="employeeOfTheMonth">
   <option>Select An Employee</option>
   <option repeat.for="employee of employees" value.bind="employee.id" model.bind="employee">${employee.fullName}</option>
@@ -396,7 +396,7 @@ First, we specify the `.bind` binding command on `selected-item`. We then use a 
 
 This is not an Attached Behavior that you will use directly. Rather, it works in conjunction with a custom binding command to dynamically enable the use of jQuery plugins and similar APIs declaratively in HTML. Let's look at an example in order to help clarify the idea:
 
-```markup
+```html
 <div jquery.modal="show: true; keyboard.bind: allowKeyboard">...</div>
 ```
 
@@ -455,7 +455,7 @@ So, what options to you have for the route pattern?
 
 All routes with a truthy `nav` property are assembled into a `navigation` array. This makes it really easy to use databinding to generate a menu structure. Another important property for binding is the `isNavigating` property. Here's some simple markup that shows what you might pair with the view-model shown above:
 
-```markup
+```html
 <template>
   <ul>
     <li class="loader" if.bind="router.isNavigating">
@@ -695,7 +695,7 @@ Attached Behaviors tend to represent cross-cutting concerns. For example you mig
 
 Let's look at one of Aurelia's own Attached Behavior implementations: `show`. Here's how it is used:
 
-```markup
+```html
 <div show.bind="isSaving" class="spinner"></div>
 ```
 
@@ -786,7 +786,7 @@ export class Show {
 
 This creates an Attached Behavior named `my-behavior` with two properties `foo` and `bar`. Each of these properties are available directly on the class, however they are configured in HTML a bit different. Here's how that would be done:
 
-```markup
+```html
 <div my-behavior="foo: some literal value; bar.bind: some.expression"></div>
 ```
 
@@ -800,7 +800,7 @@ Custom Elements add new tags to your HTML markup. Each Custom Element can have i
 
 Why don't we create a simple custom element so that we can see how that works? We'll make an element that says hello to someone, called `say-hello`. Here's how we want to be able to use it when we're done:
 
-```markup
+```html
 <template>
     <import from="./say-hello"></import>
 
@@ -848,7 +848,7 @@ export class SayHelloCustomElement {
 Be default, Custom Elements have a view. Here's the view for ours:
 
 #### say-hello.html
-```markup
+```html
 <template>
     <button click.delegate="speak()">Say Hello To ${to}</button>
 </template>

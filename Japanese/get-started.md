@@ -50,7 +50,7 @@
 今までの手順を実行していれば、あなたはすべてのライブラリ、ビルド設定など、AureliaですごいJavaScriptアプリケーションを作るために必要なすべてのツールを揃えたことになります。次に必要なことはプロジェクトフォルダのルートに_index.html_ファイルを作成することです。ファイルを作成し、下記のマークアップを使ってください。
 
 ### index.html
-```markup
+```html
 <!doctype html>
 <html>
   <head>
@@ -119,7 +119,7 @@ export class Welcome{
 オッケー。これで基本的なデータと振る舞いのある_ビューモデル_が用意できました。次にいわば共犯者の..._ビュー_について見てみます。
 
 ### app.html
-```markup
+```html
 <template>
   <section>
     <h2>${heading}</h2>
@@ -200,7 +200,7 @@ Aureliaはアプリケーションのレンダリングに必要なUIコンポ�
 
 ### app.html
 
-```markup
+```html
 <template>
   <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="navbar-header">
@@ -315,7 +315,7 @@ Aureliaのルータは、ルートが変更されるたびにビュー·モデ�
 
 ### flickr.html
 
-```markup
+```html
 <template>
     <section>
         <h2>${heading}</h2>
@@ -347,7 +347,7 @@ Aureliaのルータは、ルートが変更されるたびにビュー·モデ�
 
 ### app.html
 
-```markup
+```html
 <template>
   <import from='./nav-bar'></import>
 
@@ -377,7 +377,7 @@ export class NavBar {
 
 ### nav-bar.html
 
-```markup
+```html
 <template>
   <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="navbar-header">
@@ -416,7 +416,7 @@ export class NavBar {
 
 ### app.html
 
-```markup
+```html
 <template>
   <import from='./nav-bar'></import>
 

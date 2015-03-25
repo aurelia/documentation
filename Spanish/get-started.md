@@ -50,7 +50,7 @@ Hasta aquí todo lo que hemos hecho son procedimientos Node.js normales de monta
 Si nos has seguido hasta aquí, ahora dispones de todas las librerías, configuración de montaje y herramientas necesarias para crear aplicaciones sorprendentes con Aurelia. Lo próximo que has de hacer es crear el archivo _index.html_ en la raíz de nuestra carpeta de proyecto. Créalo ahora y utiliza el código que viene a continuación.
 
 ### index.html
-```markup
+```html
 <!doctype html>
 <html>
   <head>
@@ -119,7 +119,7 @@ Si. Lo es. De hecho es ECMAScript 6 (ES6), la próxima versión de Javascript qu
 Bien. Ahora que tenemos un modelo (de vista) con algunos datos y comportamiento básicos, echemos un vistazo a su cómplice... la vista. 
 
 ### app.html
-```markup
+```html
 <template>
   <section>
     <h2>${heading}</h2>
@@ -201,7 +201,7 @@ Muy bien. Toca configurar el enrutador. Es sencillo. Puedes incluir un título q
 
 ### app.html
 
-```markup
+```html
 <template>
   <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="navbar-header">
@@ -316,7 +316,7 @@ Hay un segundo gancho en el ciclo de vida que aparece aquí: `canDeactive`. El e
 
 ### flickr.html
 
-```markup
+```html
 <template>
     <section>
         <h2>${heading}</h2>
@@ -348,7 +348,7 @@ Recapitulemos. Para añadir una página a nuestra aplicación:
 
 ### app.html
 
-```markup
+```html
 <template>
   <import from='./nav-bar'></import>
 
@@ -378,7 +378,7 @@ Para crear un elemento a medida, has de crear y exportar una clase. Puesto que e
 
 ### nav-bar.html
 
-```markup
+```html
 <template>
   <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="navbar-header">
@@ -417,7 +417,7 @@ Este es un elemento a medida muy simple sin ningún comportamiento real, pero es
 
 ### app.html
 
-```markup
+```html
 <template>
   <import from='./nav-bar'></import>
 

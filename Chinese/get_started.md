@@ -49,7 +49,7 @@
 如果你跟着我们走到这里了，那你现在已经有所有需要的库了，也已经有创建 Aurelia 应用的组建配置文件和工具了。下一步要做的事情是在项目的根目录下创建 _index.html_ 文件。新建这个文件，并替换为下面的内容。
 
 ### index.html
-```markup
+```html
 <!doctype html>
 <html>
   <head>
@@ -118,7 +118,7 @@ export class Welcome{
 好了，现在已经有一个具有一些基本的数据和行为的 _view-model_ 了，下面来看看它的同伴—— _view_。
 
 ### app.html
-```markup
+```html
 <template>
   <section>
     <h2>${heading}</h2>
@@ -203,7 +203,7 @@ Aurelia 是按需创建 UI 组件来渲染页面的。这是通过使用一个�
 
 ### app.html
 
-```markup
+```html
 <template>
   <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="navbar-header">
@@ -317,7 +317,7 @@ jspm install aurelia-http-client
 
 ### flickr.html
 
-```markup
+```html
 <template>
     <section>
         <h2>${heading}</h2>
@@ -349,7 +349,7 @@ jspm install aurelia-http-client
 
 ### app.html
 
-```markup
+```html
 <template>
   <import from='./nav-bar'></import>
 
@@ -378,7 +378,7 @@ export class NavBar {
 
 ### nav-bar.html
 
-```markup
+```html
 <template>
   <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="navbar-header">
@@ -416,7 +416,7 @@ export class NavBar {
 
 ### app.html
 
-```markup
+```html
 <template>
   <import from='./nav-bar'></import>
 
