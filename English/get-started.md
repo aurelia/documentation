@@ -168,6 +168,7 @@ Since this is a navigation app, we should probably add some more screens and set
 
 ```javascript
 import {Router} from 'aurelia-router';
+import bootstrap from 'bootstrap';
 
 export class App {
   static inject() { return [Router]; }
