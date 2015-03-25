@@ -157,7 +157,7 @@ Ahora, cada vez que se le solicita al contenedor de inyección de dependencias u
 
 El motor de plantillas de Aurelia es responsable de cargar las vistas y sus recursos importados, compilando tu HTML para un rendimiento óptimo y mostrando la interfaz de usuario (UI) en pantalla. Para crear una vista, todo lo que tienes que hacer es escribir un archivo HTML que incluya un `HTMLTemplate`. Aquí tienes una vista sencilla:
 
-```markup
+```html
 <template>
     <div>Hello World!</div>
 </template>
@@ -165,7 +165,7 @@ El motor de plantillas de Aurelia es responsable de cargar las vistas y sus recu
 
 Todo lo que esté dentro de una etiqueta `template` será manejado por Aurelia. En todo caso, puesto que Aurelia usa la tecnología HTMLImport para cargar las vistas, también puedes incluir _links_ -enlaces-, que serán correctamente cargados, incluyendo semántica de resolución de recursos relativos. En otras palabras, puedes hacer esto:
 
-```markup
+```html
 <link rel="stylesheet" type="text/css" href="./hello.css">
 
 <template>
@@ -177,7 +177,7 @@ De paso, esto te permite cargar dinámicamente hojas de estilo dependiendo de la
 
 Cada vez que quieras importar un recurso específico de Aurelia, ya sea un _Custom Element_ -elemento a medida-, _Attached Behavior_ -comportamiento añadido-, _Template Controller_ -control de plantillas- o _Value Converter_ -conversor de valores-, puedes usar en su lugar un elemento `import` dentro de tu vista. Aquí tienes un ejemplo:
 
-```markup
+```html
 <template>
   <import from='./nav-bar'></import>
 
@@ -218,7 +218,7 @@ _¿Pero que significa esto?_
 
 Enlace uni-direccional significa que los cambios fluyen de tus modelos (de vista) Javascript hacia la vista, y no de la vista hacia el modelo. Enlace bi-direccional significa que los cambios fluyen en ambas direcciones. `.bind` intenta usar un supuesto razonable al asumir que si estás estableciendo un enlace con el valor de una propiedad en un elemento de formulario, entonces probablemente querrás que los cambios realizados en el formulario fluyan hacia el modelo. Para todo lo demás usa un enlazado uni-direccional, especialmente teniendo en cuenta que frecuentemente carece de sentido el enlace bi-direccional para elementos que no son de formulario. Aquí tienes un pequeño ejemplo de enlazado usando `.bind`:
 
-```markup
+```html
 <input type="text" value.bind="firstName">
 <a href.bind="url">Aurelia</a>
 ```
@@ -227,7 +227,7 @@ En el ejemplo anterior, el elemento `input` tendrá su `value` -valor- vinculado
 
 Aunque siempre puedes ser explícito y usar `.one-way` o `.two-way` en lugar de `.bind`. Un caso común en que se requiere esto es con los componentes web -Web Components- que funcionan como controles de tipo input. Asi que podrás imaginarte haciendo algo como esto:
 
-```markup
+```html
 <markdown-editor value.two-way="markdown"></markdown-editor>
 ```
 
@@ -237,13 +237,13 @@ En orden a optimizar el rendimiento y minimizar el uso de CPU y de memoria, pued
 
 Las órdenes de enlace no solo sirven para conectar propiedades y atributos, sino que se pueden usar para lanzar comportamientos. Por ejemplo, para invocar un método en el modelo cuando se pulsa un botón de la vista, usarías la orden `trigger` de la siguiente manera:
 
-```markup
+```html
 <button click.trigger="sayHello()">Say Hello</button>
 ```
 
 Cuando se pulsa el botón, se invoca el método `sayHello` en el modelo. Dicho esto, no resulta muy eficiente añadir gestores de eventos a cada elemento por separado, así que con frecuencia desearás emplear la delegación de evento -event delegation-. Para ello, usa la orden `.delegate`. Aquí está el mismo ejemplo, pero con delegación de evento:
 
-```markup
+```html
 <button click.delegate="sayHello()">Say Hello</button>
 ```
 
@@ -251,7 +251,7 @@ Cuando se pulsa el botón, se invoca el método `sayHello` en el modelo. Dicho e
 
 Todo esto va de una u otra manera en contra de los eventos de DOM. Ocasionalmente puedes encontrarte con un comportamiento a medida de Aurelia que necesite directamente una referencia a tu función de forma que pueda ser invocada posteriormente. Para pasar una referencia de función, usa el enlazador `.`call` (puesto que el comportamiento la _llamará -call-_ más tarde):
 
-```markup
+```html
 <div touch.call="sayHello()">Say Hello</button>
 ```
 
@@ -261,13 +261,13 @@ Ahora el comportamiento asociado recibirá una función que podrá llamar para i
 
 A veces necesitas vincular propiedades directamente dentro del contenido del documento o intercalarlas dentro de un valor de atributo. Para ello puedes usar la sintaxis para interpolación de cadenas  `${expresión}`. La interpolación de cadenas es un enlace uni-direccional cuya salida es convertida en una cadena. Aquí tienes un ejemplo:
 
-```markup
+```html
 <span>${fullName}</span>
 ```
 
 La propiedad `fullName` será directamente interpolada en el contenido del (elemento) `span`. También puedes usar la interpolación de cadenas para manipular enlaces a clases CSS así:
 
-```markup
+```html
 <div class="dot ${color} ${isHappy ? 'green' : 'red'}"></div>
 ```
 
@@ -279,13 +279,13 @@ En esta linea "dot" es una clase presente estáticamente y "green" solo está pr
 
 Además de órdenes e interpolación, el lenguaje de enlazado reconoce el uso de un atributo especial: `ref`. Al usar `ref` puedes crear un nombre local para un elemento que podrás usar como referencia en otra expresión de enlace. También se añadirá como una propiedad en el modelo, de manera que será accesible a través de código. Aquí tienes un ejemplo claro del uso de `ref`:
 
-```markup
+```html
 <input type="text" ref="name"> ${name.value}
 ```
 
 También puedes usar el enlace especial `.view-model` combinado con `ref` para obtener el objeto de tipo modelo que respalda un elemento a medida de Aurelia. Mediante esta técnica puedes vincular diferentes componentes entre si de la siguiente manera:
 
-```markup
+```html
 <i-produce-a-value ref.view-model="producer"></i-produce-a-value>
 <i-consume-a-value input.bind="producer.output"></i-consume-a-value>
 ```
@@ -304,7 +304,7 @@ Naturalmente, todos funcionan sin problemas con el enlazado de datos. Echemos un
 
 El comportamiento añadido `show` te permite condicionar la visualización de un elemento HTML. Si el valor de `show` es `true` el elemento se visualiza el elemento, en caso contrario se mantiene oculto. Este comportamiento no añade/elimina el elemento del DOM, solo modifica su visibilidad. Aquí tienes un ejemplo:
 
-```markup
+```html
 <div show.bind="isSaving" class="spinner"></div>
 ```
 
@@ -314,7 +314,7 @@ Cuando la propiedad `isSaving` es verdadera, el `div` será visible, en caso con
 
 El control de plantillas `if` permite añadir/eliminar un elemento HTML condicionalmente. Si el valor es verdadero, el elemento estará presente en el DOM, en caso contrario no.
 
-```markup
+```html
 <div if.bind="isSaving" class="spinner"></div>
 ```
 
@@ -322,7 +322,7 @@ Este ejemplo es parecido al anterior con `show`. La diferencia estriba en que si
 
 Si necesitas añadir/eliminar condicionalmente un grupo de elementos y no puedes colocar el comportamiento -behavior- `if` en un elemento padre, entonces puedes envolver esos elementos en una etiqueta `template` que incluya el comportamiento `if`. Así es como quedaría:
 
-```markup
+```html
 <template if.bind="hasErrors">
     <i class="icon error"></i>
     ${errorMessage}
@@ -333,7 +333,7 @@ Si necesitas añadir/eliminar condicionalmente un grupo de elementos y no puedes
 
 El control de plantillas `repeat` te permite mostrar una plantilla varias veces, una por cada elemento de un vector. Aquí tienes un ejemplo que muestra la lista de nombres de clientes:
 
-```markup
+```html
 <ul>
     <li repeat.for="customer of customers">${customer.fullName}</li>
 </ul>
@@ -347,7 +347,7 @@ Una consideración importante acerca del comportamiento `repeat` es que trabaja 
 
 El elemento a medida `compose` te capacita para mostrar dinámicamente interfaz de usuario dentro del DOM. Imagínate que tienes un vector heterogéneo de elementos, pero que cada uno tiene una propiedad `type` que nos dice que es lo que es. Entonces puedes hacer algo así:
 
-```markup
+```html
 <template repeat.for="item of items">
     <compose
       model.bind="item"
@@ -366,7 +366,7 @@ El elemento `compose` también tiene un atributo `view` que puede ser usado de l
 
 HTMLSelectElement es una bestia interesante. Usualmente, puedes enlazar estos datos combinando un `repeat` para las opciones con un enlace con el valor, como esto:
 
-```markup
+```html
 <select value.bind="favoriteNumber">
     <option>Select A Number</option>
     <option repeat.for="number of numbers" value.bind="number">${number}</option>
@@ -375,7 +375,7 @@ HTMLSelectElement es una bestia interesante. Usualmente, puedes enlazar estos da
 
 Pero a veces deseas trabajar con objetos del tipo selector en lugar de primitivas. Para ello puedes usar el comportamiento añadido `selected-item`. Aquí está como configurar esto para una teórica lista de empleados:
 
-```markup
+```html
 <select selected-item.bind="employeeOfTheMonth">
   <option>Select An Employee</option>
   <option repeat.for="employee of employees" value.bind="employee.id" model.bind="employee">${employee.fullName}</option>
@@ -390,7 +390,7 @@ Primero, especificamos la orden de enlace `.bind` para el `selected-item`. Luego
 
 Este no es un comportamiento añadido que vayas a usar directamente. En lugar de eso, este funciona en conjunción con una orden de enlace a medida para habilitar dinámicamente el uso declarativo de los complementos jQuery y otras APIs similares en HTML. Veamos un ejemplo para clarificar la idea:
 
-```markup
+```html
 <div jquery.modal="show: true; keyboard.bind: allowKeyboard">...</div>
 ```
 
@@ -449,7 +449,7 @@ Así que, que opciones tienes para el patrón del sistema de gestión de rutas?
 
 Todas las rutas con una propiedad `nav` verdadera se recogen en un vector `navigation`. Esto hace realmente sencillo usar el enlace de datos para generar una estructura de menú. Otra propiedad importante para el enlazado es la propiedad `isNavigating`. Aquí  tienes un sencillo marcado que muestra lo que podría emparejarse con el modelo mostrado arriba:
 
-```markup
+```html
 <template>
   <ul>
     <li class="loader" if.bind="router.isNavigating">
@@ -687,7 +687,7 @@ Los comportamientos añadidos tienden a representar competencias transversales. 
 
 Veamos la implementación de uno de los comportamientos añadidos (propios) de Aurelia: `show`. Aquí tienes como se usa:
 
-```markup
+```html
 <div show.bind="isSaving" class="spinner"></div>
 ```
 
@@ -778,7 +778,7 @@ export class Show {
 
 Esto crea un comportamiento añadido de nombre `my-behavior` con dos propiedades `foo` and `bar`. Cada una de estas propiedades están disponibles directamente en la clase, aunque su configuración en HTML es algo distinta. Aquí está como lo haríamos:
 
-```markup
+```html
 <div my-behavior="foo: some literal value; bar.bind: some.expression"></div>
 ```
 
@@ -792,7 +792,7 @@ Los elementos a medida añaden nuevas etiquetas a tu marcado HTML. Cada elemento
 
 ¿Por qué no creamos un sencillo elemento a medida para ver como funciona esto? Vamos a crear un elemento que salude a alguien, llamado `say-hello`. Aquí está como queremos poder usarlo una vez que esté hecho:
 
-```markup
+```html
 <template>
     <import from="./say-hello"></import>
 
@@ -840,7 +840,7 @@ export class SayHelloCustomElement {
 Por defecto, los elementos a medida tienen una vista. Aquí está la del nuestro:
 
 #### say-hello.html
-```markup
+```html
 <template>
     <button click.delegate="speak()">Say Hello To ${to}</button>
 </template>

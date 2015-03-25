@@ -50,7 +50,7 @@ Everything we've done so far is standard Node.js build and package management pr
 If you've followed along this far, you now have all the libraries, build configuration and tools you need to create amazing JavaScript apps with Aurelia. The next thing we need to do is create our _index.html_ file in the root of our project folder. Create that now and use the markup below.
 
 ### index.html
-```markup
+```html
 <!doctype html>
 <html>
   <head>
@@ -119,7 +119,7 @@ Yes. Yes it is. In fact it's ECMAScript 6 (ES6), the next version of JavaScript 
 Ok. Now that we have a _view-model_ with some basic data and behavior, let's have a look at its partner in crime...the _view_.
 
 ### app.html
-```markup
+```html
 <template>
   <section>
     <h2>${heading}</h2>
@@ -201,7 +201,7 @@ Alrighty. Time to configure the router. It's easy. You can set a title to use wh
 
 ### app.html
 
-```markup
+```html
 <template>
   <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="navbar-header">
@@ -316,7 +316,7 @@ There's a second lifecycle hook demonstrated here as well: `canDeactivate`. The 
 
 ### flickr.html
 
-```markup
+```html
 <template>
     <section>
         <h2>${heading}</h2>
@@ -348,7 +348,7 @@ Look at you, you overachiever! I see you're interested in learning some extra aw
 
 ### app.html
 
-```markup
+```html
 <template>
   <import from='./nav-bar'></import>
 
@@ -378,7 +378,7 @@ To create a custom element, you create and export a class. Since this class is g
 
 ### nav-bar.html
 
-```markup
+```html
 <template>
   <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="navbar-header">
@@ -417,7 +417,7 @@ This is a very simple custom element with no real behavior, but it is complete a
 
 ### app.html
 
-```markup
+```html
 <template>
   <import from='./nav-bar'></import>
 
