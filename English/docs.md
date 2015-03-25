@@ -371,6 +371,9 @@ export class MySanitizeHtmlValueConverter {
 }
 ```
 
+> NOTE:  Binding using the `innerhtml` attribute simply sets the element's `innerHTML` property.  The markup does not pass through Aurelia's templating system.  Binding expressions and require elements will not be evaluated.  A solution for this scenario is being tracked in [aurelia/templating#35](https://github.com/aurelia/templating/issues/35).
+
+
 <h4 id="textcontent"><a href="#textcontent">textContent</a></h4>
 
 You can bind an element's `textContent` property using the `textcontent` attribute:
