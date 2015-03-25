@@ -296,6 +296,95 @@ You can also use the special `.view-model` binding in conjuction with `ref` to g
 <i-consume-a-value input.bind="producer.output"></i-consume-a-value>
 ```
 
+<h4 id="select-elements"><a href="#select-elements">select elements</a></h4>
+
+`value.bind` on an HTMLSelectElement has special behavior to support the element's single and multi-select modes as well as binding to objects.  
+
+A typical select element is rendered using a combination of `value.bind` and `repeat`, like this:
+
+```markup
+<select value.bind="favoriteColor">
+    <option>Select A Color</option>
+    <option repeat.for="color of colors" value.bind="color">${color}</option>
+</select>
+```
+
+Sometimes you want to work with object instances rather than strings.  Here's the markup for building a select element from a theoretical array of employee objects:
+
+```markup
+<select value.bind="employeeOfTheMonth">
+  <option>Select An Employee</option>
+  <option repeat.for="employee of employees" model.bind="employee">${employee.fullName}</option>
+</select>
+```
+
+The primary difference between this example and the previous example is we're storing the option values in a special property, `model`, instead of the option element's `value` property which only accepts strings.
+
+<h4 id="multi-select-elements"><a href="#multi-select-elements">multi select elements</a></h4>
+
+You can bind the select element's value to an array property in multi-select scenarios.  Here's how you'd bind an array of strings, `favoriteColors`:
+
+```markup
+<select value.bind="favoriteColors" multiple>
+    <option repeat.for="color of colors" value.bind="color">${color}</option>
+</select>
+```
+
+This works with arrays of objects as well:
+
+```markup
+<select value.bind="favoriteEmployees" multiple>
+  <option repeat.for="employee of employees" model.bind="employee">${employee.fullName}</option>
+</select>
+```
+
+<h4 id="innerhtml"><a href="#innerhtml">innerHTML</a></h4>
+
+You can bind an element's `innerHTML` property using the `innerhtml` attribute:
+
+``` markup
+<div innerhtml.bind="htmlProperty"></div>
+<div innerhtml="${htmlProperty}"></div>
+```
+
+Aurelia provides a simple html sanitization converter that can be used like this:
+
+``` markup
+<div innerhtml.bind="htmlProperty | sanitizeHtml"></div>
+<div innerhtml="${htmlProperty | sanitizeHtml}"></div>
+```
+
+You're encouraged to use a more complete html sanitizer such as [sanitize-html](https://www.npmjs.com/package/sanitize-html).  Here's how you would build a converter using this package:
+
+``` bash
+jspm install npm:sanitize-html
+```
+
+``` javascript
+import sanitizeHtml from 'sanitize-html';
+
+export class MySanitizeHtmlValueConverter {
+  toView(untrustedHtml) {
+    return sanitizeHtml(untrustedHtml);
+  }
+}
+```
+
+<h4 id="textcontent"><a href="#textcontent">textContent</a></h4>
+
+You can bind an element's `textContent` property using the `textcontent` attribute:
+
+``` markup
+<div textcontent.bind="stringProperty"></div>
+<div textcontent="${stringProperty}"></div>
+```
+
+Two-way data-binding is supported with `contenteditable` elements:
+
+``` markup
+<div textcontent.bind="stringProperty" contenteditable="true"></div>
+```
+
 <h3 id="behaviors"><a href="#behaviors">Behaviors</a></h3>
 
 In addition to databinding, you also have the power of Aurelia behaviors to use in your views. There are three types of behaviors provided out of the box:
@@ -367,30 +456,6 @@ Now, depending on the _type_ of the item, the `compose` element will load a diff
 The `compose` element also has a `view` attribute which can be used in the same way as `view-model` if you don't wish to leverage the standard view/view-model convention.
 
 What if you want to determine the view dynamically based on data though? or runtime conditions? You can do that too by implementing a `getViewStrategy()` method on your view-model. It can return a relative path to the view or an instance of a `ViewStrategy` for custom view loading behavior. The nice part is that this method is executed after the `activate` callback, so you have access to the model data when determining the view.
-
-<h4 id="selected-item"><a href="#selected-item">selected-item</a></h4>
-
-HTMLSelectElement is an interesting beast. Usually, you can databind these by combining a `repeat` for the options with a binding on the value, like this:
-
-```markup
-<select value.bind="favoriteNumber">
-    <option>Select A Number</option>
-    <option repeat.for="number of numbers" value.bind="number">${number}</option>
-</select>
-```
-
-But sometimes you want to work with selecting object instances rather than primitives. For that you can use the `selected-item` attached behavior. Here's how you would configure that for a theoretical list of employees:
-
-```markup
-<select selected-item.bind="employeeOfTheMonth">
-  <option>Select An Employee</option>
-  <option repeat.for="employee of employees" value.bind="employee.id" model.bind="employee">${employee.fullName}</option>
-</select>
-```
-
-First, we specify the `.bind` binding command on `selected-item`. We then use a repeater as normal, being sure to bind `value` to some primitive. We also add a second property named `model` which the `selected-item` behavior will use to correlate selection with an object instance. In other words, when an option is selected the `employeeOfTheMonth` property will be set to the value of the `model` property on that option. When the `employeeOfTheMonth` property is set in the view-model, the option with the corresponding `model` value will be selected in the view.
-
-> **Note:** We said earlier that only form element values bind two-way by default, but in this case our custom attribute `selected-item` is also bound with a two-way mode by default. How did that work? It turns out that when you define Aurelia behaviors, you can optionally specify the default binding mode on properties.
 
 <h4 id="global-behavior"><a href="#global-behavior">global-behavior</a></h4>
 
