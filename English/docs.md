@@ -14,7 +14,7 @@ Most platforms have a "main" or entry point for code execution. Aurelia is no di
 
 >**Note:** If you are using ES5 instead of ES6, add an `es5` attribute. Doing so will "turn on" functionality, which makes using these languages easier.
 
-Often times you want to configure the framework or run some code prior to displaying anything to the user though. So chances are, as your project progresses, you will migrate towards needing some startup configuration. In order to do this, you can provide a value for the `aurelia-app` attribute that points to a configuration module. This module should export a single function names `configure`. Aurelia invokes your `configure` function, passing it the Aurelia object which you can then use to configure the framework yourself and decide what, when and where to display your UI. Here's an example configuration file:
+Often times you want to configure the framework or run some code prior to displaying anything to the user though. So chances are, as your project progresses, you will migrate towards needing some startup configuration. In order to do this, you can provide a value for the `aurelia-app` attribute that points to a configuration module. This module should export a single function named `configure`. Aurelia invokes your `configure` function, passing it the Aurelia object which you can then use to configure the framework yourself and decide what, when, and where to display your UI. Here's an example configuration file:
 
 ```javascript
 import {LogManager} from 'aurelia-framework';
@@ -35,7 +35,7 @@ export function configure(aurelia) {
 }
 ```
 
-With the exception of the custom plugin, this code is essentially what `aurelia-app` normally does for you. When you switch to the configuration file approach, you need to configure these things yourself, but you can also install custom plugins, set up the dependency injection container with some services and install global resources to be used in view templates.
+With the exception of the custom plugin, this code is essentially what `aurelia-app` normally does for you. When you switch to the configuration file approach, you need to configure these things yourself, but you can also install custom plugins, set up the dependency injection container with some services, and install global resources to be used in view templates.
 
 >**Note:** To turn on ES5, call `aurelia.use.es5()`.
 
@@ -95,7 +95,7 @@ export class Aurelia {
 
 <h2 id="views-and-view-models"><a href="#views-and-view-models">Views and View Models</a></h2>
 
-In Aurelia, user interface elements are composed of _view_ and _view-model_ pairs. The _view_ is written with HTML and is rendered into the DOM. The _view-model_ is written with JavaScript and provides data and behavior to the _view_. The templating engine and/or DI are responsible for creating these pairs and enforcing a predictable lifecycle for the process. Once instantiated, Aurelia's powerful _databinding_ links the two pieces together allowing changes in your data to be reflected in the _view_ and vice versa. This Separation of Concerns is great for developer/designer collaboration, maintainability, architectural flexibility and even source control.
+In Aurelia, user interface elements are composed of _view_ and _view-model_ pairs. The _view_ is written with HTML and is rendered into the DOM. The _view-model_ is written with JavaScript and provides data and behavior to the _view_. The templating engine and/or DI are responsible for creating these pairs and enforcing a predictable lifecycle for the process. Once instantiated, Aurelia's powerful _databinding_ links the two pieces together allowing changes in your data to be reflected in the _view_ and vice versa. This Separation of Concerns is great for developer/designer collaboration, maintainability, architectural flexibility, and even source control.
 
 <h3 id="dependency-injection"><a href="#dependency-injection">Dependency Injection (DI)</a></h3>
 
@@ -1191,11 +1191,11 @@ export class ASubscriber{
 
 The subscriber will be called any time an instance of `SomeMessage` is published. Subscription is polymorphic, so if a subclass of SomeMessage is published, this subscriber will be notified as well.
 
->**Note:** All forms of the `subscribe` method return a _dispose function_. You can call this function to dispose of the subscription and discontinue receiving messages. A good place to dispose is either in a view-model's `deactivate` callback, if it is managed by a router, or in its `detached` callback, if it is any other view-model.
+>**Note:** All forms of the `subscribe` method return a _dispose function_. You can call this function to dispose of the subscription and discontinue receiving messages. A good place to dispose is either in a view-model's `deactivate` callback if it is managed by a router, or in its `detached` callback if it is any other view-model.
 
 <h2 id="http-client"><a href="#http-client">HTTP Client</a></h2>
 
-As a convenience, Aurelia includes a basic `HttpClient` to provide a comfortable interface to the browser's XMLHttpRequest object. `HttpClient` is not included in the modules that Aurelia's bootstrapper installs, since its completely optional and many apps may choose to use a different strategy for data retrieval. So, if you want to use it, first you must install it with the following command:
+As a convenience, Aurelia includes a basic `HttpClient` to provide a comfortable interface to the browser's `XMLHttpRequest` object. `HttpClient` is not included in the modules that Aurelia's bootstrapper installs, since it's completely optional and many apps may choose to use a different strategy for data retrieval. So, if you want to use it, first you must install it with the following command:
 
 ```shell
 jspm install aurelia-http-client
@@ -1278,7 +1278,7 @@ As you can see, it provides convenience methods for all the standard verbs as we
 
 The `HttpResponseMessage` has the following properties:
 
-* `response` - Returns the raw conent sent from the server.
+* `response` - Returns the raw content sent from the server.
 * `responseType` - The expected response type.
 * `content` - Formats the raw `response` content based on the `responseType` and returns it.
 * `headers` - Returns a `Headers` object with the parsed header data.
@@ -1302,7 +1302,7 @@ var client = new HttpClient()
 client.get('some/cool/path');
 ```
 
-In this case, all request from the client will have the baseUri of 'http://aurelia.io' and will have the specified Authorizatoin header. The same API is available via the request builder. So, you can accomplish the same thing on an individual request like this:
+In this case, all requests from the client will have the baseUri of 'http://aurelia.io' and will have the specified Authorizatoin header. The same API is available via the request builder. So, you can accomplish the same thing on an individual request like this:
 
 ```javascript
 var client = new HttpClient();
@@ -1314,7 +1314,7 @@ client.createRequest('some/cool/path')
   .send();
 ```
 
-The fluent API has the following chainable methods: asDelete(), asGet(), asHead(), asOptions(), asPatch(), asPost(), asPut(), asJsonp(), withUri(), withBaseUri(), withContent(), withParams(), withResponseType(), withTimeout(), withHeader(), withCredentials(), withReviver(), withReplacer(), withProgressCallback(), withCallbackParameterName().
+The fluent API has the following chainable methods: `asDelete()`, `asGet()`, `asHead()`, `asOptions()`, `asPatch()`, `asPost()`, `asPut()`, `asJsonp()`, `withUri()`, `withBaseUri()`, `withContent()`, `withParams()`, `withResponseType()`, `withTimeout()`, `withHeader()`, `withCredentials()`, `withReviver()`, `withReplacer()`, `withProgressCallback()`, and `withCallbackParameterName()`.
 
 <h2 id="customization"><a href="#customization">Customization</a></h2>
 
