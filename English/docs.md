@@ -35,11 +35,6 @@ export function configure(aurelia) {
 }
 ```
 
-> A strategy to make plugins configurable is to setup a function as the second attribute to the plugins install method. The above example would then pass a callback as the second argument to `plugin` and perform the configuration work in there. 
-```javascript 
-.plugin('./path/to/plugin', (configObject) => { /* configuration work */ });
-```
-
 With the exception of the custom plugin, this code is essentially what `aurelia-app` normally does for you. When you switch to the configuration file approach, you need to configure these things yourself, but you can also install custom plugins, set up the dependency injection container with some services and install global resources to be used in view templates.
 
 >**Note:** To turn on ES5, call `aurelia.use.es5()`.
@@ -64,9 +59,13 @@ You can easily create your own appenders. Simply implement a class that matches 
 
 <h3 id="plugins"><a href="#plugins">Plugins</a></h3>
 
-A _plugin_ is only a module with an exported `install` function. During startup Aurelia will load all plugin modules and call their `install` functions, passing to them the Aurelia instance so that they can configure the framework appropriately. Plugins can optionally return a `Promise` from their `install` function in order to perform asynchronous configuration tasks. When writing a plugin, be sure to explicilty supply all metadata, including a View Strategy for Custom Elements.
+A _plugin_ is only a module with an exported `install` function. During startup Aurelia will load all plugin modules and call their `install` functions, passing to them the Aurelia instance so that they can configure the framework appropriately. Plugins can optionally return a `Promise` from their `install` function in order to perform asynchronous configuration tasks. When writing a plugin, be sure to explicitly supply all metadata, including a View Strategy for Custom Elements.
 
-In order to do configurations on your plugin from within the app you can specify function as the second argument to the `install` function. Execute that one after your installation work is done.
+In order to do configuration on your plugin from within the app you can specify a function as the second argument to the `install` function. Your plugin's install function can then execute that after your installation work is done. The consumer of your plugin would then write code like this:
+
+```javascript
+aurelia.use.plugin('./path/to/plugin', config => { /* configuration work */ });
+```
 
 > **Note:** Do not rely on naming conventions inside plugins. You do not know how the consumer of your plugin will change Aurelia's conventions. 3rd party plugins should be explicit in order to ensure that they function correctly in different contexts.
 

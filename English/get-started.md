@@ -20,7 +20,7 @@ Next, we need to install [jspm](http://jspm.io/). This will serve as our client-
   npm install -g jspm
   ```
 
-> **Note:** jspm, like Bower and Yeoman, leverages [git](http://git-scm.com/) so you need to install that if you don't have it. Also, jspm queries GitHub to install packages, but GitHub has a rate limit on anonymous API requests. It is advised that you configure jspm with your GitHub credentials in order to avoid problems. You can do this by executing `jspm endpoint config github` and following the prompts. Don't want to use jspm? No problem. All Aurelia packages are available via [Bower](http://bower.io/) as well.
+> **Note:** jspm, like Bower and Yeoman, leverages [git](http://git-scm.com/) so you need to install that if you don't have it. Also, jspm queries GitHub to install packages, but GitHub has a rate limit on anonymous API requests. It is advised that you configure jspm with your GitHub credentials in order to avoid problems. You can do this by executing `jspm registry config github` and following the prompts. Don't want to use jspm? No problem. All Aurelia packages are available via [Bower](http://bower.io/) as well.
 
 ## Setting up the Project Structure and Build
 

@@ -20,7 +20,7 @@
   npm install -g jspm
   ```
 
-> **Note:** 跟 Bower 和 Yeoman 一样，jspm 也基于 [git](http://git-scm.com/)，所以如果你没有 git 的话，也需要安装它。另外，jspm 通过查询 GitHub 来安装包，而 GitHub 对匿名的 API 请求做了速度限制。所以我们建议在 jspm 配置里设置好 GitHub，以免出现问题。执行命令 `jspm endpoint config github` 然后按照提示进行操作即可。不想使用 jspm？没问题，所有 Aurelia 相关的包也都可以通过 [Bower](http://bower.io/) 安装。
+> **Note:** 跟 Bower 和 Yeoman 一样，jspm 也基于 [git](http://git-scm.com/)，所以如果你没有 git 的话，也需要安装它。另外，jspm 通过查询 GitHub 来安装包，而 GitHub 对匿名的 API 请求做了速度限制。所以我们建议在 jspm 配置里设置好 GitHub，以免出现问题。执行命令 `jspm registry config github` 然后按照提示进行操作即可。不想使用 jspm？没问题，所有 Aurelia 相关的包也都可以通过 [Bower](http://bower.io/) 安装。
 
 ## 设置项目结构及组建
 

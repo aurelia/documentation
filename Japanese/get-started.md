@@ -20,7 +20,7 @@
   npm install -g jspm
   ```
 
-> **注:** jspmはBowerやYeomanのように、[git](http://git-scm.com/)を活用します。gitをまだインストールしていなければ、インストールしておく必要があります。また、jspmはインストールするパッケージをGitHubに問い合わせますが、GitHubは匿名のAPIアクセスに上限があります。この問題を回避するために、あなたのGitHub認証情報を使うようにjspmを設定することが推奨されます。これを行うために`jspm endpoint config github`を実行して、以降のプロンプトに従ってください。jspmを使いたくない? 問題ありません。すべてのAureliaパッケージは [Bower](http://bower.io/)でも取得可能です。
+> **注:** jspmはBowerやYeomanのように、[git](http://git-scm.com/)を活用します。gitをまだインストールしていなければ、インストールしておく必要があります。また、jspmはインストールするパッケージをGitHubに問い合わせますが、GitHubは匿名のAPIアクセスに上限があります。この問題を回避するために、あなたのGitHub認証情報を使うようにjspmを設定することが推奨されます。これを行うために`jspm registry config github`を実行して、以降のプロンプトに従ってください。jspmを使いたくない? 問題ありません。すべてのAureliaパッケージは [Bower](http://bower.io/)でも取得可能です。
 
 ## プロジェクト構成とビルドの準備
 
