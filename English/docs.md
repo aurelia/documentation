@@ -1212,7 +1212,7 @@ export class WebAPI {
         this.http = http;
     }
 
-    return getAllContacts(){
+    getAllContacts(){
         return this.http.get('uri goes here');
     }
 }
