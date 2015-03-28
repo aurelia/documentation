@@ -80,7 +80,7 @@ export class Aurelia {
   withResources(resources):Aurelia; //リソースヘルパーメソッド
 
   start():Promise; //フレームワークの開始、プラグインのインストールとリソースのロード
-  setRoot(root, applicationHost):Promise; //"root" または "app" ビューモデルをセットし、表示する 
+  setRoot(root, applicationHost):Promise; //"root" または "app" ビューモデルをセットし、表示する
 }
 ```
 
@@ -362,7 +362,7 @@ _これは何を意味するのでしょうか?_
 </template>
 ```
 
-これで、要素の _type_ に応じて、 `compose` 要素は異なるビューモデル(とビュー)をロードし、DOMにレンダリングします。もしビューモデルに `activate` メソッドがあれば、 `compose` エレメントはそれを呼び出し、 `model` を引数として渡します。 `activate` メソッドは `Promise` を返して、実際にデータバインドやDOMへのレンダリングが始まる前に、なんらかの非同期処理を走らせてからcompose処理を行うようにすることができます。 
+これで、要素の _type_ に応じて、 `compose` 要素は異なるビューモデル(とビュー)をロードし、DOMにレンダリングします。もしビューモデルに `activate` メソッドがあれば、 `compose` エレメントはそれを呼び出し、 `model` を引数として渡します。 `activate` メソッドは `Promise` を返して、実際にデータバインドやDOMへのレンダリングが始まる前に、なんらかの非同期処理を走らせてからcompose処理を行うようにすることができます。
 
 もしあなたが標準のビュー/ビューモデルの規約とは異なるビューを使いたい場合、 `compose` 要素に `view-model` と同じように、 `view` 属性を指定することもできます。
 
@@ -388,7 +388,7 @@ HTMLのSelectエレメントは面白いヤツです。通常は、select要素�
 </select>
 ```
 
-最初に、 `selected-item` に対して `.bind` コマンドをを指定しています。その後、repeatを同じように使い、 `value` にプリミティブをバインドします。ここで、もう一つのプロパティ `model` を追加しています。こうすることで、 `selected-item` ビヘイビアが選択に関連するオブジェクトインスタンスを使うようになります。言い換えると、オプションが選択されたとき、 `employeeOfTheMonth` プロパティに、 `model` プロパティの値がセットサれるということです。ビューモデルで `employeeOfTheMonth` プロパティがセットされると、ビューでは対応する `model` に結びついているオプションが選択されます。 
+最初に、 `selected-item` に対して `.bind` コマンドをを指定しています。その後、repeatを同じように使い、 `value` にプリミティブをバインドします。ここで、もう一つのプロパティ `model` を追加しています。こうすることで、 `selected-item` ビヘイビアが選択に関連するオブジェクトインスタンスを使うようになります。言い換えると、オプションが選択されたとき、 `employeeOfTheMonth` プロパティに、 `model` プロパティの値がセットサれるということです。ビューモデルで `employeeOfTheMonth` プロパティがセットされると、ビューでは対応する `model` に結びついているオプションが選択されます。
 
 > **注:** 以前フォームエレメントのみ双方向バインドすると説明しました。しかし、このケースで、カスタム属性 `selected-item` はデフォルトで双方向バインドします。どうやっているのでしょうか?Aureliaのビヘイビアを定義する際には、デフォルトのバインディングモードを指定することも可能だというだけです。
 
@@ -544,7 +544,7 @@ class AuthorizeStep {
   run(routingContext, next) {
     // ルートが "auth" キーを持っているか確認する
     // `nextInstructions`を使う理由は、
-    // それが子ルートを含むから。    
+    // それが子ルートを含むから。
     if (routingContext.nextInstructions.some(i => i.config.auth)) {
       var isLoggedIn = /* ここを書き換えること */false;
       if (!isLoggedIn) {
@@ -665,7 +665,7 @@ public class IndexModule : NancyModule {
 <h2 id="extending-html"><a href="#extending-html">HTMLを拡張する</a></h2>
 
 Aureliaには強力かつ拡張可能なHTMLテンプレートコンパイラがあります。コンパイラそのものは、HTMLを操作するロジックを持つ、様々な _ビヘイビアタイプ_ と相互作用するアルゴリズムです。すぐに使えるように、Aureliaには三つの中心となるビヘイビアタイプの実装があり、それで日々の作業を十分カバーできると考えています。その三つとは、 _付加ビヘイビア_ 、 _カスタムエレメント_ そして _テンプレートコントローラー_ です。
- 
+
 ビヘイビアは、デフォルトではコンパイラに見えません。組み込むためには、三つの方法があります:
 
 * `import` 要素を使ってビヘイビアをビューに読み込む。 `from` 属性でビヘイビアのモジュールへの相対パスを指定します。 ビヘイビアはローカルに定義されます。
@@ -761,7 +761,7 @@ export class ShowAttachedBehavior {
 
 次にコンストラクタを見てみましょう。
 
-付加ビヘイビアは、 `inject` 配列で指定することで、付加先のHTML要素に簡単にアクセスすることができます。 `show` ビヘイビアの例では、要素への参照を保存して、後で `classList` を更新することに利用しています。 
+付加ビヘイビアは、 `inject` 配列で指定することで、付加先のHTML要素に簡単にアクセスすることができます。 `show` ビヘイビアの例では、要素への参照を保存して、後で `classList` を更新することに利用しています。
 
 最後に、 `valueChanged` コールバックを確認します。以前、これは値が変更されたときに呼び出され、プロパティメタデータに設定されると説明しました。バインディングシステムは値が更新されると、このコールバックを呼び出します。したがって、実装するのは値に応じてクラス属性を付与/削除するコードを書くだけです。
 
@@ -1045,7 +1045,7 @@ export class WebAPI {
         this.http = http;
     }
 
-    return getAllContacts(){
+    getAllContacts(){
         return this.http.get('uri goes here');
     }
 }
