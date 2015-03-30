@@ -869,7 +869,7 @@ Let's look at one of Aurelia's own Attached Behavior implementations: `show`. He
 The `show` behavior will conditionally apply a class to an element based on the falsiness of its value. (The class, when applied, hides the element.) Here's the implementation:
 
 ```javascript
-import {Behavior} from 'aurelia-templating';
+import {Behavior} from 'aurelia-framework';
 
 export class Show {
   static metadata(){
@@ -937,7 +937,7 @@ Finally, let's look at the `valueChanged` callback. We said previously that this
 You may be wondering what to do if you want to create an Attached Behavior with multiple properties, since Attached Behaviors always map to a single attribute. For this scenario, we use an `OptionsProperty` which enables your single attribute to work like the browser's native `style` attribute, with multiple properties embedded within. Here's an example of how that is used:
 
 ```javascript
-import {Behavior} from 'aurelia-templating';
+import {Behavior} from 'aurelia-framework'; // or 
 
 export class MyBehavior {
   static metadata(){
@@ -980,7 +980,7 @@ So, how do we build this? Well, we're going to start with a class, just like we 
 
 #### say-hello.js
 ```javascript
-import {Behavior} from 'aurelia-templating';
+import {Behavior} from 'aurelia-framework';
 
 export class SayHello {
   static metadata(){
@@ -999,7 +999,7 @@ If you read the section on AttachedBehaviors, then you know what this does. Ther
 
 #### say-hello.js (with conventions)
 ```javascript
-import {Behavior} from 'aurelia-templating';
+import {Behavior} from 'aurelia-framework';
 
 export class SayHelloCustomElement {
   static metadata(){
@@ -1036,7 +1036,7 @@ Template Controllers convert DOM into an inert HTML template. The controller can
 Let's take a look at the implementation of the `if` behavior to see how one of these is put together. Here's the full source code:
 
 ```javascript
-import {Behavior, BoundViewFactory, ViewSlot} from 'aurelia-templating';
+import {Behavior, BoundViewFactory, ViewSlot} from 'aurelia-framework';
 
 export class If {
   static metadata(){
