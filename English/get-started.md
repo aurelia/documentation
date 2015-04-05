@@ -257,6 +257,7 @@ Let's display some images from Flickr. To do that, let's first configure our rou
 
 ```javascript
 import {Router} from 'aurelia-router';
+import bootstrap from 'bootstrap';
 
 export class App {
   static inject() { return [Router]; }
@@ -453,6 +454,7 @@ First, let's update our _app.js_ with the new configuration. Here's what it shou
 
 ```javascript
 import {Router} from 'aurelia-router';
+import bootstrap from 'bootstrap';
 
 export class App {
   static inject() { return [Router]; }
