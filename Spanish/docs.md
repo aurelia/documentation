@@ -728,7 +728,7 @@ Bien. Hablemos de convenciones.
 * Si el nombre de tu función de retrollamada cumple el patrón   {nombrePropiedad}Changed, entonces no necesitas especificarlo. Así, en el caso anterior, pudimos omitir el valor del segundo parámetro.
 * Si los nombres de tu propiedad y de tu atributo son iguales, entonces no es necesario que los especifiques. En el caso anterior, al ser distintos, es necesario que lo especifiquemos.
 * Los comportamientos añadidos siempre se corresponden con un único atributo. Esto nos permite optimizar un sencillo patrón de uso. Si llamas "value" a tu propiedad, entonces no necesitas incluir los metadatos de la propiedad. Automáticamente estableceremos una correspondencia entre un atributo con el mismo nombre que tu comportamiento y la propiedad `value`.
-* Si el nombre de tu clase cumple el patrón {NombreComportamiento}AttachedProperty, entonces no necesitas incluir los metadatos del comportamiento añadido. El nombre del atributo será inferido del nombre de la clase eliminando "AttachedBehavior", escribiendo en minúsculas y con guión la parte restante del nombre, p.ej. comportamiento-nombre -behavior-name-.
+* Si el nombre de tu clase cumple el patrón {NombreComportamiento}AttachedBehavior, entonces no necesitas incluir los metadatos del comportamiento añadido. El nombre del atributo será inferido del nombre de la clase eliminando "AttachedBehavior", escribiendo en minúsculas y con guión la parte restante del nombre, p.ej. comportamiento-nombre -behavior-name-.
 
 Estas convenciones significan que podemos definir nuestro comportamiento `show` de esta manera:
 

@@ -903,7 +903,7 @@ Ok. Let's talk about conventions.
 * If your callback function is named {propertyName}Changed, then you don't need to specify it. So, in the above case, we could omit the value of the second parameter.
 * If your property name and attribute name are the same, then you don't need to specify it. In the above case, they are different, so we need to specify it.
 * Attached behaviors always map to a single attribute. This allows us to optimize a simple usage pattern. If you name your property "value", then you don't need to include the property metadata at all. We will automatically map an attribute with the same name as your behavior to the `value` property.
-* If your class's export name matches the pattern {BehaviorName}AttachedProperty, then you don't need to include the attached behavior metadata at all. The attribute name will be inferred from the export name by stripping off "AttachedBehavior" and lowercasing and hyphenating the remaining part of the name. ie. behavior-name
+* If your class's export name matches the pattern {BehaviorName}AttachedBehavior, then you don't need to include the attached behavior metadata at all. The attribute name will be inferred from the export name by stripping off "AttachedBehavior" and lowercasing and hyphenating the remaining part of the name. ie. behavior-name
 
 These conventions mean that we can actually define our `show` behavior like this:
 
