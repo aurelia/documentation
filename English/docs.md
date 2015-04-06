@@ -477,7 +477,7 @@ The `repeat` Template Controller allows you to render a template multiple times,
 </ul>
 ```
 
-An important note about the repeat behavior is that it works in conjuction with the `.for` binding command. This binding command interprets a special syntax in the form "item of array" where "item" is the local name you will use in the template and "array" is a normal binding expression that evaluates to an array.
+An important note about the repeat behavior is that it works in conjunction with the `.for` binding command. This binding command interprets a special syntax in the form "item of array" where "item" is the local name you will use in the template and "array" is a normal binding expression that evaluates to an array.
 
 > **Note:**: Like the `if` behavior, you can also use a `template` tag to group a collection of elements that don't have a parent element. In fact this is true of all Template Controllers. When you place a Template Controller on an element, it transforms it into an HTMLTemplate during compilation, so you can always explicitly add the template in your markup if you want or need to.
 
@@ -836,7 +836,7 @@ Aurelia has a powerful and extensible HTML template compiler. The compiler itsel
 Behaviors are not visible to the compiler by default. There are three main ways to plug them in:
 
 * Use the `require` element to require a behavior in a view. The `from` attribute specifies the relative path to the behavior's module. The behavior will be locally defined.
-* Use the Aurelia object during your bootstrapping phase to call `.globalizeResources(...resourePaths)` to register behaviors with global visibility in your application.
+* Use the Aurelia object during your bootstrapping phase to call `.globalizeResources(...resourcePaths)` to register behaviors with global visibility in your application.
 * Install a plugin that registers behaviors with global visibility in your application.
 
 >**Note:** A recommended practice for your own apps is to place all your app-specific behaviors, value converters, etc. into a _resources_ folder. Then create an _index.js_ file that turns them all into an internal plugin. Finally, install that plugin during your app's bootstrapping phase. This will keep your resources located in a known location, along with their registration code. It will also keep your configuration file clean and simple.
@@ -866,7 +866,7 @@ Let's look at one of Aurelia's own Attached Behavior implementations: `show`. He
 <div show.bind="isSaving" class="spinner"></div>
 ```
 
-The `show` behavior will conditionally apply a class to an element based on the falsiness of its value. (The class, when applied, hides the element.) Here's the implementation:
+The `show` behavior will conditionally apply a class to an element based on the falseness of its value. (The class, when applied, hides the element.) Here's the implementation:
 
 ```javascript
 import {Behavior} from 'aurelia-framework';
@@ -1302,7 +1302,7 @@ var client = new HttpClient()
 client.get('some/cool/path');
 ```
 
-In this case, all requests from the client will have the baseUri of 'http://aurelia.io' and will have the specified Authorizatoin header. The same API is available via the request builder. So, you can accomplish the same thing on an individual request like this:
+In this case, all requests from the client will have the baseUri of 'http://aurelia.io' and will have the specified Authorization header. The same API is available via the request builder. So, you can accomplish the same thing on an individual request like this:
 
 ```javascript
 var client = new HttpClient();
