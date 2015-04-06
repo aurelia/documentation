@@ -442,7 +442,7 @@ To recap: First we have a `require` element. Aurelia uses this to load the custo
 
 You may wonder how Aurelia determines the name of the custom element. By convention, it will use the export name, lowered and hyphenated. However, you can always be explicit. To do so, add more metadata by chaining `.customElement('nav-bar')` on `Behavior`. What if your custom element doesn't have a view template because it's all implemented in code? No problem, chain `.noView()`. Want to use ShadowDOM for your custom element? Do it like a pro by chaining `.useShadowDOM()`. Don't worry about whether or not the browser supports it. We have an efficient, full-fidelity ShadowDOM fallback implementation.
 
-In addition to creating custom elements, you can also create standalone attributes which add new behavior to existing elements. We call these _Attached Behaviors_. On occassion you may need to create _Template Controllers_ for dynamically adding and removing DOM from the view, like the `repeat` and `if` we used above. That's not all you can do either. Aurelia's templating engine is both powerful and extensible.
+In addition to creating custom elements, you can also create standalone attributes which add new behavior to existing elements. We call these _Attached Behaviors_. On occasion you may need to create _Template Controllers_ for dynamically adding and removing DOM from the view, like the `repeat` and `if` we used above. That's not all you can do either. Aurelia's templating engine is both powerful and extensible.
 
 ## Bonus: Leveraging Child Routers
 
@@ -497,7 +497,7 @@ export class ChildRouter{
 
 What!? It's practically the same configuration as `App`? What? Why? Well...you should probably never do this in real life...but it's pretty cool what this does. This, my friends, is a recursive router, and we're doing it because we can.
 
-For completness, here's the view:
+For completeness, here's the view:
 
 ### child-router.html
 
