@@ -62,17 +62,24 @@ If you've followed along this far, you now have all the libraries, build configu
     <script src="jspm_packages/system.js"></script>
     <script src="config.js"></script>
     <script>
+     System.config({
+       "paths": {
+         "*": "dist/*.js"
+       }
+     });
+   </script>
+    <script>
       System.import('aurelia-bootstrapper');
     </script>
   </body>
 </html>
 ```
 
-Yes, that's it. This is the only HTML page in our application. The head of the document is pretty straight forward: we link in our bootstrap, font-awesome and custom stylesheets. It's the body that's interesting.
+Yes, that's it. This is the only HTML page in our application. The head of the document is pretty straight forward: we link in our font-awesome and custom stylesheets. It's the body that's interesting.
 
 > **Note:** Be sure to confirm that the local folder name for font-awesome matches the link href. It's possible that these libraries have updated their versions since the authoring of this document.
 
-Let's start with the script tags. First we have _system.js_, our ES6 standards-based module loader. It's what loads the Aurelia library as well as your own code. Next we have _config.js_. This contains configuration for the loader. It's generated automatically whenever you execute a jspm command. jspm is the client-side package manager we recommend because it provides an amazing developer experience by integrating client-side package management with an ES6 compliant module loader.
+Let's start with the script tags. First we have _system.js_, our ES6 standards-based module loader. It's what loads the Aurelia library as well as your own code. Next we have _config.js_. This contains configuration for the loader. It's generated automatically whenever you execute a jspm command. jspm is the client-side package manager we recommend because it provides an amazing developer experience by integrating client-side package management with an ES6 compliant module loader. Immediately under that we have a call to `System.config`. This sets up the output location of our compiled JavaScript code.
 
 >**Note:** The Aurelia Framework isn't tied to jspm or SystemJS. We also support require-style APIs like RequireJS and Dojo Loader out of the box. Also, you can implement your own loader and handle package management any way you want. However we do think jspm/SystemJS is the best ES6-oriented solution today and it's our recommended approach.
 
@@ -93,11 +100,9 @@ In the _src_ folder create an _app.html_ file and an _app.js_ file. This is the 
 ### app.js
 ```javascript
 export class Welcome{
-  constructor(){
-    this.heading = 'Welcome to the Aurelia Navigation App!';
-    this.firstName = 'John';
-    this.lastName = 'Doe';
-  }
+  heading = 'Welcome to the Aurelia Navigation App!';
+  firstName = 'John';
+  lastName = 'Doe';
 
   get fullName(){
     return `${this.firstName} ${this.lastName}`;
@@ -111,9 +116,9 @@ export class Welcome{
 
 What...is that JavaScript?
 
-Yes. Yes it is. In fact it's ECMAScript 6 (ES6), the next version of JavaScript which introduces many new features to the language. Fortunately the Gulp file you downloaded above has you set up with [Babel](https://babeljs.io/), an amazing ES6 transpiler that allows you to write tomorrow's JavaScript and run it on today's browsers. Now you can use modules, classes, lambdas, string interpolation and more. Sweet! So, how do you create a _view-model_? You create a plain class and _export_ it to the framework. Piece. Of. Cake.
+Yes. Yes it is. In fact it's ECMAScript 7 (ES7), the next..next version of JavaScript which introduces many new features to the language. Fortunately the Gulp file you downloaded above has you set up with [Babel](https://babeljs.io/), an amazing transpiler that allows you to write tomorrow's JavaScript and run it on today's browsers. Now you can use modules, classes, lambdas, string interpolation and more. Sweet! So, how do you create a _view-model_? You create a plain class and _export_ it to the framework. Piece. Of. Cake.
 
-> **Note:** You don't have to use Babel or even ES6 to write an Aurelia app. You can use languages like TypeScript and CoffeeScript...or today's browser language: ES5. All you have to do is follow the language's standard pattern for creating classes and everything will work fine. We think ES6 is awesome though and hope you will consider it first. To learn more about the newest version of JavaScript including features like module exports and classes we recommend reading through [The Babel Learning Guide](http://babeljs.io/docs/learn-es6/).
+> **Note:** You don't have to use Babel or even ES7 to write an Aurelia app. You can use languages like TypeScript and CoffeeScript...or today's browser language: ES5. All you have to do is follow the language's standard pattern for creating classes and everything will work fine. We think ES7 is awesome though and hope you will consider it first. To learn more about the newest version of JavaScript including features like module exports and classes we recommend reading through [The Babel Learning Guide](http://babeljs.io/docs/learn-es6/).
 
 Ok. Now that we have a _view-model_ with some basic data and behavior, let's have a look at its partner in crime...the _view_.
 
@@ -169,28 +174,30 @@ Since this is a navigation app, we should probably add some more screens and set
 ### app.js
 
 ```javascript
+import {inject} from 'aurelia-framework';
 import {Router} from 'aurelia-router';
-import bootstrap from 'bootstrap';
+import 'bootstrap';
+import 'bootstrap/css/bootstrap.css!';
 
+@inject(Router)
 export class App {
-  static inject() { return [Router]; }
   constructor(router) {
     this.router = router;
     this.router.configure(config => {
       config.title = 'Aurelia';
       config.map([
-        { route: ['','welcome'], moduleId: './welcome', nav: true, title:'Welcome' }
+        { route: ['','welcome'],  moduleId: './welcome',      nav: true, title:'Welcome' }
       ]);
     });
   }
 }
 ```
 
-Ok, there's some really interesting new stuff here. We want to use the router, so we begin by importing it at the top of the file. This is the power of ES6 again. We then create our _App_ class to hold our data and behavior for the main application layout. Take a look at the constructor function. It's expecting something to pass in a _router_ instance when the App class is created. Where does that come from?
+Ok, there's some really interesting new stuff here. We want to use the router, so we begin by importing it at the top of the file. This is the power of the ES6/ES7 again. We then create our _App_ class to hold our data and behavior for the main application layout. Take a look at the constructor function. It's expecting something to pass in a _router_ instance when the App class is created. Where does that come from?
 
-Aurelia creates the UI components as needed to render your app. It does this by using a [Dependency Injection](http://en.wikipedia.org/wiki/Dependency_injection) container capable of providing constructor dependencies like this. How does the DI system know what to provide? All you have to do is add a static method named _inject_ that returns an array of types to provide instances of. There should be one entry in the array for each constructor parameter. In the above example, we needed a router instance, so we added the `Router` type to the inject array.
+Aurelia creates the UI components as needed to render your app. It does this by using a [Dependency Injection](http://en.wikipedia.org/wiki/Dependency_injection) container capable of providing constructor dependencies like this. How does the DI system know what to provide? All you have to do is add an ES7 `inject` decorator to your class that passes a list of types to provide instances of. There should be one argument for each constructor parameter. In the above example, we needed a router instance, so we added the `Router` type.
 
-> **Note:** Aurelia will also be able to handle this with ES7 Decorators in the next update.
+> **Note:** If you don't like using a decorator in this case, you can also add a static `inject` method or property to the class that returns an array of types to inject.
 
 We need to set the router to a public property on the class. The property must be named _router_. This is important. Don't get any fancy ideas here like naming it _taco_ or something like that ok? It's a router..so name it _router_ and everyone will be happy. Did we mention you **must** name it _router_?
 
@@ -202,6 +209,8 @@ Alrighty. Time to configure the router. It's easy. You can set a title to use wh
 * `moduleId`: This is a path relative to the current view-model which specifies the view/view-model pair you want to render for this route.
 * `title`: You can optionally provide a title to be used in generating the document's title.
 * `nav`: If this route should be included in the _navigation model_ because you want to generate a UI with it, set this to true (or a number indicating order).
+
+> **Note:** Did you notice how we used ES6 imports to load both bootstrap's JavaScript and CSS?
 
 ### app.html
 
@@ -256,11 +265,13 @@ Let's display some images from Flickr. To do that, let's first configure our rou
 ### app.js (updated)
 
 ```javascript
+import {inject} from 'aurelia-framework';
 import {Router} from 'aurelia-router';
-import bootstrap from 'bootstrap';
+import 'bootstrap';
+import 'bootstrap/css/bootstrap.css!';
 
+@inject(Router)
 export class App {
-  static inject() { return [Router]; }
   constructor(router) {
     this.router = router;
     this.router.configure(config => {
@@ -279,20 +290,21 @@ If you guessed that we need to create a _flickr.js_ and _flickr.html_ file, you 
 ### flickr.js
 
 ```javascript
+import {inject} from 'aurelia-framework';
 import {HttpClient} from 'aurelia-http-client';
 
-var url = 'http://api.flickr.com/services/feeds/photos_public.gne?tags=rainier&tagmode=any&format=json';
-
+@inject(HttpClient)
 export class Flickr{
-  static inject() { return [HttpClient]; }
+  heading = 'Flickr';
+  images = [];
+  url = 'http://api.flickr.com/services/feeds/photos_public.gne?tags=rainier&tagmode=any&format=json';
+
   constructor(http){
-    this.heading = 'Flickr';
-    this.images = [];
     this.http = http;
   }
 
   activate(){
-    return this.http.jsonp(url).then(response => {
+    return this.http.jsonp(this.url).then(response => {
       this.images = response.content.items;
     });
   }
@@ -372,16 +384,14 @@ Guess what? Our simple view-model/view conventions still apply for custom elemen
 ### nav-bar.js
 
 ```javascript
-import {Behavior} from 'aurelia-framework';
+import {bindable} from 'aurelia-framework';
 
 export class NavBar {
-  static metadata(){ return Behavior.withProperty('router'); }
+  @bindable router = null;
 }
 ```
 
-To create a custom element, you create and export a class. Since this class is going to be used in HTML as an element, we need to tell the framework what properties on the class should appear as attributes on the element. To do that, we use the _metadata_ method. Like _inject_, metadata is a way to provide information about your class to the Aurelia framework. Aurelia is smart and can infer many things, but when it can't or when you want to do something different than the conventions, you use some form of metadata. To leverage this capability, add a static `metadata` method on the class and return an array of metadata instances (really just regular objects). In this case we are using Aurelia's `Behavior` metadata helper. The `withProperty` method adds a `BehaviorProperty` which tells the framework that we want our class's `router` property to be surfaced as an attribute in the HTML. Once it's surfaced as an attribute, we can databind to it in the view.
-
-> **Note:** Ultimately all metadata can be declared using ES7 Decorators with the same name. This isn't available yet, but is coming in the next update.
+To create a custom element, you create and export a class. Since this class is going to be used in HTML as an element, we need to tell the framework what properties on the class should appear as attributes on the element. To do that, we use the _bindable_ decorator. Like _inject_, _bindable_ is a way to provide information about your class to the Aurelia framework. Aurelia is smart and can infer many things, but when it can't or when you want to do something different than the conventions, you supply some additional information through decorators. The `bindable` decorator tells the framework that we want our class's `router` property to be surfaced as an attribute in the HTML. Once it's surfaced as an attribute, we can bind to it in the view.
 
 ### nav-bar.html
 
@@ -453,11 +463,13 @@ First, let's update our _app.js_ with the new configuration. Here's what it shou
 ### app.js (updated...again)
 
 ```javascript
+import {inject} from 'aurelia-framework';
 import {Router} from 'aurelia-router';
-import bootstrap from 'bootstrap';
+import 'bootstrap';
+import 'bootstrap/css/bootstrap.css!';
 
+@inject(Router)
 export class App {
-  static inject() { return [Router]; }
   constructor(router) {
     this.router = router;
     this.router.configure(config => {
@@ -477,12 +489,14 @@ Nothing new there. The interesting part is what's inside _child-router.js_...
 ### child-router.js
 
 ```javascript
+import {inject} from 'aurelia-framework';
 import {Router} from 'aurelia-router';
 
+@inject(Router)
 export class ChildRouter{
-  static inject() { return [Router]; }
+  heading = 'Child Router';
+
   constructor(router){
-    this.heading = 'Child Router';
     this.router = router;
     router.configure(config => {
       config.map([
