@@ -479,7 +479,7 @@ The `repeat` Template Controller allows you to render a template multiple times,
 
 An important note about the repeat behavior is that it works in conjunction with the `.for` binding command. This binding command interprets a special syntax in the form "item of array" where "item" is the local name you will use in the template and "array" is a normal binding expression that evaluates to an array.
 
-You can also iterate over the ES6 Map object
+You can also iterate over ES6 Map objects
 
 ```markup
 <ul>
