@@ -479,6 +479,14 @@ The `repeat` Template Controller allows you to render a template multiple times,
 
 An important note about the repeat behavior is that it works in conjunction with the `.for` binding command. This binding command interprets a special syntax in the form "item of array" where "item" is the local name you will use in the template and "array" is a normal binding expression that evaluates to an array.
 
+You can also iterate over ES6 Map objects
+
+```markup
+<ul>
+    <li repeat.for="[id, customer] of customers">${id} ${customer.fullName}</li>
+</ul>
+```
+
 > **Note:**: Like the `if` behavior, you can also use a `template` tag to group a collection of elements that don't have a parent element. In fact this is true of all Template Controllers. When you place a Template Controller on an element, it transforms it into an HTMLTemplate during compilation, so you can always explicitly add the template in your markup if you want or need to.
 
 Each item that is being repeated by the `repeat` behavior has several special contextual values available for binding:
