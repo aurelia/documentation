@@ -49,7 +49,7 @@ Con excepción del complemento a medida -custom plugin-, este código se corresp
 
 Aurelia tiene una abstracción sencilla para accesos que usa el propio marco de trabajo -framework-. Por defecto, no produce efectos -no-op-. La configuración anterior muestra como instalar un objeto appender que tomará más tarde los datos de acceso -log data- y los sacará por la consola. También puedes ver como se establece el nivel del registro. Las opciones disponibles para este ajuste son: `none`, `error`, `warn`, `info` y `debug`.
 
-Puedes crear fácilmente tus propios objetos appender. Solo implementa una clase que se acomode a la interfaz de appender. La mejor forma de ver como hacerlo es estudiar nuestro propio [código fuente del appender para el registro de consola](https://github.com/aurelia/logging-console/blob/master/src/index.js) .
+Puedes crear fácilmente tus propios objetos appender. Solo implementa una clase que se acomode a la interfaz de appender. La mejor forma de ver como hacerlo es estudiar nuestro propio [código fuente del appender para el registro de consola](https://github.com/aurelia/logging-console/blob/master/src/index.js).
 
 ### Complementos -plugins-
 
@@ -63,7 +63,7 @@ Un _complemento_ -plugin- es solo un módulo con una función `install` exportad
 
 #### Promesas -promises-
 
-Aurelia usa por defecto promesas ES6 o un polyfill. En cualquier caso, puedes reemplazar esto con la excelente librería de promesa [Bluebird](https://github.com/petkaantonov/bluebird). Inclúyela simplemente en tu página antes de cualquier referencia a los otros scripts. Te proporcionará su propia implementación ajustada a los estándares de promesas -Promise- que actualmente es más rápida que la (implementación) nativa y tiene un mejor soporte para depuración. Además cuando se usa en combinación con el transpilador 6to5 (compilador de ES6 a ES5), puedes usar [coroutines](https://6to5.org/docs/usage/transformers/#bluebird-coroutines) para código asíncrono mejorado.
+Aurelia usa por defecto promesas ES6 o un polyfill. En cualquier caso, puedes reemplazar esto con la excelente librería de promesa [Bluebird](https://github.com/petkaantonov/bluebird). Inclúyela simplemente en tu página antes de cualquier referencia a los otros scripts. Te proporcionará su propia implementación ajustada a los estándares de promesas -Promise- que actualmente es más rápida que la (implementación) nativa y tiene un mejor soporte para depuración. Además cuando se usa en combinación con el transpilador Babel (compilador de ES6 a ES5), puedes usar [coroutines](https://babeljs.io/docs/usage/transformers/#bluebird-coroutines) para código asíncrono mejorado.
 
 ### El objeto Aurelia
 
@@ -84,9 +84,11 @@ export class Aurelia {
 }
 ```
 
+
 ## Vistas y modelos
 
 En Aurelia, los elementos de interfaz de usuario están compuestos por parejas de _vista_ y _modelo_ . La _vista_ se escribe con HTML y se despliega en el DOM. El _modelo_ se escribe con JavaScript y provee datos y comportamiento a la _vista_. El motor de plantillas y/o la inyección de dependencias son responsables de la creación de estas parejas y la aplicación de un ciclo de vida previsible para el proceso. Una vez generado, el poderoso _sistema de enlace -databinding-_ enlaza las dos partes permitiendo que los cambios en los datos se reflejen en la _vista_ y viceversa.
+
 
 ### Inyección de dependencias
 
@@ -153,6 +155,7 @@ Ahora, cada vez que se le solicita al contenedor de inyección de dependencias u
 
 > **Nota:** Este último ejemplo introduce _metadata_ -metadatos- para proporcionar información sobre el contexto al marco de trabajo. Verás otra vez _metadata_ cuando hablemos acerca de los _comportamientos_ -behaviors-.
 
+
 ## Uso de plantillas -templating-
 
 El motor de plantillas de Aurelia es responsable de cargar las vistas y sus recursos importados, compilando tu HTML para un rendimiento óptimo y mostrando la interfaz de usuario (UI) en pantalla. Para crear una vista, todo lo que tienes que hacer es escribir un archivo HTML que incluya un `HTMLTemplate`. Aquí tienes una vista sencilla:
@@ -210,6 +213,7 @@ El enlazado de datos te permite enlazar el estado y el comportamiento de un obje
 
 Puedes ampliar el sistema con tus propias órdenes de enlazado, pero Aurelia proporciona una colección para cubrir los casos de uso más frecuentes.
 
+
 #### bind, one-way, two-way & one-time
 
 La orden de enlazado más común es `.bind` -enlaza-. Esta hará que la propiedad sea vinculada usando un enlace uni-direccional -"one-way"- para todos sus atributos, excepto para el caso de valores de elementos de formulario, que reciben un enlace bi-direccional -"two-way"-.
@@ -232,6 +236,7 @@ Aunque siempre puedes ser explícito y usar `.one-way` o `.two-way` en lugar de 
 ```
 
 En orden a optimizar el rendimiento y minimizar el uso de CPU y de memoria, puedes aprovechar alternativamente la orden de enlace `.one-time` para enviar datos desde el modelo hacia la vista una sola vez -one time-. Esto ocurrirá durante la fase inicial de enlazado, después de lo cual no habrá ninguna sincronización.
+
 
 #### delegate, trigger & call
 
@@ -257,6 +262,7 @@ Todo esto va de una u otra manera en contra de los eventos de DOM. Ocasionalment
 
 Ahora el comportamiento asociado recibirá una función que podrá llamar para invocar tu código `sayHello()`.
 
+
 #### Interpolación de cadenas
 
 A veces necesitas vincular propiedades directamente dentro del contenido del documento o intercalarlas dentro de un valor de atributo. Para ello puedes usar la sintaxis para interpolación de cadenas  `${expresión}`. La interpolación de cadenas es un enlace uni-direccional cuya salida es convertida en una cadena. Aquí tienes un ejemplo:
@@ -275,6 +281,7 @@ En esta linea "dot" es una clase presente estáticamente y "green" solo está pr
 
 > **Nota:** Puedes usar expresiones simples en tu enlace. No intentes hacer cosas demasiado rebuscadas. No queremos que haya código en la vista. Solo buscamos establecer un vínculo entre la vista y su modelo.
 
+
 #### ref
 
 Además de órdenes e interpolación, el lenguaje de enlazado reconoce el uso de un atributo especial: `ref`. Al usar `ref` puedes crear un nombre local para un elemento que podrás usar como referencia en otra expresión de enlace. También se añadirá como una propiedad en el modelo, de manera que será accesible a través de código. Aquí tienes un ejemplo claro del uso de `ref`:
@@ -290,6 +297,7 @@ También puedes usar el enlace especial `.view-model` combinado con `ref` para o
 <i-consume-a-value input.bind="producer.output"></i-consume-a-value>
 ```
 
+
 ### Comportamientos -behaviors-
 
 Junto al enlazado de datos -databinding-, cuentas con el poder de los comportamientos de Aurelia para usarlo en tus vistas. Son tres los tipos de comportamiento incluidos:
@@ -299,6 +307,7 @@ Junto al enlazado de datos -databinding-, cuentas con el poder de los comportami
 * Controles de plantillas -Template Controllers- Crean mecanismos nuevos para desplegar las plantillas. Un control de plantillas es una clase capaz de crear interfaz de usuario dinámicamente y de inyectarla en el DOM.
 
 Naturalmente, todos funcionan sin problemas con el enlazado de datos. Echemos un vistazo a los comportamientos que te proporciona Aurelia y que están disponibles globalmente en todas las vistas.
+
 
 #### show
 
