@@ -14,7 +14,7 @@ Si necesitas que Aurelia funcione con una versión de IE anterior a la 11 existe
 
 Muchas plataformas tienen un punto de entrada o "main" para la ejecución del código. Aurelia no es diferente. Si has leído la página [Get Started](/get-started.html), entonces ya habrás visto el atributo `aurelia-app` . Simplemente, colócalo en algún elemento HTML y el configurador inicial -bootstrapper- de Aurelia cargará _app.js_ y _app.html_, los vinculará y los inyectará en el elemento del DOM en el que incluiste dicho atributo. Si no quieres usar esta convención, provee simplemente de un valor al atributo indicando que modelo (de vista) deseas cargar. Por ejemplo, `<body aurelia-app="todo">` hará que se carguen los archivos _todo.js_ y _todo.html_.
 
-El atributo `aurelia-app` está bien para empezar, pero a menudo deseamos configurar nuestro marco de trabajo -framework- o ejecutar algún código antes de mostrarle nada al usuario. Así que cabe la posibilidad, según vaya progresando tu proyecto, de que tiendas a usar `aurelia-main`. 
+El atributo `aurelia-app` está bien para empezar, pero a menudo deseamos configurar nuestro marco de trabajo -framework- o ejecutar algún código antes de mostrarle nada al usuario. Así que cabe la posibilidad, según vaya progresando tu proyecto, de que tiendas a usar `aurelia-main`.
 
 >**Nota:** Si estas usando AtScript, añade un atributo `atscript` al elemento DOM de tu aplicación. Si estás usando ES5 en lugar de ES6, añade un atributo `es5`. De está manera se activa la función que hace más sencillo el uso de estos lenguajes.
 
@@ -403,7 +403,7 @@ Este no es un comportamiento añadido que vayas a usar directamente. En lugar de
 <div jquery.modal="show: true; keyboard.bind: allowKeyboard">...</div>
 ```
 
-Este ejemplo está basado en el complemento [Bootstrap modal widget](http://getbootstrap.com/javascript/#modals). En este caso, el complemento `modal` de jQuery será añadido al `div` y será configurado con su opción `show` puesta a `true` y su opción `keyboard` puesta al valor de la propiedad `allowKeyboard` del modelo. Cuando la vista contenedora esté desenlazada, el complemento jQuery será destruido. 
+Este ejemplo está basado en el complemento [Bootstrap modal widget](http://getbootstrap.com/javascript/#modals). En este caso, el complemento `modal` de jQuery será añadido al `div` y será configurado con su opción `show` puesta a `true` y su opción `keyboard` puesta al valor de la propiedad `allowKeyboard` del modelo. Cuando la vista contenedora esté desenlazada, el complemento jQuery será destruido.
 
 Esta capacidad combina el comportamiento añadido especial `global-behaviour` con sintaxis a medida para habilitar estas capacidades. La sintaxis que ves aquí está basada en la sintaxis del atributo nativo (HTML) `style` que lista las propiedades y los valores separados de la misma manera que en el ejemplo. Ten en cuenta que puedes usar órdenes de enlace como `.bind`, para pasar datos de tu modelo directamente al complemento, o `.call`, para pasar una función de retrollamada directamente al complemento.
 
@@ -447,7 +447,7 @@ Opcionalmente podemos crear una propiedad `title` para ser usada en la construcc
 
 >**Nota:** Cualquier propiedad que dejes fuera será determinada convencionalmente por el marco de trabajo en base a lo que hayas proporcionado.
 
-Así que, que opciones tienes para el patrón del sistema de gestión de rutas? 
+Así que, que opciones tienes para el patrón del sistema de gestión de rutas?
 
 * rutas estáticas -static routes-
     - p.ej. 'home' - Coincide con la cadena exactamente.
@@ -548,12 +548,12 @@ class AuthorizeStep {
     // Check if the route has an "auth" key
     // The reason for using `nextInstructions` is because
     // this includes child routes.
-    if (routingContext.nextInstructions.some(i => i.config.auth)) { 
+    if (routingContext.nextInstructions.some(i => i.config.auth)) {
       var isLoggedIn = /* insert magic here */false;
       if (!isLoggedIn) {
         return next.cancel(new Redirect('login'));
       }
-      
+
       return next();
     } else {
       return next();
@@ -737,7 +737,7 @@ Bien. Hablemos de convenciones.
 * Si el nombre de tu función de retrollamada cumple el patrón   {nombrePropiedad}Changed, entonces no necesitas especificarlo. Así, en el caso anterior, pudimos omitir el valor del segundo parámetro.
 * Si los nombres de tu propiedad y de tu atributo son iguales, entonces no es necesario que los especifiques. En el caso anterior, al ser distintos, es necesario que lo especifiquemos.
 * Los comportamientos añadidos siempre se corresponden con un único atributo. Esto nos permite optimizar un sencillo patrón de uso. Si llamas "value" a tu propiedad, entonces no necesitas incluir los metadatos de la propiedad. Automáticamente estableceremos una correspondencia entre un atributo con el mismo nombre que tu comportamiento y la propiedad `value`.
-* Si el nombre de tu clase cumple el patrón {NombreComportamiento}AttachedProperty, entonces no necesitas incluir los metadatos del comportamiento añadido. El nombre del atributo será inferido del nombre de la clase eliminando "AttachedBehavior", escribiendo en minúsculas y con guión la parte restante del nombre, p.ej. comportamiento-nombre -behavior-name-.
+* Si el nombre de tu clase cumple el patrón {NombreComportamiento}AttachedBehavior, entonces no necesitas incluir los metadatos del comportamiento añadido. El nombre del atributo será inferido del nombre de la clase eliminando "AttachedBehavior", escribiendo en minúsculas y con guión la parte restante del nombre, p.ej. comportamiento-nombre -behavior-name-.
 
 Estas convenciones significan que podemos definir nuestro comportamiento `show` de esta manera:
 
@@ -758,17 +758,17 @@ export class ShowAttachedBehavior {
 }
 ```
 
-> **Nota:** ¿Y por qué no aprovecha Aurelia mismo internamente estas convenciones? Siempre que estemos creando una librería externa de comportamientos, lo mejor es ser explícitos. Tu no sabes si los desarrolladores que utilicen tu librería van a cambiar o no las convenciones de Aurelia, quebrando así tu librería. Para evitar esto, indica siempre explícitamente los metadatos para los comportamientos que previsiblemente van a ser usados en otras aplicaciones. Dentro de tu propia aplicación puedes usar las convenciones que quieras para simplificar el desarrollo. 
+> **Nota:** ¿Y por qué no aprovecha Aurelia mismo internamente estas convenciones? Siempre que estemos creando una librería externa de comportamientos, lo mejor es ser explícitos. Tu no sabes si los desarrolladores que utilicen tu librería van a cambiar o no las convenciones de Aurelia, quebrando así tu librería. Para evitar esto, indica siempre explícitamente los metadatos para los comportamientos que previsiblemente van a ser usados en otras aplicaciones. Dentro de tu propia aplicación puedes usar las convenciones que quieras para simplificar el desarrollo.
 
 A continuación, veamos el constructor.
 
-Los comportamientos añadidos pueden obtener fácilmente acceso al elemento HTML al que se han añadido especificándolo en el vector `inject`. El comportamiento `show` almacene la referencia de manera que puede actualizar `classList` posteriormente. 
+Los comportamientos añadidos pueden obtener fácilmente acceso al elemento HTML al que se han añadido especificándolo en el vector `inject`. El comportamiento `show` almacene la referencia de manera que puede actualizar `classList` posteriormente.
 
 Finalmente, veamos la retrollamada `valueChanged`. Dijimos anteriormente que esto está configurado mediante los metadatos de la propiedad de manera que sea llamada siempre que el valor cambie. El sistema de enlazado actualizará automáticamente las propiedades disparando la retrollamada. Así, todo lo que tiene que hacer la implementación es  añadir/eliminar la clase apropiada en función del valor.
 
 ### Propiedades con opciones -options properties-
 
-Puede que te preguntes que hacer si quieres crear un comportamiento añadido con múltiples propiedades teniendo en cuenta que los comportamientos añadidos siempre están en correspondencia con un único atributo. Para este escenario usamos una propiedad `OptionsProperty` que capacita a tu atributo único para funcionar como el atributo nativo `style`, con múltiples propiedades insertadas en él. Aquí tienes un ejemplo de como se usa: 
+Puede que te preguntes que hacer si quieres crear un comportamiento añadido con múltiples propiedades teniendo en cuenta que los comportamientos añadidos siempre están en correspondencia con un único atributo. Para este escenario usamos una propiedad `OptionsProperty` que capacita a tu atributo único para funcionar como el atributo nativo `style`, con múltiples propiedades insertadas en él. Aquí tienes un ejemplo de como se usa:
 
 ```javascript
 import {Behavior} from 'aurelia-templating';
@@ -793,7 +793,7 @@ Esto crea un comportamiento añadido de nombre `my-behavior` con dos propiedades
 
 Fíjate en que no usamos la orden de enlace sobre el comando mismo. En lugar de eso, lo usamos con cada propiedad individual dentro del valor del atributo. Puedes utilizar literales u órdenes de enlazado estándar.
 
->**Note:** No se usan las órdenes `delegate` y `trigger` dentro de un atributo de opción. Estas están siempre añadidas al elemento mismo, puesto que trabajan directamente con eventos nativos del DOM. En cambio si puedes usar `call`. 
+>**Note:** No se usan las órdenes `delegate` y `trigger` dentro de un atributo de opción. Estas están siempre añadidas al elemento mismo, puesto que trabajan directamente con eventos nativos del DOM. En cambio si puedes usar `call`.
 
 ### Elementos a medida -custom elements-
 
@@ -1046,7 +1046,7 @@ export class WebAPI {
         this.http = http;
     }
 
-    return getAllContacts(){
+    getAllContacts(){
         return this.http.get('uri goes here');
     }
 }
@@ -1129,4 +1129,4 @@ ConventionalView.convertModuleIdToViewUrl = function(moduleId){
 ```
 Este código tendrías que ejecutarlo como parte de tu lógica de configuración inicial -bootstrapping logic- para que surtiera efecto antes de que se carguen los comportamientos. Esto afectará a *todo* incluido a los elementos a medida. Así que si necesitas o quieres que estos actúen de otra manera, tendrás que tenerlo en cuenta en tu implementación de `convertModuleIdToViewUrl`.
 
->**Nota:** Este es un ejemplo de por que los autores de complementos externos no deben fiarse de las convenciones. Los desarrolladores pueden modificar estas convenciones para adaptarse a las necesidades de su propia aplicación.     
+>**Nota:** Este es un ejemplo de por que los autores de complementos externos no deben fiarse de las convenciones. Los desarrolladores pueden modificar estas convenciones para adaptarse a las necesidades de su propia aplicación.
