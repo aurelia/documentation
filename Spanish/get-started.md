@@ -6,7 +6,7 @@
 
 ## Configurar tu entorno
 
-Empecemos configurando un gran conjunto de herramientas que podrás usar para crear aplicaciones Javascript modernas. Todo nuestro equipamiento está basado en [Node.js](http://nodejs.org/). Si ya lo tienes instalado, estupendo! Si no es así, vete a la [página web oficial](http://nodejs.org/), descárgatelo e instálalo. Todo lo demás que vamos a necesitar lo instalaremos usando el gestor de paquetes de Node ([npm](https://docs.npmjs.com/getting-started/what-is-npm)).
+Empecemos configurando un gran conjunto de herramientas que podrás usar para crear aplicaciones Javascript modernas. Todo nuestro equipamiento está basado en [Node.js](http://nodejs.org/). Si ya lo tienes instalado, estupendo! Si no es así, vete a la [página web oficial](http://nodejs.org/), descárgatelo e instálalo. Todo lo demás que vamos a necesitar lo instalaremos usando el gestor de paquetes de Node ([npm](https://docs.npmjs.com/getting-started/what-is-npm)). Si ya tienes npm instalado, asegúrate de contar con la [última versión](https://github.com/npm/npm/wiki/Troubleshooting#try-the-latest-stable-version-of-node) para evitar cualquier problema con las otras herramientas.
 
 Primero, empecemos por instalar [Gulp](http://gulpjs.com/), que vamos a utilizar para automatizar el montaje. Si aún no lo tienes, puedes usar npm de esta manera para configurarlo (es posible que necesites usar `sudo`):
 
@@ -54,57 +54,61 @@ Si nos has seguido hasta aquí, ahora dispones de todas las librerías, configur
 <!doctype html>
 <html>
   <head>
-    <link rel="stylesheet" type="text/css" href="jspm_packages/github/twbs/bootstrap@3.3.2/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="jspm_packages/npm/font-awesome@4.2.0/css/font-awesome.min.css">
+    <title>Aurelia</title>   
+    <link rel="stylesheet" type="text/css" href="jspm_packages/npm/font-awesome@4.3.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="styles/styles.css">
   </head>
   <body aurelia-app>
     <script src="jspm_packages/system.js"></script>
     <script src="config.js"></script>
     <script>
-      System.baseUrl = 'dist';
+      System.config({
+        "paths": {
+          "*": "dist/*.js";
+        }
+      });
+    </script>
+    <script>
       System.import('aurelia-bootstrapper');
     </script>
   </body>
 </html>
 ```
 
-Si, eso es. Esta es la única página HTML de nuestra aplicación. La cabecera del documento ("head") es bastante evidente: enlazamos a nuestras hojas de estilo personalizadas, de Bootstrap y de Font-Awesome. Lo que es interesante es el cuerpo ("body").
+Si, eso es. Esta es la única página HTML de nuestra aplicación. La cabecera del documento ("head") es bastante evidente: enlazamos a nuestras hojas de estilo personalizadas y de Font-Awesome. Lo que es interesante es el cuerpo ("body").
 
-> **Nota:** Asegúrate de que las direcciones locales para bootstrap y font-awesome se corresponden con los "href" de los enlaces. Es posible que estas librerías hayan actualizado sus versiones desde la redacción de este documento.
+> **Nota:** Asegúrate de que la dirección local de font-awesome se corresponden con los "href" de los enlaces. Es posible que estas librerías hayan actualizado sus versiones desde la redacción de este documento.
 
-Empecemos con las etiquetas script. Primero tenemos _system.js_, nuestro cargador de módulos basado en estándares ES6. Es el responsable de cargar tanto la librería de Aurelia como tu propio código. A continuación tenemos _config.js_. Este contiene la configuración para el cargador. Y es generado automáticamente cada vez que ejecutamos un comando jspm. jspm es el gestor de paquetes del lado del cliente que nosotros recomendamos. Este proporciona una experiencia de desarrollo estupenda al integrar la gestión de paquetes del lado del cliente con un cargador de módulos que cumple con ES6.
+Empecemos con las etiquetas "script". Primero tenemos _system.js_, nuestro cargador de módulos basado en estándares ES6. Es el responsable de cargar tanto la librería de Aurelia como tu propio código. A continuación tenemos _config.js_. Este contiene la configuración para el cargador. Y es generado automáticamente cada vez que ejecutamos un comando jspm. jspm es el gestor de paquetes del lado del cliente que nosotros recomendamos, porque proporciona una experiencia de desarrollo estupenda al integrar la gestión de paquetes del lado del cliente con un cargador de módulos que cumple con ES6. A continuación inmediatamente tenemos una llamada a "System.config". Con esta establecemos la localización de salida para nuestro código Javascript compilado.
 
 > **Nota:** El marco de trabajo ("framework") Aurelia no está atado a jspm o a SystemJS. También soporta APIs estilo `require` como RequireJS y Dojo Loader directamente. Incluso puedes implementar tu propio cargador y desarrollar tu gestión de paquetes como te parezca. En cualquier caso pensamos que jspm/SystemJS es la mejor opción actual orientada a ES6 y es el planteamiento que nosotros recomendamos.
 
-Una vez que ya tenemos nuestro cargador de módulos y su configuración, establecemos el valor de `baseUrl` para apuntar a la ubicación de nuestro código. A continuación cargamos el módulo `aurelia-bootstrapper` con una llamada a `System.import`, asegurándonos de capturar cualquier error que pudiera suceder en el arranque y los enlaza a la consola.
+Una vez que ya tenemos nuestro cargador de módulos y su configuración, cargamos el módulo "aurelia-bootstrapper" con una llamada a "System.import".
 
-Cuando se carga el iniciador (boostrapper) este inspecciona el documento HTML en busca de atributos _aurelia_. En este caso encontrará que el cuerpo ("body") tiene un atributo _aurelia-app_. Esto le dice al iniciador ("bootstrapper") que cargue el modelo (de la vista) y la vista de nuestra _app_ (aplicación), ubicados por convención en _app.js_ y _app.html_, para componerlos como aplicación Aurelia en el DOM.
+Cuando se carga el iniciador (boostrapper) este inspecciona el documento HTML en busca de atributos _aurelia-app_. En este caso encontrará que el cuerpo ("body") tiene un atributo _aurelia-app_. Esto le dice al iniciador ("bootstrapper") que cargue el modelo (de la vista) y la vista de nuestra _app_ (aplicación), ubicados por convención en _app.js_ y _app.html_, para componerlos como aplicación Aurelia en el DOM.
 
 Un momento... si no tenemos ningún modelo (de la vista) ni vista de nuestra _app_ (aplicación). Ummm... ¿¡Y AHORA QUE!?
 
 ## Creación de nuestra primera pantalla
 
-En Aurelia, los elementos de la interfaz de usuario están compuestos por parejas de vista (_view_) y modelo (de vista) (_view-model_). La vista se escribe en HTML y se muestra en el DOM. El modelo (de vista) está escrito en Javascript y provee de datos y comportamiento (lógica) a la vista. El potente enlazado de datos (_databinding_) vincula las dos partes permitiendo que los cambios en tus datos se reflejen en la vista y viceversa.
+En Aurelia, los elementos de la interfaz de usuario están compuestos por parejas de vista (_view_) y modelo (de vista) (_view-model_). La vista se escribe en HTML y se muestra en el DOM. El modelo (de vista) está escrito en Javascript y provee de datos y comportamiento (lógica) a la vista. El potente enlazado de datos (_databinding_) vincula las dos partes permitiendo que los cambios en tus datos se reflejen en la vista y viceversa. Esta separación de asuntos es magnífica para la colaboración desarrollador/diseñador, para facilitar el mantenimiento, para la flexibilidad de la arquitectura e incluso para el control del código fuente. 
 
-Veamos como funciona...
+Veamos como funciona esto...
 
 Crea en la carpeta _src_ los archivos _app.html_ y _app.js_. Estos son la vista y el modelo que buscaba el iniciador ("bootstrapper"). Empecemos por el modelo creando una simple clase que contenga un _firstName_ ("nombre") y un _lastName_ ("apellido"). También añadiremos una propiedad computada _fullName_ ("nombre completo") y un método _welcome_ de bienvenida. Este es el aspecto que debería tener:
 
 ### app.js
 ```javascript
-export class Welcome{
-  constructor(){
-    this.heading = 'Welcome to the Aurelia Navigation App!';
-    this.firstName = 'John';
-    this.lastName = 'Doe';
-  }
-
-  get fullName(){
+export class Welcome {
+  heading = 'Welcome to the Aurelia Navigation App!';
+  firstName = 'John';
+  lastName = 'Doe';
+  
+  get fullName() {
     return `${this.firstName} ${this.lastName}`;
   }
 
-  welcome(){
+  welcome() {
     alert(`Welcome, ${this.fullName}!`);
   }
 }
@@ -112,9 +116,9 @@ export class Welcome{
 
 ¿Que... eso es Javascript?
 
-Si. Lo es. De hecho es ECMAScript 6 (ES6), la próxima versión de Javascript que incorpora numerosas características nuevas al lenguaje. Afortunadamente el archivo Gulp que te descargaste más arriba te ha equipado con [Babel](https://babeljs.io/), un sorprendente transpilador (transpiler) -compilador de código fuente a código fuente- de ES6 a ES5 que nos permite escribir Javascript del futuro y ejecutarlo en navegadores actuales. De esta manera podemos utilizar módulos, clases, lambdas, interpolación de cadenas y otros. ¡Que bueno! Bien, como se crea un modelo (de vista) _view-model_? Creamos una simple clase y la exportamos con _export_ al marco de trabajo (framework). Pedazo. De. Tarta.
+Si. Lo es. De hecho se trata de ECMAScript 7 (ES7), la próxima "próxima versión" de Javascript que incorpora numerosas características nuevas al lenguaje. Afortunadamente el archivo Gulp que te descargaste más arriba te ha equipado con [Babel](https://babeljs.io/), un sorprendente transpilador (transpiler) -compilador de código fuente a código fuente- que nos permite escribir Javascript del futuro y ejecutarlo en navegadores actuales. De esta manera podemos utilizar módulos, clases, lambdas, interpolación de cadenas y otros. ¡Que bueno! Bien, como se crea un modelo (de vista) _view-model_? Creamos una simple clase y la exportamos con _export_ al marco de trabajo (framework). Pedazo. De. Tarta.
 
-> **Nota:** No tienes que usar Babel necesariamente para escribir una aplicación con Aurelia. Puedes usar AtScript, CoffeScript,... o el lenguaje de los navegadores actuales: ES5. Todo lo que tienes que hacer es seguir los patrones estándar del lenguaje para crear clases y todo irá bien. Nosotros pensamos que ES6 es alucinante y deseamos que lo tomes en consideración en primer lugar. Para aprender más acerca de las versión más reciente de Javascript incluyendo exportación de módulos y clases te recomendamos la lectura de [Luke Hoban's feature repo](https://github.com/lukehoban/es6features#readme), el repositorio de características de Luke Hoban.
+> **Nota:** No tienes que usar Babel ni ES 7 necesariamente para escribir una aplicación con Aurelia. Puedes usar lenguajes como Typescript, CoffeScript,... o el lenguaje de los navegadores actuales: ES5. Todo lo que tienes que hacer es seguir los patrones estándar del lenguaje para crear clases y todo irá bien. Nosotros pensamos que ES7 es alucinante y confiamos en que lo tomes en consideración en primer lugar. Para aprender más acerca de las versión más reciente de Javascript incluyendo características como exportación de módulos y clases te recomendamos la lectura de [The Babel Learning Guide](http://babeljs.io/docs/learn-es6/), La guía de estudio Babel.
 
 Bien. Ahora que tenemos un modelo (de vista) con algunos datos y comportamiento básicos, echemos un vistazo a su cómplice... la vista.
 
@@ -157,9 +161,11 @@ gulp watch
 
 Ahora puedes ir en el navegador a [http://localhost:9000/](http://localhost:9000/) para ver la aplicación. Teclea en los controles de entrada del formulario y ve como la propiedad calculada _Full Name_ se actualiza con cualquier cambio. Pulsa el botón y observa como se llama a tu método.
 
+> **Nota:** Si esto no funcionara, prueba a [actualizar](https://github.com/npm/npm/wiki/Troubleshooting#try-the-latest-stable-version-of-node) a la última versión de npm.
+
 > **Nota:** Aurelia posee un motor de enlace de datos único y potente que usa técnicas adaptativas para elegir el mejor modo de observar cambios en cada propiedad. Por ejemplo, si estás usando un navegador que soporta [Object.observe](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/observe), tanto _firstName_ como _lastName_ serán observados usando esa estrategia. Si no, se generarán accesores (getters) y asignadores (setters) que guarden los cambios en la cola de micro-tareas (Micro Task Queue), emulando correctamente el comportamiento de _Object.observe_. Ya que la propiedad computada _fullName_ no puede ser observada con ninguna de estas técnicas, usaremos [dirty-checking](http://blog.bguiz.com/post/57373805814/accessors-vs-dirty-checking-in-javascript-frameworks/). Usaremos la mejor técnica dependiendo de la situación e incluso pueden incorporarse también estrategias personalizadas con intención de "enseñar" al marco de trabajo a como     observar tipos especiales de patrones de modelo. Esto nos parece estupendo.
->
-El comando `.bind` usa el comportamiento por defecto de enlace para cualquier propiedad. El tipo de enlace por defecto es uni-direccional para todo excepto para controles de formulario, para los que es bi-direccional. Esto puede modificarse en cualquier momento mediante los comandos de enlace `.one-way`, `.two-way` y `.one-time`. Análogamente, podemos usar `.delegate` para la delegación de eventos, pero también podemos usar `.trigger` para asignarlo directamente al elemento objetivo.
+
+> **Note:** El comando `.bind` usa el comportamiento por defecto de enlace para cualquier propiedad. El tipo de enlace por defecto es uni-direccional para todo excepto para controles de formulario, para los que es bi-direccional. Esto puede modificarse en cualquier momento mediante los comandos de enlace `.one-way`, `.two-way` y `.one-time`. Análogamente, podemos usar `.delegate` para la delegación de eventos, pero también podemos usar `.trigger` para asignarlo directamente al elemento objetivo.
 
 ## Añadiendo la navegación
 
@@ -168,29 +174,34 @@ Ya que se trata de una aplicación de navegación, probablemente deberíamos añ
 ### app.js
 
 ```javascript
+import {inject} from 'aurelia-framework';
 import {Router} from 'aurelia-router';
+import 'bootstrap';
+import 'bootstrap/css/bootstrap.css!';
 
+@inject(Router)
 export class App {
-  static inject() { return [Router]; }
   constructor(router) {
     this.router = router;
     this.router.configure(config => {
       config.title = 'Aurelia';
       config.map([
-        { route: ['','welcome'], moduleId: 'welcome', nav: true, title:'Welcome' }
+        { route: ['','welcome'],  moduleId: './welcome',      nav: true, title:'Welcome' }
       ]);
     });
   }
 }
 ```
 
-Bien, aquí hay algunas cosas nuevas realmente interesantes. Queremos usar el enrutador, así que empezamos por importarlo al principio del archivo. Este es el poder de ES6 otra vez. A continuación creamos nuestra clase _App_ que contendrá nuestros datos y lógica para el diseño principal de la aplicación. Echa una ojeada a la función constructora. Esta está esperando algo para pasarle una instancia del enrutador cuando se crea la clase App. ¿De donde sale eso?
+Bien, aquí hay algunas cosas nuevas realmente interesantes. Queremos usar el enrutador, así que empezamos por importarlo al principio del archivo. Este es el poder de ES6/ES7 otra vez. A continuación creamos nuestra clase _App_ que contendrá nuestros datos y lógica para el diseño principal de la aplicación. Echa una ojeada a la función constructora. Esta está esperando algo para pasarle una instancia del enrutador cuando se crea la clase App. ¿De donde sale eso?
 
-Aurelia crea los componentes de la interfaz de usuario según resultan necesarios para visualizar la aplicación. Esto lo hace usando una contenedor para la [inyección de dependencias](https://es.wikipedia.org/wiki/Inyecci%C3%B3n_de_dependencias) capaz de proveer dependencias como esta del constructor. ¿Como sabe el inyector de dependencias (DI) que es lo que tiene que proporcionar? Todo lo que hemos de hacer es añadir un método estático llamado _inject_ que devuelve un vector (array) de tipos con los que aprovisionar las instancias. Debería haber un elemento en el vector por cada parámetro del constructor. En el ejemplo anterior, necesitamos una instancia del enrutador, así que añadimos el tipo _Router_ al vector de inyección.
+Aurelia crea los componentes de la interfaz de usuario según resultan necesarios para visualizar la aplicación. Esto lo hace usando una contenedor para la [inyección de dependencias](https://es.wikipedia.org/wiki/Inyecci%C3%B3n_de_dependencias) capaz de proveer dependencias como esta del constructor. ¿Como sabe el inyector de dependencias (DI) que es lo que tiene que proporcionarnos? Todo lo que hemos de hacer es añadir un decorador (decorator) `inject` a tu clase que pasa una lista de tipos de los que hay que proporcionar objetos. Debería haber un elemento en el vector por cada parámetro del constructor. En el ejemplo anterior, necesitábamos un objeto del tipo enrutador, así que añadimos el tipo _Router_.
 
-> **Nota:** Si resulta que usas AtScript, te gustará saber que Aurelia entiende las anotaciones de tipo de AtScript y que las puede usar para la inyección de dependencias. Según otros compiladores (de código fuente a código fuente) principales de Javascript vayan adoptando los metadatos en tipos o anotaciones seguiremos mejorando nuestra plataforma para que esta aprenda a entender el formato del lenguaje que tu hayas elegido.
+> **Nota:** Si no te gusta usar un decorador (decorator) en este caso, también puedes añadir un método `inject` o propiedad estáticos a la clase que devuelva un vector (array) de tipos a inyectar. 
 
-Necesitamos crear el router como propiedad pública de la clase. La propiedad tiene que llamarse _router_. Esto es importante. No tengas aquí ocurrencias como llamarla _taco_ ni nada parecido, vale? Se trata de un enrutador así que llámalo _router_ y todos estaremos contentos. ¿Hemos mencionado que <strong>tienes que llamarla _router_</strong>?
+Necesitamos crear el router como propiedad pública de la clase. La propiedad tiene que llamarse _router_. Esto es importante. No tengas aquí ocurrencias como llamarla _taco_ ni nada parecido, vale? Se trata de un enrutador así que llámalo _router_ y todos estaremos contentos. ¿Hemos mencionado que **es obligatorio llamarla** _router_?
+
+> **Nota:** Esperamos poder eliminar esta restricción en una próxima actualización.
 
 Muy bien. Toca configurar el enrutador. Es sencillo. Puedes incluir un título que se usará cuando se genere el título del documento. Luego incluimos las rutas. Cada ruta posee las siguientes propiedades:
 
@@ -198,6 +209,8 @@ Muy bien. Toca configurar el enrutador. Es sencillo. Puedes incluir un título q
 * `moduleId`: Esta es una ruta relativa al modelo actual que especifica la pareja vista/modelo que quieres mostrar para esta ruta.
 * `title`: Opcionalmente puedes proporcionar un título que se usará en la generación del título del documento.
 * `nav`: Si esta ruta debe ser incluida en el modelo de navegación (_navigation model_), porque quieres generar una interfaz de usuario (UI) con ella, este de ser _true_ (o un número que indicará el orden).
+
+> **Note:** ¿Te diste cuenta de como usamos ES6 imports para cargar el Javascript y el CSS de inicio (bootstrap). 
 
 ### app.html
 
@@ -233,7 +246,7 @@ Muy bien. Toca configurar el enrutador. Es sencillo. Puedes incluir un título q
 ```
 Siguiendo nuestra sencilla regla de construcción de aplicaciones, la clase _App_ estará enlazada con la vista anterior _app.html_. Buena parte de este código de marcado tiene que ver con el montaje de la estructura principal de navegación. Ya hemos visto el enlazado básico y la interpolación de cadenas, así que fijémonos en cosas nuevas. Observa el elemento `ul` de _navbar-nav_. Su `li` muestra como usar un repetidor con la siguiente expresión `repeat.for="row of router.navigation"`. Este creará un elemento `li` por cada elemento en el vector `router.navigation`. La variable local es _row_ y puedes ver como se utiliza en los `li` y en sus elementos descendientes.
 
-> **Nota:** La propiedad`navigation` del router es un vector rellenado con todas las rutas que hayas marcado con `nav:true` en la configuración de tu enrutador.
+> **Nota:** La propiedad`navigation` del router es un vector rellenado con todas las rutas que hayas marcado con `nav:true` en la configuración de tu enrutador. Aurelia modela su sintaxis `repeat.for` siguiendo el nuevo bucle estándar `for..of` de ES6. Así, puedes pensar en iterar sobre el vector de rutas navegables y en generar UI interfaces de usuario para cada una.
 
 También puedes ver en los elementos `li` una demostración de como usar la interpolación de cadenas para añadir/eliminar clases dinámicamente. Más adelante en la vista hay un segundo elemento `ul`. ¿Ves el enlace en su `li` hijo? `if.bind="router.isNavigating"` Esto añade/elimina el elemento `li` dependiendo del valor de la expresión vinculada. Convenientemente, el enrutador actualizará su propiedad `isNavigating` siempre que esté... navegando.
 
@@ -252,17 +265,20 @@ Vamos a mostrar algunas imágenes de Flickr. Para ello, vamos a configurar nuest
 ### app.js (updated)
 
 ```javascript
+import {inject} from 'aurelia-framework';
 import {Router} from 'aurelia-router';
+import 'bootstrap';
+import 'bootstrap/css/bootstrap.css!';
 
+@inject(Router)
 export class App {
-  static inject() { return [Router]; }
   constructor(router) {
     this.router = router;
     this.router.configure(config => {
       config.title = 'Aurelia';
       config.map([
-        { route: ['','welcome'],  moduleId: 'welcome',      nav: true, title:'Welcome' },
-        { route: 'flickr',        moduleId: 'flickr',       nav: true }
+        { route: ['','welcome'],  moduleId: './welcome',      nav: true, title:'Welcome' },
+        { route: 'flickr',        moduleId: './flickr',       nav: true }
       ]);
     });
   }
@@ -274,20 +290,21 @@ Si supones que necesitamos crear los archivos _flickr.js_ y _flickr.html_, has a
 ### flickr.js
 
 ```javascript
+import {inject} from 'aurelia-framework';
 import {HttpClient} from 'aurelia-http-client';
 
-var url = 'http://api.flickr.com/services/feeds/photos_public.gne?tags=rainier&tagmode=any&format=json';
-
+@inject(HttpClient)
 export class Flickr{
-  static inject() { return [HttpClient]; }
+  heading = 'Flickr';
+  images = [];
+  url = 'http://api.flickr.com/services/feeds/photos_public.gne?tags=rainier&tagmode=any&format=json';
+
   constructor(http){
-    this.heading = 'Flickr';
-    this.images = [];
     this.http = http;
   }
 
   activate(){
-    return this.http.jsonp(url).then(response => {
+    return this.http.jsonp(this.url).then(response => {
       this.images = response.content.items;
     });
   }
@@ -350,7 +367,7 @@ Recapitulemos. Para añadir una página a nuestra aplicación:
 
 ```markup
 <template>
-  <import from='./nav-bar'></import>
+  <require from='./nav-bar'></require>
 
   <nav-bar router.bind="router"></nav-bar>
 
@@ -360,21 +377,21 @@ Recapitulemos. Para añadir una página a nuestra aplicación:
 </template>
 ```
 
-Este código importa un elemento `nav-bar` desde "./nav-bar" y una vez que está disponible en la vista, ya podemos usarlo como cualquier otro elemento, incluyendo el enlace a sus propiedades particulares (como _router_). Así, que como conseguimos este producto final?
+Este código requiere un elemento `nav-bar` desde "./nav-bar" y una vez que está disponible en la vista, ya podemos usarlo como cualquier otro elemento, incluyendo el enlace a sus propiedades particulares (como _router_). Así, que como conseguimos este producto final?
 
 ¿Sabes qué? Nuestras sencillas reglas relativas a modelo y vista se aplican también con los elementos a medida. (De hecho venimos creando lo que a veces llamamos elementos a medida "anónimos"... solo que no lo sabías.) Creemos un _nav-bar.js_ y un _nav-bar.html_. Aquí está primero el código para el modelo:
 
 ### nav-bar.js
 
 ```javascript
-import {Behavior} from 'aurelia-framework';
+import {bindable} from 'aurelia-framework';
 
 export class NavBar {
-  static metadata(){ return Behavior.withProperty('router'); }
+  @bindable router = null;
 }
 ```
 
-Para crear un elemento a medida, has de crear y exportar una clase. Puesto que esta clase va a ser utilizada en HTML como un elemento, necesitamos indicarle al marco de trabajo (framework) que propiedades de la clase deben aparecer como atributos del elemento. Para ello, usamos el método _metadata_. Como _inject_ metadata es una manera de proporcionarle información acerca de tu clase al marco de trabajo de Aurelia. Aurelia es inteligente y es capaz de inferir muchas cosas, pero cuando no puede o cuando quieres hacer algo diferente a las convenciones, entonces usamos alguna forma de metadatos. Para sacar provecho de esta capacidad, añade a la clase un método estático _metadata_ y devuelve un vector de instancias de metadatos (realmente simples objetos normales). En este caso estamos usando el auxiliar para metadatos de Aurelia _Behavior_. El método `withProperty` añade una propiedad `BehaviorProperty` que le dice al marco de trabajo que queremos que la propiedad `router` de la clase debe aflorar como un atributo en el HTML. Una vez que aflora como atributo, podemos enlazar datos a este en la vista.
+Para crear un elemento a medida, has de crear y exportar una clase. Puesto que esta clase va a ser utilizada en HTML como un elemento, necesitamos indicarle al marco de trabajo (framework) que propiedades de la clase deben aparecer como atributos del elemento. Para ello, usamos el decorador (decorator) _bindable_. Como _inject_, _bindable_ es una manera de proporcionarle información acerca de tu clase al marco de trabajo Aurelia. Aurelia es inteligente y es capaz de inferir muchas cosas, pero cuando no puede o cuando quieres hacer algo diferente a las convenciones, entonces proporcionamos información adicional a través de decoradores (decorator). El decorador (decorator) `bindable` le dice al marco de trabajo que queremos que la propiedad `router`de nuestra clase aflore como atributo en HTML. Una vez que aflora como un atributo, ya podemos enlazar (datos) con él en la vista.
 
 ### nav-bar.html
 
@@ -419,7 +436,7 @@ Este es un elemento a medida muy simple sin ningún comportamiento real, pero es
 
 ```markup
 <template>
-  <import from='./nav-bar'></import>
+  <require from='./nav-bar'></require>
 
   <nav-bar router.bind="router"></nav-bar>
 
@@ -429,15 +446,13 @@ Este es un elemento a medida muy simple sin ningún comportamiento real, pero es
 </template>
 ```
 
-Para recapitular: primero tenemos un elemento `import`. Aurelia lo utiliza para cargar el elemento a medida a través de la fuente relativa indicada en el atributo _from_. Este sigue nuestras sencillas convenciones así que este sabrá como cargar nuestros archivos _nav-bar.js_ y _nav-bar.html_. Cualquier cosa importada a una vista de esta manera es local a la vista. Como resultado, no tienes que preocuparte por los conflictos entre nombres. Lo segundo es el uso real del elemento que usa el enlace de datos con el enrutador de `App`. Estamos conectando (piping) la instancia del enrutador de nuestra clase `App` a la correspondiente propiedad del elemento `NavBar` para su representación interna. ¡Que bueno!
+Para recapitular: primero tenemos un elemento `require`. Aurelia lo utiliza para cargar el elemento a medida a través de la fuente relativa indicada en el atributo `from`. Este sigue nuestras sencillas convenciones así que este sabrá como cargar nuestros archivos _nav-bar.js_ y _nav-bar.html_. Cualquier cosa requerida para una vista de esta manera es local a la vista. Como resultado, no tienes que preocuparte por los conflictos entre nombres. Lo segundo es el uso real del elemento que usa el enlace de datos con el enrutador de `App`. Estamos conectando (piping) la instancia del enrutador de nuestra clase `App` a la correspondiente propiedad del elemento `NavBar` para su representación interna. ¡Que bueno!
 
-> **Nota:** También puedes cargar elementos de la aplicación y otros comportamientos por conveniencia, de manera que no necesites importar recursos comunes en cada vista.  
+> **Nota:** También puedes cargar elementos de la aplicación y otros comportamientos por conveniencia, de manera que no necesites requerir recursos comunes en cada vista.  
 
-Puede que desees saber como determina Aurelia el nombre del elemento a medida. Por convención, usara el nombre de la clase, en minúscula y con guión. De todas maneras,siempre puedes ser explícito. Para ello, añade más metadatos encadenando `.customElement('nav-bar')` a `Behavior`. ¿Que pasa si tu elemento a medida no tiene una plantilla para la vista, porque está implementado enteramente con código? No hay problema, encadena `.noView`. ¿Deseas usar ShadowDOM para tu elemento a medida? Hazlo como un profesional encadenando `.useShadowDOM()`. No te preocupes de si el navegador lo soporta o no. Tenemos una implementación de reserva eficiente y muy fiel para ShadowDOM.
+Puede que desees saber como determina Aurelia el nombre del elemento a medida. Por convención, usara el nombre de exportación, en minúscula y con guión. De todas maneras, siempre puedes ser explícito. Para ello, añade más metadatos encadenando `.customElement('nav-bar')` a `Behavior`. ¿Que pasa si tu elemento a medida no tiene una plantilla para la vista, porque está implementado enteramente con código? No hay problema, encadena `.noView`. ¿Deseas usar ShadowDOM para tu elemento a medida? Hazlo como un profesional encadenando `.useShadowDOM()`. No te preocupes de si el navegador lo soporta o no. Tenemos una implementación de reserva eficiente y muy fiel para ShadowDOM.
 
-Además de crear elementos a medida, también puedes crear atributos aislados que añadan nuevo comportamiento a elementos existentes. A esto se le denomina _comportamientos añadidos_ (attached behaviors). En ocasiones puede que necesites crear _controladores de plantilla_ (template controllers) para añadir o eliminar dinámicamente DOM de la vista, como los métodos `repeat` y `for` que ya empleamos. Esto no es todo lo que puedes hacer. El motor de plantillas de Aurelia es poderoso y extensible.
-
-> **Nota:** Los usuarios de AtScript pueden aprovechar las anotaciones del lenguaje y Aurelia las pillará. Los usuarios de lenguajes que soporten propiedades estáticas de clase, como TypeScript, puede usar una propiedad `metadata` en lugar de un método, por comodidad. Esto se aplica también a la designación `inject` usada por el contenedor de la inyección de dependencias.
+Además de crear elementos a medida, también puedes crear atributos aislados que añadan nuevo comportamiento a elementos existentes. A esto se le denomina _comportamientos añadidos_ (attached behaviors). En ocasiones puede que necesites crear _controladores de plantilla_ (template controllers) para añadir o eliminar dinámicamente DOM de la vista, como los `repeat` e `if` que ya empleamos. Esto no es todo lo que puedes hacer. El motor de plantillas de Aurelia es poderoso y extensible.
 
 ## Bonificación: aprovechamiento de enrutadores hijos
 
@@ -447,19 +462,22 @@ Primero, actualicemos nuestro _app.js_ con la nueva configuración. Aquí está 
 
 ### app.js (actualizado... otra vez)
 
-```javascript
+``javascript
+import {inject} from 'aurelia-framework';
 import {Router} from 'aurelia-router';
+import 'bootstrap';
+import 'bootstrap/css/bootstrap.css!';
 
+@inject(Router)
 export class App {
-  static inject() { return [Router]; }
   constructor(router) {
     this.router = router;
     this.router.configure(config => {
       config.title = 'Aurelia';
       config.map([
-        { route: ['','welcome'],  moduleId: 'welcome',      nav: true, title:'Welcome' },
-        { route: 'flickr',        moduleId: 'flickr',       nav: true },
-        { route: 'child-router',  moduleId: 'child-router', nav: true, title:'Child Router' }
+        { route: ['','welcome'],  moduleId: './welcome',      nav: true, title:'Welcome' },
+        { route: 'flickr',        moduleId: './flickr',       nav: true },
+        { route: 'child-router',  moduleId: './child-router', nav: true, title:'Child Router' }
       ]);
     });
   }
@@ -470,19 +488,21 @@ Nada nuevo en esto. La parte interesante es lo que está dentro de _child-router
 
 ### child-router.js
 
-```javascript
+``javascript
+import {inject} from 'aurelia-framework';
 import {Router} from 'aurelia-router';
 
+@inject(Router)
 export class ChildRouter{
-  static inject() { return [Router]; }
+  heading = 'Child Router';
+
   constructor(router){
-    this.heading = 'Child Router';
     this.router = router;
     router.configure(config => {
       config.map([
-        { route: ['','welcome'],  moduleId: 'welcome',      nav: true, title:'Welcome' },
-        { route: 'flickr',        moduleId: 'flickr',       nav: true },
-        { route: 'child-router',  moduleId: 'child-router', nav: true, title:'Child Router' }
+        { route: ['','welcome'],  moduleId: './welcome',      nav: true, title:'Welcome' },
+        { route: 'flickr',        moduleId: './flickr',       nav: true },
+        { route: 'child-router',  moduleId: './child-router', nav: true, title:'Child Router' }
       ]);
     });
   }
