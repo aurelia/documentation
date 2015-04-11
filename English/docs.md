@@ -454,7 +454,7 @@ Use the `style` attribute's alias, `css` when doing string interpolation to ensu
 ```
 
 
-<h3 id="enhanced-html"><a href="#enhanced-html">Enhanced HTML</a></h3>
+<h3 id="extended-html"><a href="#extended-html">Extended HTML</a></h3>
 
 In addition to databinding, you also have the power of Aurelia's HTMLm enhancements. There are two types:
 
@@ -975,11 +975,6 @@ Notice that we don't use a binding command on the attribute itself. Instead, we 
 
 > **Note:** You don't use `delegate` or `trigger` commands inside an options attribute. Those are always attached to the element itself, since they work directly with native DOM events. However, you can use `call`.
 
-There are also some special options for custom attributes you can "turn on" via decorators:
-
-* `@templateController` - Allows a custom attribute to turn the attributed HTML into an HTMLTemplate which it can then generate on the fly. This is how attributes like `if` and `repeat` can be created.
-* `@dynamicOptions` - This allows a custom attribute to have a dynamic set of properties which are all mapped from the options attribute syntax into the class at runtime. Don't declare `bindable` properties. Anything the consumer lists in the options attribute syntax will be mapped.
-
 If you aren't using ES7 property initializers, you can put the `@bindable` decorator directly on the class. Just be sure to provide the property name like this `@bindable('propertyName')`. To specify more details for a bindable property, you should pass an options object instead like this:
 
 ```javascript
@@ -994,7 +989,73 @@ If you aren't using ES7 property initializers, you can put the `@bindable` decor
 
 The defaults and conventions are shown above. So, you would only need to specify these options if you need to deviate. R
 
-> **Note:** Rmember that all decorators are available on the `Decorators` helper and can be specified with a static `decorators` property or method if you prefer (or if you are using a language that doens't support decorators). See the CoffeeScript examples above for details.
+> **Note:** There is also a special `@dynamicOptions` decorator. This allows a custom attribute to have a dynamic set of properties which are all mapped from the options attribute syntax into the class at runtime. Don't declare `bindable` properties. Simply add a single `@dynamicOptions` decorator and anything the consumer lists in the options attribute syntax will be mapped.
+
+> **Note:** Remember that all decorators are available on the `Decorators` helper and can be specified with a static `decorators` property or method if you prefer (or if you are using a language that doesn't support decorators). See the CoffeeScript examples above for details.
+
+<h4 id="template-controllers"><a href="#template-controllers">Template Controllers</a></h3>
+
+Custom Attributes can indicate that they are a Template Controller with the `@templateController` decorator. This indicates that they convert DOM into an inert HTML template. The custom attribute class can then decide when and where (or how many times) to instantiate the template in the DOM. Examples of this are the `if` and `repeat` attributes. Simply place one of these on a DOM node and it becomes a template, controlled by the Custom Attribute class.
+
+Let's take a look at the implementation of the `if` Custom Attribute to see how one of these is put together. Here's the full source code:
+
+```javascript
+import {BoundViewFactory, ViewSlot, customAttribute, templateController, inject} from 'aurelia-framework';
+
+@customAttribute('if')
+@templateController
+@inject(BoundViewFactory, ViewSlot)
+export class If {
+  constructor(viewFactory, viewSlot){
+    this.viewFactory = viewFactory;
+    this.viewSlot = viewSlot;
+    this.showing = false;
+  }
+
+  valueChanged(newValue){
+    if (!newValue) {
+      if(this.view){
+        this.viewSlot.remove(this.view);
+        this.view.unbind();
+      }
+
+      this.showing = false;
+      return;
+    }
+
+    if(!this.view){
+      this.view = this.viewFactory.create();
+    }
+
+    if (!this.showing) {
+      this.showing = true;
+
+      if(!this.view.bound){
+        this.view.bind();
+      }
+
+      this.viewSlot.add(this.view);
+    }
+  }
+}
+```
+
+Before we dig into the unique aspects, let me remind you of what you see here that is similar. First, we have a simple class with decorators. It also has a single `value` property by default which can be observed by adding a `valueChanged` callback.
+
+Ok, what's different? Take a look at the constructor. We have two unique items being injected: `BoundViewFactory` and `ViewSlot`.
+
+The `BoundViewFactory` is capable of generating instances of the the HTML template that the attribute is attached to. No need to worry about compiling, etc. That's taken care of for you. Why is it called "Bound" View Factory though? Well, it's already referencing the parent binding context. It's "bound" in a sense. So, if you call its `create` method it will instantiate a new View from the template which will be bound to that context. This is what you want with an `if` attribute. It's not what you want with a `repeat` attribute. In that case, each time you call `create` you want a view bound to a particular array item. To achieve this, simply pass any object you want the view to be bound against into the `create` method.
+
+The `ViewSlot` represents the slot or location within the DOM that the template was extracted from. This is usually the location that you want to add View instances to.
+
+>**Note**: Unlike previous attributes, a template controller works more directly with the _primitives_ of the framework. Views, ViewFactories and ViewSlots are all low level parts of the templating engine.
+
+Take a close look at the `valueChanged` callback. Here you can see where the `if` attribute is creating the view and adding it to the slot, based on the truthiness of the value. There are a few important details of this:
+
+* The attribute always calls `bind` on the View _before_ adding it to the ViewSlot. This ensures that all internal bindings are initially evaluated outside of the live DOM. This is important for performance.
+* Similarly, always call `unbind` _after_ removing the View from the DOM.
+* After the View is initially created, the `if` attribute does not throw it away even when the value becomes false. It caches the instance. Aurelia can re-use Views and even re-target them at different binding contexts. Again, this is important for performance, since it eliminates needless re-creation of Views.
+
 
 <h3 id="custom-elements"><a href="#custom-elements">Custom Elements</a></h3>
 
@@ -1059,69 +1120,6 @@ That's really all there is to it. You follow the same view-model/view naming con
 *  `@skipContentProcessing` - Tells the compiler not to process the content of your custom element. It is expected that you will do custom processing yourself.
 *  `@useView(path)` - Specifies a different view to use.
 *  `@noView` - Indicates that this custom element does not have a view and that the author intends for the element to handle its own rendering internally.
-
-<h3 id="template-controllers"><a href="#template-controllers">Template Controllers</a></h3>
-
-Custom Attributes can indicate that they are a Template Controller with the `@templateController` decorators. This indicates that they convert DOM into an inert HTML template. The custom attribute class can then decide when and where (or how many times) to instantiate the template in the DOM. Examples of this are the `if` and `repeat` attributes. Simply place one of these on a DOM node and it becomes a template, controlled by the Custom Attribute class.
-
-Let's take a look at the implementation of the `if` Custom Attribute to see how one of these is put together. Here's the full source code:
-
-```javascript
-import {BoundViewFactory, ViewSlot, customAttribute, templateController, inject} from 'aurelia-framework';
-
-@customAttribute('if')
-@templateController
-@inject(BoundViewFactory, ViewSlot)
-export class If {
-  constructor(viewFactory, viewSlot){
-    this.viewFactory = viewFactory;
-    this.viewSlot = viewSlot;
-    this.showing = false;
-  }
-
-  valueChanged(newValue){
-    if (!newValue) {
-      if(this.view){
-        this.viewSlot.remove(this.view);
-        this.view.unbind();
-      }
-
-      this.showing = false;
-      return;
-    }
-
-    if(!this.view){
-      this.view = this.viewFactory.create();
-    }
-
-    if (!this.showing) {
-      this.showing = true;
-
-      if(!this.view.bound){
-        this.view.bind();
-      }
-
-      this.viewSlot.add(this.view);
-    }
-  }
-}
-```
-
-Before we dig into the unique aspects, let me remind you of what you see here that is similar. First, we have a simple class with decorators. It also has a single `value` property by default which can be observed by adding a `valueChanged` callback.
-
-Ok, what's different? Take a look at the constructor. We have two unique items being injected: `BoundViewFactory` and `ViewSlot`.
-
-The `BoundViewFactory` is capable of generating instances of the the HTML template that the attribute is attached to. No need to worry about compiling, etc. That's taken care of for you. Why is it called "Bound" View Factory though? Well, it's already referencing the parent binding context. It's "bound" in a sense. So, if you call its `create` method it will instantiate a new View from the template which will be bound to that context. This is what you want with an `if` attribute. It's not what you want with a `repeat` attribute. In that case, each time you call `create` you want a view bound to a particular array item. To achieve this, simply pass any object you want the view to be bound against into the `create` method.
-
-The `ViewSlot` represents the slot or location within the DOM that the template was extracted from. This is usually the location that you want to add View instances to.
-
->**Note**: Unlike previous attributes, a template controller works more directly with the _primitives_ of the framework. Views, ViewFactories and ViewSlots are all low level parts of the templating engine.
-
-Take a close look at the `valueChanged` callback. Here you can see where the `if` attribute is creating the view and adding it to the slot, based on the truthiness of the value. There are a few important details of this:
-
-* The attribute always calls `bind` on the View _before_ adding it to the ViewSlot. This ensures that all internal bindings are initially evaluated outside of the live DOM. This is important for performance.
-* Similarly, always call `unbind` _after_ removing the View from the DOM.
-* After the View is initially created, the `if` attribute does not throw it away even when the value becomes false. It caches the instance. Aurelia can re-use Views and even re-target them at different binding contexts. Again, this is important for performance, since it eliminates needless re-creation of Views.
 
 <h2 id="eventing"><a href="#eventing">Eventing</a></h2>
 
