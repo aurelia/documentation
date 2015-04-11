@@ -859,7 +859,7 @@ export class YourViewModel {
 
 <h2 id="extending-html"><a href="#extending-html">Extending HTML</a></h2>
 
-Aurelia has a powerful and extensible HTML template compiler. The compiler itself is just an algorithm for interacting with these extensions. Out of the box, Aurelia provides two extensions: _Custom Elements_ and _Custom Attributes.
+Aurelia has a powerful and extensible HTML template compiler. The compiler itself is just an algorithm for interacting with these extensions. Out of the box, Aurelia provides two extensions: _Custom Elements_ and _Custom Attributes_.
 
 These extensions are not visible to the compiler by default. There are three main ways to plug them in:
 
