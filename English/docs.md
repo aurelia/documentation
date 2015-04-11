@@ -454,7 +454,7 @@ Use the `style` attribute's alias, `css` when doing string interpolation to ensu
 ```
 
 
-<h3 id="extended-html"><a href="#extended-html">Extended HTML</a></h3>
+<h3 id="html-extensions"><a href="#html-extensions">HTML Extensions</a></h3>
 
 In addition to databinding, you also have the power of Aurelia's HTML extensions. There are two types:
 
