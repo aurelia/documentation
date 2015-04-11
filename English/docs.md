@@ -456,9 +456,9 @@ Use the `style` attribute's alias, `css` when doing string interpolation to ensu
 
 <h3 id="extended-html"><a href="#extended-html">Extended HTML</a></h3>
 
-In addition to databinding, you also have the power of Aurelia's HTMLm enhancements. There are two types:
+In addition to databinding, you also have the power of Aurelia's HTML extensions. There are two types:
 
-* Custom Elements - Extend HTML with new tags! Your custom elements can have their own views (which use databinding and other html enhancements) and optionally leverage [ShadowDOM](http://www.html5rocks.com/en/tutorials/webcomponents/shadowdom/) (even if the browser doesn't support it).
+* Custom Elements - Extend HTML with new tags! Your custom elements can have their own views (which use databinding and other html extensions) and optionally leverage [ShadowDOM](http://www.html5rocks.com/en/tutorials/webcomponents/shadowdom/) (even if the browser doesn't support it).
 * Custom Attributes - Extend HTML with new attributes which can be added to existing or custom elements. These attributes add new behavior to the elements.
 
 Naturally, all of this works seamlessly with databinding. Let's look at the set of Custom Elements and Attributes that Aurelia provides for you and which are available globally in every view.
