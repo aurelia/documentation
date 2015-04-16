@@ -6,13 +6,26 @@
 
 <h2 id="browser-support"><a href="#browser-support">対応ブラウザ</a></h2>
 
-Aureliaは、当初は常時更新のあるブラウザ向けに設計されていました。それには、Chrome、Firefox、IE11そしてSafari 8が含まれます。設定なしでは、IE11未満のどのブラウザでも動作しません...現在は。しかし、我々は将来的にIE9をサポートする方法を見つけました。アップデートのアナウンスを待っていてください。
+Aureliaは、当初は常時更新のあるブラウザ向けに設計されていました。それには、Chrome、Firefox、IE11そしてSafari 8が含まれます。しかし、IE9以上をサポートする方法を見つけました。これを有効にするには、追加で二つのpolyfillが必要になります。MutationObserverとWeakMapです。この二つはjspmでインストールすることができ、それぞれ `github:webreflection/es6-collections` 、 `github:polymer/mutationobservers` です。この二つを system.js の前にロードしてください。
+
+index.htmlは以下のようになります:
+
+```markup
+<script src="jspm_packages/github/webreflection/es6-collections@master/es6-collections.js"></script>
+<script src="jspm_packages/github/polymer/mutationobservers@0.4.2/MutationObserver.js"></script>
+<script src="jspm_packages/system.js"></script>
+<script src="config.js"></script>
+<script>
+  System.import('aurelia-bootstrapper');
+</script>
+```
+
+> **注:** Aurelia自身はWeakMapを必要としませんが、MutationObserver polyfillで必要です。
+
 
 <h2 id="startup-and-configuration"><a href="#startup-and-configuration">起動と設定</a></h2>
 
 ほとんどのプラットフォームは、コード実行のための"main"またはエントリーポイントを持っています。Aureliaでも同じです。あなたがすでに [Get Started](/get-started.html) を読んでいれば、 `aurelia-app` 属性について知っていることでしょう。単にHTML要素にこの属性を記載すれば、Aureliaのブートストラッパーは、 _app.js_ と _app.html_ をロードし、データバインドを行い、その属性があるDOM要素にそれを注入します。
-
->**注:** もしあなたがES6の代わりにES5を使っているなら、`es5`属性を追加することで、この言語での利用を簡単にする機能を "on" にすることができます。
 
 多くの場合において、画面に何かを表示する前に、フレームワークを設定したり、何か先行して処理を走らせたりしたいと思うことでしょう。そのため、プロジェクトの開発が進むにつれ、開始時設定を追加することになります。開始時設定のために、 `aurelia-app` 属性の値ととして、設定モジュールを指定することができます。このモジュールには唯一のexport関数 `configure` があります。Aureliaはこの `configure` 関数にAureliaオブジェクトを渡して起動し、フレームワークの設定を可能とします。これにより自分で何をいつUI上のどこに表示するかを自分で設定することが可能になります。 下記は設定モジュールの例です:
 
@@ -36,8 +49,6 @@ export function configure(aurelia) {
 ```
 
 カスタムプラグインを除けば、このコードは通常 `aurelia-app` が行う処理と本質的には一緒です。あなたが設定モジュールを指定する方法に切り替える際、これらの処理は自分自身で設定する必要があります。しかし、カスタムプラグインをインストールしたり、ビューテンプレートで共通に使われるサービスのDIを設定することも、同時にできるようになるのです。
-
->**注:** ES5を有効にする場合は、 `aurelia.use.es5()` を呼び出してください。
 
 設定モジュールを使う場合は、実際のところ上記の標準オプションをすべて含んだ記法が存在します。次のようにします:
 
@@ -99,33 +110,40 @@ Aureliaでは、ユーザーインターフェースコンポーネントは _�
 
 <h3 id="dependency-injection"><a href="#dependency-injection">依存性注入 (DI)</a></h3>
 
-ビューモデルとテンプレートコントローラ、付与ビヘイビアなどの他のインターフェース要素は、DIコンテナを使用して、フレームワークによってインスタンス化されるクラスとして作成されます。このスタイルで書かれたコードはモジュール化やテストが容易です。大きなクラスを作成するより、協力して目的を達成する小さいオブジェクトに分割するようにできます。DIが実行時にそれらのオブジェクトを統合してくれます。
+ビューモデルや他のUI要素、例えばカスタムエレメントやカスタム属性は、クラスとして作成し、フレームワークがDIコンテナを使ってインスタンス化します。このスタイルで書かれたコードはモジュール化やテストが容易です。大きなクラスを作成するより、協力して目的を達成する小さいオブジェクトに分割するようにできます。DIが実行時にそれらのオブジェクトを統合してくれます。
 
-DIを活用するのは、あなたのクラスに若干のメタデータを追加して、フレームワークにそれをコンストラクタに渡すことを知らせるだけです。これはAureliaのHttpClientを使うビューモデルの例です。
+DIを自分でも使う場合は、クラスにデコレータを追加して、コンストラクタに何を渡すかをフレームワークに伝えるだけです。これはAureliaのHttpClientに依存するビューモデルの例です。
 
 ```javascript
+import {inject} from 'aurelia-framework';
 import {HttpClient} from 'aurelia-http-client';
 
+@inject(HttpClient)
 export class CustomerDetail{
-    static inject() { return [HttpClient]; }
     constructor(http){
         this.http = http;
     }
 }
 ```
 
-`inject` という名前のスタティックメソッドを追加し、注入したいものの配列を返すだけです。
+ES7や、デコレータが有効なTypeScriptでは、 `inject` デコレータを追加して、injectする型ごとに一つの引数を渡します。デコレータをサポートしていない言語や、デコレータを使いたくない場合は、 `inject` という名前のスタティックメソッド、またはプロパティを追加し、注入したいものの配列を返すだけです。同じ例をCoffeeScriptでCommonJSモジュールとして書いたものが下記です:
 
-> **注:** 将来のバージョンでは、injectデータをES7/TypeScriptのDecoratorで指定できるようになります。
+```coffeescript
+HttpClient = require('aurelia-http-client').HttpClient;
+
+class Flickr
+  constructor: (@http) ->
+  @inject:[HttpClient]
+```
 
 injectの配列に入れるものはコンストラクタに必要な型だけではありません。 `リゾルバ` インスタンスでも良いです。例として、下記を見てください:
 
 ```javascript
-import {Lazy} from 'aurelia-framework';
+import {Lazy, inject} from 'aurelia-framework';
 import {HttpClient} from 'aurelia-http-client';
 
+@inject(Lazy.of(HttpClient))
 export class CustomerDetail{
-    static inject() { return [Lazy.of(HttpClient)]; }
     constructor(getHTTP){
         this.getHTTP = getHTTP;
     }
@@ -141,24 +159,33 @@ export class CustomerDetail{
 * `Optional` - すでにコンテナ中にクラスのインスタンスがある場合に、そのインスタンスを注入する。なければnull。
     * 例. `Optional.of(LoggedInUser)`
 
-これらのリゾルバに加え、 `レジストレーション` アノテーションを使って、デフォルトの(コンテナへの)登録や、インスタンスの生存期間を指定することができます。デフォルトでは、DIコンテナはすべてがシングルトンインスタンスであることを想定しています。コンテナにつき、一つのインスタンスです。けれども、レジストレーションアノテーションを使って、この動作を変えることもできます。下記に例を示します:
+これらのリゾルバに加え、 `レジストレーション` デコレータを使って、デフォルトの(コンテナへの)登録や、インスタンスの生存期間を指定することができます。デフォルトでは、DIコンテナはすべてがシングルトンインスタンスであることを想定しています。コンテナにつき、一つのインスタンスです。けれども、レジストレーションアノテーションを使って、この動作を変えることもできます。下記に例を示します:
 
 ```javascript
-import {Metadata} from 'aurelia-framework';
+import {transient, inject} from 'aurelia-framework';
 import {HttpClient} from 'aurelia-http-client';
 
+@transient()
+@inject(HttpClient)
 export class CustomerDetail{
-    static metadata(){ return Metadata.transient(); }
-    static inject() { return [HttpClient]; }
     constructor(http){
         this.http = http;
     }
 }
 ```
 
-この例では、DIコンテナが `CustomerDetail` のインスタンスを要求されるたびに、コンテナはシングルトンではなく、新しいインスタンスを生成して返します。 `Singleton` や `Transient` はフレームワークが提供する、すぐに使えるレジストレーションです。 `Registration` を継承して独自のレジストレーションを作成することも可能です。
+この例では、DIコンテナが `CustomerDetail` のインスタンスを要求されるたびに、コンテナはシングルトンではなく、新しいインスタンスを生成して返します。 `singleton` や `transient` はフレームワークが提供する、すぐに使えるレジストレーションです。 `Registration` を継承して独自のレジストレーションを作成することも可能です。
 
-> **注:** 最後の例ではフレームワークにコンテキスト情報を提供するために、 _metadata_ を使っています。メタデータについては、ビヘイビアについてお話するときに再度目にすることになるでしょう。これは将来的にES7/TypeScriptのデコレーターで使えるようになります。
+デコレータを使えない、もしくは使いたくないんだけど、という方も心配しないでください。フォールバックの仕組みを用意しています。スタティックな `decorators` プロパティもしくはメソッドを用意し、チェイン可能な `Decorators` ヘルパを使うだけです。このヘルパには我々が提供するすべてのデコレータを取得するメソッドを持っていますから、どんな言語でも利用することができます。上記の例をCoffeeScriptで書いてみます:
+
+```coffeescript
+HttpClient = require('aurelia-http-client').HttpClient;
+Decorators = require('aurelia-framework').Decorators;
+
+class CustomerDetail
+  constructor: (@http) ->
+  @decorators:Decorators.transient().inject(HttpClient);
+```
 
 <h2 id="templating"><a href="#templating">テンプレート</a></h2>
 
@@ -182,7 +209,7 @@ Aureliaのテンプレートエンジンは、あなたのビューやそれが�
 
 これによってビューごとのスタイルシートや、Webコンポーネントを動的に、その場でロードすることを可能となります。
 
-Aureliaに固有のリソース、Aureliaの _カスタムエレメント_ や、 _付与ビヘイビア_ 、 _テンプレートコントローラー_ 、 _バリューコンバーター_ などをが必要になる場合は、ビューの中で `require` 要素を使う必要があります。下記に例を示します:
+Aureliaに固有のリソース、Aureliaの _カスタムエレメント_ や、 _カスタム属性_ 、 _テンプレートコントローラー_ 、 _バリューコンバーター_ などをが必要になる場合は、ビューの中で `require` 要素を使う必要があります。下記に例を示します:
 
 ```markup
 <template>
@@ -200,16 +227,16 @@ Aureliaに固有のリソース、Aureliaの _カスタムエレメント_ や�
 
 * 冗長でない - リソースはアプリケーションで1回ダウンロードされるだけで済みます。他のビューで同じ要素をインポートしていても、再度ダウンロードされることはありません。
 * ワンタイムコンパイル - この方法でインポートされたカスタムエレメントのテンプレートはアプリケーションを通じて一回のみコンパイルされます。
-* 局所スコープ - 読み込まれたリソースはrequireしたビューの中でのみ可視となり、名前衝突の可能性を減らします。
-* リネーム - 同じビューで二つのサードパーティ製リソースを同時に使うときに、名前を変更することが可能です。
+* 局所スコープ - 読み込まれたリソースはrequireしたビューの中でのみ可視となり、グローバルを削除することで名前衝突の可能性を減らし、メンテナンス性を向上させ理解しやすくします。
+* リネーム - 同じビューで同じ名前、もしくは似た名前の二つのサードパーティ製リソースを同時に使うときに、名前を変更することが可能です。
     - 例. `<require from="./nav-bar" as="foo-bar"></require>` - `nav-bar` 要素の代わりに、 `foo-bar` として使うことができます。(これはES6にもとづいています。ES6では、リネームはエイリアスの代替として考えられており、それはエイリアスが厳密に型の名前を変えてしまうからです。)
 * パッケージ - requireは、一つのビューにインポートされることになる複数リソースからなるモジュールを指すこともできます。
-* 拡張性 - あなたは新しいタイプのリソースを定義することも可能です。このように読み込まれた時に、独自のローディング(非同期に一度だけ)や、登録(ビューごとに)を行うようにできます。
+* 拡張性 - あなたは新しいタイプのリソースを定義することも可能です。このように読み込まれた時に、独自のローディング(非同期に一度だけ)や、登録(ビューごとに)を行うようにできます。これは宣言的で、拡張可能なリソースローディングパイプラインです。
 * ES6 - コードはHTMLインポートではなく、ES6ローダーによりロードされ、ローダーの機能、拡張性のすべてを利用できます。
 
 ビューではデータバインディングとともに、上記のような様々な種類のリソースを活用することになるでしょう。
 
->**注:** あなたはおそらく、それぞれのビューにインポートしないといけないなんてうんざりだと思っていることでしょう。ブートストラップ時に、すべてのビューでグローバルなリソースを使えるように、Aureliaを設定できます。覚えておきましょう。
+>**注:** あなたはおそらく、それぞれのビューにインポートしないといけないなんてうんざりだと思っていることでしょう。ブートストラップ時に、すべてのビューでグローバルなリソースを使えるように、Aureliaを設定できます。 `aurelia.globalizeResources(...resourcePaths)` を使うだけです。 覚えておきましょう。
 
 <h3 id="databinding"><a href="#databinding">データバインディング</a></h3>
 
@@ -262,13 +289,13 @@ _これは何を意味するのでしょうか?_
 
 > **注:** イベントデリゲーションについて詳しくない方のために。これはDOMのイベントが親に向かって湧き上がるように伝播する性質を用いたテクニックです。 `.delegate` を一つのイベントハンドラに対して使うとき、それは個々の要素ではなく、ドキュメントに対し接続されます。その要素のイベントが発火すると、それはDOMツリーを泡のように上にたどっていき、最終的にそれが処理されるドキュメントに到達します。これによってイベント処理時のメモリ効率が良くなります。そして、この方式をあなたの標準の処理方式とすることが推奨されます。
 
-これら全てはDOMイベントに対して、様々な方法で動作を行うものでした。まれに、後で手動で呼び出せるように、直接関数を参照するような、カスタムのAurelia挙動を使うことがあります。関数リファレンスを渡すためには、 `.call` バインディングを使います。(それをあとで _呼び出す_ からです):
+これら全てはDOMイベントに対して、様々な方法で動作を行うものでした。後で手動で呼び出せるように、直接関数を参照するような、カスタム属性やカスタムエレメントを使うこともあるでしょう。関数リファレンスを渡すためには、 `.call` バインディングを使います。(それをあとで _呼び出す_ からです):
 
 ```markup
 <div touch.call="sayHello()">Say Hello</button>
 ```
 
-これで、この接続を行った振る舞い(touch)は、 `sayHello()` を実行する関数を手に入れました。
+これで、カスタム属性 `touch` は、 `sayHello()` を実行する関数を手に入れました。
 
 <h4 id="string-interpolation"><a href="#string-interpolation">文字列補完</a></h4>
 
@@ -379,7 +406,6 @@ export class MySanitizeHtmlValueConverter {
 
 > 注: `innerhtml` 属性を使ったバインディングは、単純にエレメントの `innerHTML` プロパティにセットされます。マークアップはAureliaのテンプレートシステムを通らないため、バインディング式やrequireエレメントは評価されません。この問題にの解決方法ついては [aurelia/templating#35](https://github.com/aurelia/templating/issues/35) で追跡できます。
 
-
 <h4 id="textcontent"><a href="#textcontent">textContent</a></h4>
 
 エレメントの`textContent` プロパティを`textcontent` 属性で設定できます:
@@ -428,19 +454,18 @@ export class Foo {
 ```
 
 
-<h3 id="behaviors"><a href="#behaviors">ビヘイビア</a></h3>
+<h3 id="html-extensions"><a href="#html-extensions">HTML拡張</a></h3>
 
-データバインディングに加え、ビューの中でAureliaビヘイビアの能力を使うことができます。すぐ使えるビヘイビアとして、次の三つがあります。:
+データバインディングに加え、ビューの中でAurelia HTML 拡張の能力を使うことができます。HTML拡張には、次の二つがあります:
 
 * カスタムエレメント - HTMLを新しいタグで拡張します。あなたのカスタムエレメントは独自のビューを持つことができます (その中ではデータバインディングや、他のカスタムエレメントも使えます)。また、 [ShadowDOM](http://www.html5rocks.com/en/tutorials/webcomponents/shadowdom/) も活用できます。(それがサポートしていないブラウザであってもです)
-* 付加ビヘイビア - 新しい属性を既存のエレメント、もしくはカスタムエレメントに追加して、HTMLを拡張できます。このような属性はエレメントにビヘイビアを"付与"します。
-* テンプレートコントローラー - テンプレートをレンダリングする新しい機構を作ります。テンプレートコントローラーはUIを動的に作成して、DOMに挿入できるものです。
+* カスタム属性 - 新しい属性を既存のエレメント、もしくはカスタムエレメントに追加して、HTMLを拡張できます。このような属性はエレメントに振る舞いを追加します。
 
-もちろん、これらの全てはデータバインディングと一体となって動作します。Aureliaが提供するビヘイビアを見てみましょう。すべてのビューで使えます。
+もちろん、これらの全てはデータバインディングと一体となって動作します。Aureliaが提供するカスタムエレメントとカスタム属性を見てみましょう。すべてのビューで使えます。
 
 <h4 id="show"><a href="#show">show</a></h4>
 
-`show` 付加ビヘイビアは、条件によってHTMLを表示することができます。showの値が `true` の場合、エレメントを表示し、そうでなければ非表示とします。このビヘイビアはDOMを追加/削除するものではありません。単に表示を切り替えるだけです。下記に例を示します:
+`show` カスタム属性は、条件によってHTMLを表示することができます。showの値が `true` の場合、エレメントを表示し、そうでなければ非表示とします。この属性はDOMを追加/削除するものではありません。単に表示を切り替えるだけです。下記に例を示します:
 
 ```markup
 <div show.bind="isSaving" class="spinner"></div>
@@ -450,7 +475,7 @@ export class Foo {
 
 <h4 id="if"><a href="#if">if</a></h4>
 
-`if` テンプレートコントローラーは条件によってHTMLエレメントを追加/削除することができます。値がtrueの時、エレメントはDOM中に現れますが、そうでなければ、DOMにも存在しません。
+`if` カスタム属性は条件によってHTMLエレメントを追加/削除することができます。値がtrueの時、エレメントはDOM中に現れますが、そうでなければ、DOMにも存在しません。
 
 ```markup
 <div if.bind="isSaving" class="spinner"></div>
@@ -458,7 +483,7 @@ export class Foo {
 
 この例は上で出てきた `show` に似ていますね。違いは、バインディング式の値がfalseだったときに、 `div` は非表示になるだけではなく、DOMからも削除されてしまうところです。
 
-複数のエレメントを条件によって追加/削除したいが、親要素がなく `if` ビヘイビアを配置できないような場合は、複数のエレメントをtemplateタグで囲んで、それに `if` ビヘイビアを付与します。下記のようになります:
+複数のエレメントを条件によって追加/削除したいが、親要素がなく `if` 属性を配置できないような場合は、複数のエレメントをtemplateタグで囲んで、それに `if` 属性を付与します。下記のようになります:
 
 ```markup
 <template if.bind="hasErrors">
@@ -469,7 +494,7 @@ export class Foo {
 
 <h4 id="repeat"><a href="#repeat">repeat</a></h4>
 
-`repeat` テンプレートコントローラーは、配列内の要素ごとに、テンプレートを複数回表示することができます。 顧客名のリストを表示するサンプルです:
+`repeat` カスタム属性は、配列内の要素ごとに、テンプレートを複数回表示することができます。 顧客名のリストを表示するサンプルです:
 
 ```markup
 <ul>
@@ -477,11 +502,19 @@ export class Foo {
 </ul>
 ```
 
-注意しなければいけない点として、repeatビヘイビアは `for` バインディングコマンドと一緒に使う必要があります。このバインディングコマンドは、”item of array" の特殊な表記を解釈します。ここで、"item" はテンプレート中で利用するローカル変数名で、"array" は配列を返すバインディング式です。
+注意しなければいけない点として、repeat属性は `for` バインディングコマンドと一緒に使う必要があります。このバインディングコマンドは、”item of array" の特殊な表記を解釈します。ここで、"item" はテンプレート中で利用するローカル変数名で、"array" は配列を返すバインディング式です。
 
-> **注:**: `if` ビヘイビア同様、 `template` タグを使って、親要素のない複数のエレメントをまとめることができます。実際、これはすべてのテンプレートコントローラーで利用できます。テンプレートコントローラーを要素に付与すると、コンパイル時にHTMLテンプレートに変換されます。そのため、必要があれば、templateを明示的に指定することもできるのです。
+そうそう、Mapもありますね。ES6のMapとのバインドは、次のようにします:
 
-`repeat` ビヘイビアで繰り返される要素では、バインディング内で利用できる特殊なコンテキスト変数が利用できます:
+```markup
+<ul>
+  <li repeat.for="[id, customer] of customers">${id} ${customer.fullName}</li>
+</ul>
+```
+
+> **注:**: `if` 属性同様、 `template` タグを使って、親要素のない複数のエレメントをまとめることができます。
+
+`repeat` 属性で繰り返される要素では、バインディング内で特殊なコンテキスト変数が利用できます:
 
 * `$parent` - 現在のバージョンでは、ビューモデルのプロパティやメソッドはrepeatの中では参照することができません。将来のアップデートで改良する予定ですが、当面の間はビューモデルを `parent` で参照してください。
 * `$index` - 現在の要素の配列中のインデックス
@@ -511,7 +544,7 @@ export class Foo {
 
 <h4 id="global-behavior"><a href="#global-behavior">global-behavior</a></h4>
 
-これは直接利用できる付加ビヘイビアではありません。これは、カスタムバインディングコマンドと組み合わせて、jQuery APIやそれに類するものの宣言的な利用を動的に有効にします。このアイディアを理解するために、例を見てみましょう:
+これは直接利用できるHTML拡張ではありません。これは、カスタムバインディングコマンドと組み合わせて、jQuery APIやそれに類するものの宣言的な利用を動的に有効にします。このアイディアを理解するために、例を見てみましょう:
 
 ```markup
 <div jquery.modal="show: true; keyboard.bind: allowKeyboard">...</div>
@@ -519,7 +552,7 @@ export class Foo {
 
 このサンプルは [Bootstrap modal widget](http://getbootstrap.com/javascript/#modals) をベースにしています。この例は、 `modal` jQueryヴィジェットがdiv要素に付与され、その `show` オプションを `true` にセットし、 `keyboard` オプションをビューモデルの `allowKeyboard` プロパティの値にセットします。このビューとの結びつきが解除されると、jQueryヴィジェットは破棄されます。
 
-`global-behavior` 付加ビヘイビアとカスタムシンタックスを組み合わせ、このような動的な挙動を可能にしています。この例のように、プロパティと値を上記のように区切るシンタックスは `style` 属性のシンタックスをベースにしたものです。バインディングコマンドも利用できることに注目してください。 `.bind` を使ってビューモデルのデータを直接プラグインに渡したり、 `.call` を使ってコールバック関数をプラグインに渡すこともできます。
+`global-behavior` とカスタムシンタックスを組み合わせ、このような動的な挙動を可能にしています。この例のように、プロパティと値を上記のように区切るシンタックスは `style` 属性のシンタックスをベースにしたものです。バインディングコマンドも利用できることを覚えておきましょう。 `.bind` を使ってビューモデルのデータを直接プラグインに渡したり、 `.call` を使ってコールバック関数をプラグインに渡すこともできます。
 
 どのように動作するかというと:
 
@@ -536,10 +569,11 @@ export class Foo {
 設定の例をみてみましょう。
 
 ```javascript
+import {inject} from 'aurelia-framework';
 import {Router} from 'aurelia-router';
 
+@inject(Router)
 export class App {
-  static inject() { return [Router]; }
   constructor(router) {
     this.router = router;
     this.router.configure(config => {
@@ -633,11 +667,10 @@ router.configure(config => {
 
 ```javascript
 import {Router, Redirect} from 'aurelia-router';
-import {Container} from 'aurelia-dependency-injection';
-import bootstrap from 'bootstrap';
+import {inject} from 'aurelia-framework';
 
+@inject(Router)
 export class App {
-  static inject() { return [Router]; }
   constructor(router) {
     this.router = router;
     this.router.configure(config => {
@@ -654,10 +687,6 @@ export class App {
 }
 
 class AuthorizeStep {
-  static inject() { return []; }
-  constructor() {
-  }
-
   run(routingContext, next) {
     // ルートが "auth" キーを持っているか確認する
     // `nextInstructions`を使う理由は、
@@ -667,11 +696,9 @@ class AuthorizeStep {
       if (!isLoggedIn) {
         return next.cancel(new Redirect('login'));
       }
-
-      return next();
-    } else {
-      return next();
     }
+
+    return next();
   }
 }
 ```
@@ -781,20 +808,21 @@ public class IndexModule : NancyModule {
 
 <h3 id="reusing-an-existing-vm"><a href="#reusing-an-existing-vm">ビューモデルの再利用</a></h3>
 
-複数のルートに対して、同じビューモデルを使いたくないケースもあるでしょう。デフォルトでは、Aureliaはこれらのルートを同一ビューモデルのエイリアスとみなすので、ビルドと付加プロセス、およびライフサイクルは一度のみ実行されます。これに満足できないこともあるでしょう。次の例を見てください:
+複数のルートに対して、同じビューモデルを使いたいケースもあるでしょう。デフォルトでは、Aureliaはこれらのルートを同一ビューモデルのエイリアスとみなすので、ビルドと付加プロセス、およびライフサイクルは一度のみ実行されます。これに満足できないこともあるでしょう。次の例を見てください:
 
 ```javascript
+import {inject} from 'aurelia-framework';
 import {Router} from 'aurelia-router';
 
+@inject(Router)
 export class App {
-  static inject() { return [Router]; }
   constructor(router) {
     this.router = router;
     this.router.configure(config => {
       config.title = 'Aurelia';
       config.map([
-        { route: 'product/a',         moduleId: 'product'      nav: true },
-        { route: 'product/b',         moduleId: 'product',     nav: true },
+        { route: 'product/a',         moduleId: './product'      nav: true },
+        { route: 'product/b',         moduleId: './product',     nav: true },
       ]);
     });
   }
@@ -831,54 +859,49 @@ export class YourViewModel {
 
 <h2 id="extending-html"><a href="#extending-html">HTMLを拡張する</a></h2>
 
-Aureliaには強力かつ拡張可能なHTMLテンプレートコンパイラがあります。コンパイラそのものは、HTMLを操作するロジックを持つ、様々な _ビヘイビアタイプ_ と相互作用するアルゴリズムです。すぐに使えるように、Aureliaには三つの中心となるビヘイビアタイプの実装があり、それで日々の作業を十分カバーできると考えています。その三つとは、 _付加ビヘイビア_ 、 _カスタムエレメント_ そして _テンプレートコントローラー_ です。
+Aureliaには強力かつ拡張可能なHTMLテンプレートコンパイラがあります。コンパイラそのものは、拡張と相互作用するアルゴリズムです。すぐに使えるように、Aureliaは二つの拡張を用意しています: _カスタムエレメント_ と _カスタム属性_ です。
 
-ビヘイビアは、デフォルトではコンパイラに見えません。組み込むためには、三つの方法があります:
+これらのHTML拡張は、デフォルトではコンパイラに認識されません。組み込むためには、三つの方法があります:
 
-* `require` 要素を使ってビヘイビアをビューに読み込む。 `from` 属性でビヘイビアのモジュールへの相対パスを指定します。 ビヘイビアはローカルに定義されます。
-* ブートストラップ時に、Aureliaオブジェクトの `.globalizeResources(...resources)` を使ってビヘイビアをアプリケーショングローバルに見えるようにする。
-* プラグインをインストールして、ビヘイビアをアプリケーショングローバルに見えるように登録する。
+* `require` 要素を使ってHTML拡張をビューに読み込む。 `from` 属性でHTML拡張のモジュールへの相対パスを指定します。 HTML拡張はローカルに定義されます。
+* ブートストラップ時に、Aureliaオブジェクトの `.globalizeResources(...resources)` を使ってHTML拡張を登録し、アプリケーショングローバルに見えるようにする。
+* HTML拡張をアプリケーショングローバルに見えるように登録するようなプラグインをインストールする。
 
->**注:** お勧めの方法は、アプリケーション固有のビヘイビアやバリューコンバーターなどを _resources_ フォルダに入れることです。その後、それらすべてを内部的にプラグインとする _index.js_ ファイルを作成します。最後に、そのプラグインをアプリケーションのブートストラップ時にインストールします。こうすることで、リソースとその登録コードを一緒にして、既知の場所に保管することができます。また、設定ファイルを汚すこともありません。
+>**注:** お勧めの方法は、アプリケーション固有のHTML拡張やバリューコンバーターなどを _resources_ フォルダに入れることです。その後、それらすべてを内部的にプラグインとする _index.js_ ファイルを作成します。最後に、そのプラグインをアプリケーションのブートストラップ時にインストールします。こうすることで、リソースとその登録コードを一緒にして、既知の場所に保管することができます。また、設定ファイルを汚すこともありません。
 
-すべてのビヘイビアは、次のフックを実装することで、ビューのライフサイクルに組み込むことができます:
+すべてのHTML拡張は、次のフックを実装することで、ビューのライフサイクルに組み込むことができます:
 
 * `bind(bindingContext)` - データバインディングエンジンがビューをバインドするときに起動されます。bindingContextは、ビューがデータバインドされるインスタンスです。
 * `unbind()` - データバインディングエンジンがビューをアンバインドするときに起動されます。
-* `attached()` - ビヘイビアを含むビューがDOMに組み込まれるときに起動されます。
-* `detached()` - ビヘイビアを含むビューがDOMから外れるときに起動されます。
+* `attached()` - HTML拡張を含むビューがDOMに組み込まれるときに起動されます。
+* `detached()` - HTML拡張を含むビューがDOMから外れるときに起動されます。
 
->**注:** `bind` コールバックを実装するときには、初回のバインドが少し異なる流れになることに注意してください。通常、ビヘイビアプロパティはバインド時に個々に呼ばれます。しかし、 `bind` コールバックは、初期化時には呼ばれません。 `bind` コールバックは、すべてのプロパティが値とバインドされた後、一度だけ呼ばれます。これは重要で、役に立つ特徴です。特にすべての値が評価された後に"実行"したいような、複雑な振る舞いに役立ちます。
+>**注:** `bind` コールバックを実装するときには、初回のHTML拡張のバインド処理の流れが少し異なる流れになることに注意してください。通常、バインド可能なプロパティへのコールバックがあれば、それらはバインド時に個々に呼ばれます。しかし、 `bind` コールバックを追加すると、それらは初期化時に呼ばれなくなります。そのかわりに `bind` コールバックを、すべてのプロパティが初期値とバインドされた状態で、一度だけ呼びます。これは重要で、役に立つ特徴です。特にすべての値が評価された後にのみ"実行"したいような、複雑な拡張に役立ちます。
 
-<h3 id="attached-behaviors"><a href="#attached-behaviors">付加ビヘイビア</a></h3>
+<h3 id="custom-attributes"><a href="#custom-attributes">カスタム属性</a></h3>
 
-付加ビヘイビアは、カスタム属性を付け加えることで、既存のHTMLエレメントに機能や振る舞いを"付加"します。付加ビヘイビアの代表的な利用例は:
+カスタム属性はは、既存のHTMLエレメントに機能や振る舞いを"付加"します。カスタム属性の代表的な利用例は:
 
 * jQueryや、それに類するプラグインをラップする ( `global-behavior` では十分でないときに)。
 * 共通のスタイル、クラス、属性バインディングのショートカットを作成する。
 * 直接変更できないような既存のHTMLエレメント、カスタムエレメントを変更する。
 
-付加ビヘイビアは横断的感心事を表す傾向があります。たとえば、どんなエレメントにも付加できるツールチップを作成したいことがあるでしょう。付加ビヘイビアは、このようなツールチップ機能をすべてのカスタムエレメントに作りこむより良い発想だと言えます。
+カスタム属性は横断的感心事を表す傾向があります。たとえば、どんなエレメントにも付加できるツールチップを作成したいことがあるでしょう。カスタム属性は、このようなツールチップ機能をすべてのカスタムエレメントに作りこむより良い発想だと言えます。
 
-Aureliaが持つ付加ビヘイビア実装の一つ、 `show` を見てみましょう。下記がそのコードです:
+Aureliaで利用できるカスタム属性の一つ、 `show` を見てみましょう。下記がそのコードです:
 
 ```markup
 <div show.bind="isSaving" class="spinner"></div>
 ```
 
-`show` ビヘイビアはバインドしている値が偽の場合、クラス属性を付与します。. (この付与されるクラス属性は、付与されるとエレメントを隠します) 実装を見てみましょう:
+`show` 属性はバインドしている値が偽の場合、cssのclass属性を付与します。 (このcss classは、付与されるとエレメントを隠します。) 実装を見てみましょう:
 
 ```javascript
-import {Behavior} from 'aurelia-templating';
+import {inject, customAttribute} from 'aurelia-framework';
 
+@customAttribute('show')
+@inject(Element)
 export class Show {
-  static metadata(){
-    return Behavior
-      .attachedBehavior('show')
-      .withProperty('value', 'valueChanged', 'show');
-  }
-
-  static inject() { return [Element]; }
   constructor(element) {
     this.element = element;
   }
@@ -893,23 +916,25 @@ export class Show {
 }
 ```
 
-まず注目するところは、付加ビヘイビアも、今まで見てきたパターンと何ら変わらないクラスだということです。 `メタデータ` がビヘイビアを定義する上で重要な役割を果たしているのに気がつくと思います。メタデータでやっていることを説明します:
+まず注目するところは、カスタム属性も、今まで見てきたパターンと何ら変わらないクラスだということです。 デコレータがカスタム属性を定義する上で重要な役割を果たしているのに気がつくと思います。ここでやっていることを説明します:
 
-* `.attachedBehavior('show')` - HTMLコンパイラに、このクラスを `付加ビヘイビア` としてプラグインすることを通知するメタデータインスタンスです。これで、このビヘイビアは属性に"show"が現れた時、コンパイラによって認識され呼び出されます。Aureliaでは付加ビヘイビアは常にHTMLの一つの属性に関連付けられます。これは1対1の関連性です。
-* `.withProperty('value', 'valueChanged', 'show')` - `BehaviorProperty` を作成します。それにより、HTMLコンパイラに、あなたが作成したクラスにHTML属性に対応づける特別なプロパティがあることを伝えます。このメソッドの最初の引数はクラスのプロパティ名です。最後の引数は属性名で、これはプロパティ名と同じ場合は省略できます。2番目の引数は省略可能で、プロパティが変更されたときに呼び出されるコールバックを指定することができます。
+* `@customAttribute('show')` - HTMLコンパイラに、このクラスをカスタム属性 としてプラグインすることを通知します。これで、属性"show"が出てきたとき、コンパイラがそれに気づきます。
+* `inject` - これはDIシステムの一部です; 以前出てきたものと同じです。カスタム属性はそれが定義されているエレメントをコンストラクタにinjectすることができます。ここではそのようにしています。型を示すためにブラウザの `Element` 型を使っています。
 
-オーケー。それでは、規約について説明しましょう。
+他にもいくつかあります。
 
-* もしコールバック関数名が、 {プロパティ名}Changed の場合、省略できます。つまり、先ほどの例の2番目の引数を省略できるということです。
-* プロパティ名と属性名が同じなら、省略できます。先ほどの例だと、名前が異なりますから、指定する必要がありました。
-* 付加ビヘイビアは常にひとつの属性にのみ対応付けられます。これにより、このシンプルな利用法に特化した最適化が可能となります。もしプロパティ名が"value"であれば、プロパティメタデータを指定する必要はありません。ビヘイビアと同じ名前の属性を自動的に `value` プロパティと関連付けます。
-* exportしたクラス名が{ビヘイビア名}AttachedBehaviorの場合、付加ビヘイビアメタデータを指定する必要はありません。属性名はクラス名から"AttachedBehavior"を取り除いたものを、小文字にしてハイフンでつないだ文字が使われる。例をあげると、behavior-name のようになります。
+* HTML中の属性は値を持つことができます。カスタム属性クラスは値をもつための `value` プロパティを持ち、HTMLで中の値と同期します。ここで `valueChanged` メソッドを実装すると、値が変更されたときに呼び出されます。このメソッドの最初の引数は新しい値、二つ目の引数が古い値です。
 
-これらの規約を利用すると、先ほどの `show` ビヘイビアを次のように定義することができます:
+規約についてはどうでしょうか?
+
+カスタム属性クラスのexport名を {SomeName}CustomAttribute とすると、 `@customAttribute` デコレーターを含める必要はありません。属性名はクラス名からCustomAttributeを除いた文字列を、小文字にしてハイフンでつないだものになります。例えば、SomeNameCustomAttributeなら、some-name という属性名になります。
+
+これらの規約を利用すると、先ほどの `show` 属性は次のように定義することができます:
 
 ```javascript
-export class ShowAttachedBehavior {
-  static inject() { return [Element]; }
+export class ShowCustomAttribute {
+  static inject = [Element]; //これはデコレーターを使わず定義する例です
+
   constructor(element) {
     this.element = element;
   }
@@ -924,128 +949,63 @@ export class ShowAttachedBehavior {
 }
 ```
 
-> **注:** では、なぜAureliaの内部ではこの規約を使っていないのだろうか?サードパーティライブラリとしてビヘイビアのライブラリを作成する場合は、これらを省略せず明示した方が良いです。利用者がAureliaの規約に手を加えていないかどうか知ることはできないため、規約に頼っていると、ライブラリが正しく動作しないことにもなります。それを防ぐためには、常に明示的にメタデータを指定することです。ただ自分のアプリケーションで利用する場合には、この規約を活用して、シンプルに開発することが可能です。
+> **注:** では、Aureliaの内部でもこの規約を使えば良いのでは、と思うでしょう?サードパーティライブラリを作成する場合は、これらを省略せず明示した方が良いのです。利用者がAureliaの規約に手を加えていないかどうか知ることはできないため、規約に頼っていると、ライブラリが正しく動作しないことにもなります。それを防ぐためには、常に明示的にメタデータを指定することです。ただ自分のアプリケーションで利用する場合には、この規約を活用して、シンプルに開発することが可能です。
 
-次にコンストラクタを見てみましょう。
+<h4 id="options-properties"><a href="#options-properties">オプション属性</a></h4>
 
-付加ビヘイビアは、 `inject` 配列で指定することで、付加先のHTML要素に簡単にアクセスすることができます。 `show` ビヘイビアの例では、要素への参照を保存して、後で `classList` を更新することに利用しています。
-
-最後に、 `valueChanged` コールバックを確認します。以前、これは値が変更されたときに呼び出され、プロパティメタデータに設定されると説明しました。バインディングシステムは値が更新されると、このコールバックを呼び出します。したがって、実装するのは値に応じてクラス属性を付与/削除するコードを書くだけです。
-
-<h4 id="options-properties"><a href="#options-properties">オプションプロパティ</a></h4>
-
-もし複数のプロパティを持つ付加ビヘイビアが作りたかったらどうすればいいのかと思ったことでしょう。付加ビヘイビアは一つの属性と関連付けられるので、それはもっともな疑問です。このような用途では、 `オプションプロパティ` を使います。これにより、単一の属性に複数のプロパティを埋め込むことができます。ブラウザの `style` 属性のようなものです。ここに例を示します:
+もし複数のプロパティを持つカスタム属性が作りたかったらどうすればいいのかと思ったことでしょう。通常属性はひとつの値と関連付けられるので、それはもっともな疑問です。実際すごく簡単で、複数の `bindable` プロパティを作成するだけで良いです。
 
 ```javascript
-import {Behavior} from 'aurelia-templating';
+import {customAttribute, bindable} from 'aurelia-framework';
 
-export class MyBehavior{
-  static metadata(){
-    return Behavior
-      .attachedBehavior('my-behavior')
-      .withOptions().and(x => {
-        x.withProperty('foo');
-        x.withProperty('bar');
-      });
-  }
+@customAttribute('my-attribute')
+export class MyAttribite {
+  @bindable foo;
+  @bindable bar;
 }
 ```
 
-これは `my-behavior` という名前で、 `foo` と `bar` という二つのプロパティをもつ付加ビヘイビアを作成します。これらプロパティは、クラスでは直接利用できますが、HTMLでは少し異なる形で設定することになります。どのようにするか見てみましょう:
+これは `my-attribute` という名前で、 `foo` と `bar` という二つのプロパティをもつカスタム属性を作成します。これらプロパティは、クラスでは直接利用できます。また、変更通知のためのコールバック `fooChanged` `barChanged` をそれぞれ持つこともできます。 HTMLでは少し異なる形で設定することになります。どのようにするか見てみましょう:
 
 ```markup
-<div my-behavior="foo: some literal value; bar.bind: some.expression"></div>
+<div my-attribute="foo: some literal value; bar.bind: some.expression"></div>
 ```
 
-ビヘイビア自身ではバインディングコマンドを使っていないことに注目してください。その代わり、属性の値の中で、個々のプロパティにたいしてバインディングコマンドを使えます。バインディングコマンドと同様に、リテラルも利用可能です。
+属性にバインディングコマンドを使っていないことに注目してください。その代わり、属性の値の中で、個々のプロパティにたいしてバインディングコマンドを使えます。バインディングコマンドと同様に、リテラルも利用可能です。
 
 > **注:** `delegate` や `trigger` コマンドは、オプション属性中で利用しないでください。これらは素のDOMイベントと連携するため、常にエレメントに付加されます。ただし、 `call` は利用可能です。
 
-<h3 id="custom-elements"><a href="#custom-elements">カスタムエレメント</a></h3>
+もしES7のプロパティイニシャライザを使っていなければ、 `@bindable` デコレータを直接クラスに指定することも可能です。その場合はプロパティ名を `@bindable('propertyName')` のように指定します。バインド可能なプロパティの細かい設定を行う場合は、次のようにオプションオブジェクトを渡します:
 
-カスタムエレメントは、HTMLマークアップに新しいタグを導入します。個々のカスタムエレメントは、Light DOMまたはShadow DOMにレンダリングされる、自身のビューテンプレートを持つことができます。また、カスタムエレメントは任意の数のプロパティを持つこともでき、それらはビューテンプレートで利用でき、HTML上はデータバインド可能な属性となります。
-
-どのように動作するかわかるように、ここで簡単なサンプルを作成してみましょう。 `say-hello` という、誰かにhelloと挨拶するだけのエレメントを作成します。このカスタムエレメントが完成すれば、次のように利用することができます:
-
-```markup
-<template>
-    <require from="./say-hello"></require>
-
-    <input type="text" ref="name">
-    <say-hello to.bind="name.value"></say-hello>
-</template>
-```
-
-どうやって作りましょうか。付加ビヘイビアの時と同様に、まずはクラスを作成することからスタートします。下記がそのクラスです:
-
-#### say-hello.js
 ```javascript
-import {Behavior} from 'aurelia-templating';
-
-export class SayHello {
-  static metadata(){
-    return Behavior
-      .customElement('say-hello')
-      .withProperty('to');
-  }
-
-  speak(){
-    alert('Hello ${this.to}!');
-  }
-}
+@bindable({
+  name:'myProperty', //クラス中のプロパティ名
+  attribute:'my-property', //HTML中の属性名
+  changeHandler:'myPropertyChanged', //変更通知コールバック
+  defaultBindingMode: ONE_WAY, //.bindコマンドでのバインディングモード
+  defaultValue: undefined //HTML中で指定が無いときのデフォルト値
+})
 ```
 
-もしすでに付加ビヘイビアのセクションを読んでいたら、何をやっているのかはわかるとおもいます。ここにも幾つかの規約があり、もしその気になれば次のように省略することができます:
+デフォルトと規約については上述した通りなので、変更の必要があるものだけを指定すればよいです。
 
-#### say-hello.js (規約を用いて)
-```javascript
-import {Behavior} from 'aurelia-templating';
+> **注:** 特別な `@dynamicOptions` デコレータというものがあります。これはカスタム属性に、動的なプロパティを持たせるもので、オプション属性のシンタックスで指定したプロパティを実行時にマッピングします。これを使うときは `bindable` を使ってプロパティを宣言しないでください。 `@dynamicOptions` デコレータを記載すれば、オプション属性のシンタックス中で定義されているプロパティにマッピングされます。
 
-export class SayHelloCustomElement {
-  static metadata(){
-    return Behavior.withProperty('to');
-  }
-
-  speak(){
-    alert('Hello ${this.to}!');
-  }
-}
-```
-
-カスタムエレメントにはビューもありますね。これがビューです。
-
-#### say-hello.html
-```markup
-<template>
-    <button click.delegate="speak()">Say Hello To ${to}</button>
-</template>
-```
-
-ご覧の通り、クラスのプロパティやメソッドにアクセスできています。ビューテンプレートで利用したいプロパティをプロパティメタデータで宣言する必要はありません。属性として使いたいプロパティだけを宣言すればよいのです。
-
-やることはこれだけです。カスタムエレメントでも通常のビューモデル/ビューと同じ名前規約に従います。カスタムエレメント固有のメタデータもあるので、覚えておきましょう:
-
-* `.useShadowDOM()` - これはコンポーネントのビューをLight DOMではなく、Shadow DOMにレンダリングします。この用語について詳しくなければ、 [この記事](http://www.html5rocks.com/en/tutorials/webcomponents/shadowdom/) を読んでください。Shadow DOMを使う場合、 _コンテンツセレクタ_  をビューテンプレートの中で利用できます。
-* `.noView()` - ビヘイビアがすべてコードで実装されていて、ビューを持たないような場合はこのオプションを指定します。
-* `.useView(relativePath)` - 命名規約とは異なるビューを利用する場合は、そのビューへの相対パスを引数として、このオプションを利用します。
+> **注:** デコレータを使いたくない、または言語がサポートしていない場合、デコレータは `Decorators` ヘルパを使って `decorators` プロパティもしくはメソッドで指定できることを思い出してください。以前でてきたCoffeeScriptの例を参照ください。
 
 <h3 id="template-controllers"><a href="#template-controllers">テンプレートコントローラー</a></h3>
 
-テンプレートコントローラーは、DOMを展開されていないHTMLテンプレートに変換するものです。コントローラーはその後、いつどこで(また、何回)テンプレートをDOM中に展開するかを決めることができます。 `if` や `repeat` がテンプレートコントローラーの例です。このビヘイビアをDOMノードに配置すれば、それはビヘイビアに制御されるテンプレートになるというわけです。
+カスタム属性は、 `@templateController` デコレータを使って、それらがテンプレートコントローラーであると示すことができます。 これは、DOMを展開されていないHTMLテンプレートに変換するものです。カスタム属性はその後、いつどこで(また、何回)テンプレートをDOM中に展開するかを決めることができます。 `if` や `repeat` がテンプレートコントローラーの例です。これらをDOMノードに配置すれば、それはカスタム属性で制御可能なテンプレートになるというわけです。
 
-`if` ビヘイビアの実装を確認して、どのようにまとめているのか見てみましょう。下記がソースコード全体です:
+`if` カスタム属性の実装を確認して、どのようにまとめているのか見てみましょう。下記がソースコード全体です:
 
 ```javascript
-import {Behavior, BoundViewFactory, ViewSlot} from 'aurelia-templating';
+import {BoundViewFactory, ViewSlot, customAttribute, templateController, inject} from 'aurelia-framework';
 
+@customAttribute('if')
+@templateController
+@inject(BoundViewFactory, ViewSlot)
 export class If {
-  static metadata(){
-    return Behavior
-      .templateController('if')
-      .withProperty('value', 'valueChanged', 'if');
-  }
-
-  static inject() { return [BoundViewFactory, ViewSlot]; }
   constructor(viewFactory, viewSlot){
     this.viewFactory = viewFactory;
     this.viewSlot = viewSlot;
@@ -1080,21 +1040,86 @@ export class If {
 }
 ```
 
-テンプレートコントローラーの固有の側面について掘り下げる前に、いままでやってきたことと似ている部分について説明しましょう。まず、単純なクラスとメタデータですね。以前の二つのビヘイビアと同様にメタデータを宣言しています。規約も同様です。従って、クラス名を `IfTemplateController` にすれば、メタデータで宣言する必要はありません。同様に、 `valueChanged` コールバックがあれば、プロパティメタデータを宣言する必要もありません。付加ビヘイビアと同じ規約ですね。
+固有の側面について掘り下げる前に、いままでやってきたことと似ている部分について説明しましょう。まず、単純なクラスとデコレータですね。デフォルトで一つの `value` プロパティを持ち、ここに追加されている `valueChanged` コールバックで変更を監視しています。
 
-では、違いはなんでしょうか?コンストラクタを見てください。このテンプレートコントローラーには二つ挿入されているものがあります: `BoundViewFactory` と `ViewSlot` です。
+では、違いはなんでしょうか?コンストラクタを見てください。二つの引数があります: `BoundViewFactory` と `ViewSlot` です。
 
-`BoundViewFactory` はコントローラーが付加されているHTMLテンプレートを展開する役割を持っています。コンパイルの心配をする必要はありません。このクラスがすべて面倒をみてくれます。なぜ"Bound"ビューファクトリーという名前が付いているのでしょうか?これは、あらかじめ親のバインディングコンテキストを参照する形になっているためです。これが"bound(バインドされた)"という意味です。したがって、 `create` メソッドを呼ぶと、このコンテキストとバインドした新しいビューをテンプレートから作成するのです。これは `if` ビヘイビアで想定される挙動ですね。しかし `repeat` ビヘイビアでは異なります。この場合、 `create` を呼ぶ際には、配列内の要素にバインドされたビューが必要になります。この動作を実現するためには、ビューにバインドしたいオブジェクトを `create` メソッドに渡せば良いのです。
+`BoundViewFactory` はコントローラーが付加されているHTMLテンプレートを展開する役割を持っています。コンパイルなどの心配をする必要はありません。このクラスがすべて面倒をみてくれます。なぜ"Bound"ビューファクトリーという名前が付いているのでしょうか?これは、あらかじめ親のバインディングコンテキストを参照する形になっているためです。これが"bound(バインドされた)"という意味です。したがって、 `create` メソッドを呼ぶと、このコンテキストとバインドした新しいビューをテンプレートから作成するのです。これは `if` 属性で想定される挙動ですね。しかし `repeat` 属性では異なります。この場合、 `create` を呼ぶ際には、配列内の要素にバインドされたビューが必要になります。この動作を実現するためには、ビューにバインドしたいオブジェクトを `create` メソッドに渡せば良いのです。
 
-`ビュースロット` はテンプレートを取り除く、DOM上の位置やスロットを表します。これは通常ビューインスタンスを追加する場所でもあります。
+`ViewSlot` はテンプレートの配置されたDOM上の位置やスロットを表します。これは通常ビューインスタンスを追加する場所でもあります。
 
->**注**: これまでに説明してきたビヘイビアとは違い、テンプレートコントローラーはより直接的にフレームワークの  _プリミティブ_ と連携します。ビュー、ビューファクトリー、ビュースロットはテンプレートエンジンの低レベルな構成要素です。
+>**注**: これまでに説明してきた属性とは違い、テンプレートコントローラーはより直接的にフレームワークの  _プリミティブ_ と連携します。ビュー、ビューファクトリー、ビュースロットはテンプレートエンジンの低レベルな構成要素です。
 
-`valueChanged` コールバックを見てください。そこで、 `if` ビヘイビアがビューを作成して、値が真の場合にビューをスロットに追加しています。重要なポイントがいくつかあります:
+`valueChanged` コールバックを見てください。そこで、 `if` 属性がビューを作成して、値が真の場合にビューをスロットに追加しています。重要なポイントがいくつかあります:
 
-* ビヘイビアはビュースロットにビューを追加する _前に_ `bind` を呼び出します。これは現在のDOMの外側で、内部的なバインディングを最初に評価します。これは性能上重要です。
+* 属性はビュースロットにビューを追加する _前に_ `bind` を呼び出します。これは現在のDOMの外側で、内部的なバインディングを最初に評価します。これは性能上重要です。
 * 似ていますが、DOMからビューを取り除いた _後に_ `unbind` を呼び出します。
-* ビューが最初に作成されると、値が偽の場合でも、 `if` ビヘイビアはそれを保持します。インスタンスをキャッシュするということです。Aureliaはビューを再利用しますし、それを他のバインディングコンテキストに利用することも可能です。これもまた、性能にとって重要です。不要なビューの再生成を抑制するからです。
+* ビューが最初に作成されると、値が偽の場合でも、 `if` 属性はそれを保持します。インスタンスをキャッシュするということです。Aureliaはビューを再利用しますし、それを他のバインディングコンテキストに利用することも可能です。これもまた、性能にとって重要です。不要なビューの再生成を抑制するからです。
+
+
+<h3 id="custom-elements"><a href="#custom-elements">カスタムエレメント</a></h3>
+
+カスタムエレメントは、HTMLマークアップに新しいタグを導入します。個々のカスタムエレメントは、Light DOMまたはShadow DOMにレンダリングされる、自身のビューテンプレートを持つことができます。また、カスタムエレメントは任意の数のプロパティを持つこともでき、それらはビューテンプレートで利用でき、HTML上はデータバインド可能な属性となります。
+
+どのように動作するかわかるように、ここで簡単なサンプルを作成してみましょう。 `say-hello` という、誰かにhelloと挨拶するだけのエレメントを作成します。このカスタムエレメントが完成すれば、次のように利用することができます:
+
+```markup
+<template>
+    <require from="./say-hello"></require>
+
+    <input type="text" ref="name">
+    <say-hello to.bind="name.value"></say-hello>
+</template>
+```
+
+どうやって作りましょうか。カスタム属性の時と同様に、まずはクラスを作成することからスタートします。下記がそのクラスです:
+
+#### say-hello.js
+```javascript
+import {customElement, bindable} from 'aurelia-framework';
+
+@customElement('say-hello')
+export class SayHello {
+  @bindable to;
+
+  speak(){
+    alert('Hello ${this.to}!');
+  }
+}
+```
+
+もしすでにカスタム属性のセクションを読んでいたら、何をやっているのかはわかるとおもいます。ここでも規約を使って次のように省略することができます:
+
+#### say-hello.js (規約を用いて)
+```javascript
+import {bindable} from 'aurelia-framework';
+
+export class SayHelloCustomElement {
+  @bindable to;
+
+  speak(){
+    alert('Hello ${this.to}!');
+  }
+}
+```
+
+カスタムエレメントにはビューもありますね。これがビューです。
+
+#### say-hello.html
+```markup
+<template>
+    <button click.trigger="speak()">Say Hello To ${to}</button>
+</template>
+```
+
+ご覧の通り、クラスのプロパティやメソッドにアクセスできています。テンプレート利用したいプロパティ全てを `@bindable` で宣言する必要はありません。カスタムエレメントで中で属性として使いたいプロパティだけを宣言すればよいのです。
+
+やることはこれだけです。カスタムエレメントでも通常のビューモデル/ビューと同じ名前規約に従います。カスタムエレメント固有のデコレータもあるので、覚えておきましょう:
+
+* `@syncChildren(property, changeHandler, selector)` - クエリセレクタに応じて、配列の中身がビューと同期するような配列プロパティを作成します。
+*  `@skipContentProcessing` - コンパイラにカスタムエレメントを処理しないように指示します。つまり、独自で処理するということになります。
+*  `@useView(path)` - 命名規約とは異なるビューを指定します。
+*  `@noView()` - カスタムエレメントがビューを持たないことを示します。つまり、カスタムエレメントがレンダリングを内部で行うということを意図しています。。
 
 <h2 id="eventing"><a href="#eventing">イベント</a></h2>
 
@@ -1102,7 +1127,7 @@ export class If {
 
 <h3 id="dom-events"><a href="#dom-events">DOMイベント</a></h3>
 
-DOMイベントはUI固有のメッセージの伝送に使います。これはアプリケーション固有のメッセージに使うべきではありません。AureliaはUIイベントのためにDOMに機能を追加したりしていません(現在のところは)。ビヘイビアは、関連する `エレメント` をコンストラクタに挿入することができます。その後、この `エレメント` を使って、イベントを起動することができます。DOMイベントの作成と起動について学ぶには、 [この記事を読んでください](https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Creating_and_triggering_events) 。
+DOMイベントはUI固有のメッセージの伝送に使います。これはアプリケーション固有のメッセージに使うべきではありません。AureliaはUIイベントのためにDOMに機能を追加したりしていません(現在のところは)。カスタム属性やカスタムエレメントは、関連する `エレメント` をコンストラクタに挿入することができます。その後、この `エレメント` を使って、イベントを起動することができます。DOMイベントの作成と起動について学ぶには、 [この記事を読んでください](https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Creating_and_triggering_events) 。
 
 <h3 id="the-event-aggregator"><a href="#the-event-aggregator">イベントアグリゲーター</a></h3>
 
@@ -1114,7 +1139,7 @@ DOMイベントはUI固有のメッセージの伝送に使います。これは
 import {EventAggregator} from 'aurelia-event-aggregator';
 
 export class APublisher{
-    static inject(){ return [EventAggregator]; }
+    static inject = [EventAggregator];
     constructor(eventAggregator){
         this.eventAggregator = eventAggregator;
     }
@@ -1132,7 +1157,7 @@ export class APublisher{
 import {EventAggregator} from 'aurelia-event-aggregator';
 
 export class ASubscriber{
-    static inject(){ return [EventAggregator]; }
+    static inject = [EventAggregator];
     constructor(eventAggregator){
         this.eventAggregator = eventAggregator;
     }
@@ -1158,7 +1183,7 @@ import {EventAggregator} from 'aurelia-event-aggregator';
 import {SomeMessage} from './some-message';
 
 export class APublisher{
-    static inject(){ return [EventAggregator]; }
+    static inject = [EventAggregator];
     constructor(eventAggregator){
         this.eventAggregator = eventAggregator;
     }
@@ -1207,7 +1232,7 @@ jspm install aurelia-http-client
 import {HttpClient} from 'aurelia-http-client';
 
 export class WebAPI {
-    static inject() { return [HttpClient]; }
+    static inject = [HttpClient];
     constructor(http){
         this.http = http;
     }
@@ -1330,6 +1355,6 @@ ConventionalView.convertModuleIdToViewUrl = function(moduleId){
 }
 ```
 
-このコードは初期化時の設定処理に含めて実行するようにし、他のビヘイビアがロードされる前に有効になるようにしなければなりません。これはカスタムエレメントも含め *すべて* に影響します。規約を変えるためには、`convertModuleIdToViewUrl` の実装を適切に変更する必要があります。
+このコードは初期化時の設定処理に含めて実行するようにし、他のカスタムエレメントがロードされる前に有効になるようにしなければなりません。これはカスタムエレメントも含め *すべて* に影響します。規約を変えるためには、`convertModuleIdToViewUrl` の実装を適切に変更する必要があります。
 
 > **注:** これが、なぜサードパーティのプラグインは規約に頼ってはいけないかという例です。開発者は彼らのアプリケーションのニーズに合わせて、規約を変更するかもしれないためです。

@@ -6,7 +6,7 @@
 
 ## 環境を設定する
 
-まずはモダンなJavaScriptアプリケーションをビルドするための素晴らしいツール群を準備することから始めましょう。我々のすべてのツールは [Node.js](http://nodejs.org/) 上で作られています。すでにNode.jsをインストール済み? 素晴らしい! インストールしていなければ、 [公式サイト](http://nodejs.org/) へ行き、ダウンロードしてインストールしてください。それ以外に必要なものはすべてNodeのパッケージマネージャー ([npm](https://docs.npmjs.com/getting-started/what-is-npm)) 経由でインストールされます。
+まずはモダンなJavaScriptアプリケーションをビルドするための素晴らしいツール群を準備することから始めましょう。我々のすべてのツールは [Node.js](http://nodejs.org/) 上で作られています。すでにNode.jsをインストール済み? 素晴らしい! インストールしていなければ、 [公式サイト](http://nodejs.org/) へ行き、ダウンロードしてインストールしてください。それ以外に必要なものはすべてNodeのパッケージマネージャー ([npm](https://docs.npmjs.com/getting-started/what-is-npm)) 経由でインストールされます。もしすでにnpmをインストール済みの場合でも、その他のツールとのトラブルを避けるためにも、  [最新バージョン](https://github.com/npm/npm/wiki/Troubleshooting#try-the-latest-stable-version-of-node) であることを確認してください。
 
 最初に、ビルド自動化ツールの [Gulp](http://gulpjs.com/) をインストールすることから始めます。もしまだインストールしていなければ、npmを使って次のようにセットアップしてください (`sudo` を使う必要があるかもしれません):
 
@@ -75,11 +75,11 @@
 </html>
 ```
 
-はい、これだけです。これが今作っているアプリケーションに必要な唯一のHTMLページです。ドキュメントのヘッダはすぐに分かると思います: bootstrapやfont-awesome、カスタムスタイルシートへのリンクです。重要なのはbodyです。
+はい、これだけです。これが今作っているアプリケーションに必要な唯一のHTMLページです。ドキュメントのヘッダはすぐに分かると思います: font-awesome、カスタムスタイルシートへのリンクです。重要なのはbodyです。
 
 > **注:** ローカルに保存されているbootstrapやfont-awesomeのフォルダ名が、href属性に記載のリンク先と一致しているか必ず確認してください。このドキュメントを書いた後に、それぞれのライブラリのバージョンが上がっている可能性があります。
 
-scriptタグから解説しましょう。最初に読み込んでいるのは _system.js_ 、ES6標準ベースのモジュールローダーです。これはAureliaライブラリと一緒にあなたが書くコードを読み込むものです。次に _config.js_ を読み込みます。これにはローダーの設定が含まれています。これはあなたがjspmコマンドを実行したときに自動的に生成されます。jspmは我々が推奨するクライアントサイドのパッケージマネージャーです。クライアントサイドのパッケージ管理とES6互換のモジュールローダーを統合することで、素晴らしい開発を体感することができます。
+scriptタグから解説しましょう。最初に読み込んでいるのは _system.js_ 、ES6標準ベースのモジュールローダーです。これはAureliaライブラリと一緒にあなたが書くコードを読み込むものです。次に _config.js_ を読み込みます。これにはローダーの設定が含まれています。これはあなたがjspmコマンドを実行したときに自動的に生成されます。jspmは我々が推奨するクライアントサイドのパッケージマネージャーです。クライアントサイドのパッケージ管理とES6互換のモジュールローダーを統合することで、素晴らしい開発を体感することができます。その直下では `System.config` を呼び出しています。ここでコンパイルされたJavascriptコードの出力先を指定しています。
 
 > **注:** AureliaフレームワークはjspmやSystemJSに縛られてはいません。我々はrequireスタイルのAPIである、RequireJSやDojoローダーも最初から使えるようにしています。また、自分で自分の望むようなパッケージ管理を実装することもできます。とはいえ、我々はjspm/SystemJSが現在のES6指向のソリューションの中ではベストだと考えているので、推奨方法としています。
 
@@ -100,11 +100,9 @@ _src_ フォルダに _app.html_ ファイルと _app.js_ ファイルを作成�
 ### app.js
 ```javascript
 export class Welcome{
-  constructor(){
-    this.heading = 'Welcome to the Aurelia Navigation App!';
-    this.firstName = 'John';
-    this.lastName = 'Doe';
-  }
+  heading = 'Welcome to the Aurelia Navigation App!';
+  firstName = 'John';
+  lastName = 'Doe';
 
   get fullName(){
     return `${this.firstName} ${this.lastName}`;
@@ -118,9 +116,9 @@ export class Welcome{
 
 何ですか...これJavaScriptですか?
 
-はい。その通りです。これはECMAScript 6 (ES6)、多くの言語拡張が追加されたJavaScriptの次のバージョンです。幸いなことに、今までの手順でダウンロードしたGulpファイル中で、 [Babel](https://babeljs.io/) というとても素晴らしいトランスパイラが含まれています。これは、現在のブラウザ上で将来のJavaScriptを書き、動作できるようにするものです。これを使ってモジュールや、クラスや、ラムダ式や、文字列の補完や、その他の機能を使うことができます。すごい! それで、どうやって _ビューモデル_ を作ればいいのでしょうか? 普通のクラスを作ってフレームワークに _export_ するだけです。楽勝です。
+はい。その通りです。これはECMAScript 7 (ES7)、多くの言語拡張が追加されたJavaScriptの次の次のバージョンです。幸いなことに、今までの手順でダウンロードしたGulpファイル中で、 [Babel](https://babeljs.io/) というとても素晴らしいトランスパイラが含まれています。これは、現在のブラウザ上で将来のJavaScriptを書き、動作できるようにするものです。これを使ってモジュールや、クラスや、ラムダ式や、文字列の補完や、その他の機能を使うことができます。すごい! それで、どうやって _ビューモデル_ を作ればいいのでしょうか? 普通のクラスを作ってフレームワークに _export_ するだけです。楽勝です。
 
-> **注:** Aureliaアプリケーションを書くのにBabelを使わなければいけないわけではありません。ES6すら使わなくても大丈夫です。AtScriptやTypeScript、CoffeeScript...といった、現在のブラウザで動作する言語、すなわちES5を使うことができます。あなたがやらなければいけないことは、利用する言語の標準的なやり方でクラスを作成することです。それでちゃんと動作します。しかし、我々はES6が素晴らしいと思っていますし、まずはそれを使うことを最初に考えて欲しいです。モジュールのexportやクラスといった新しいJavaScriptの機能についてより深く学ぶには、 [Luke Hoban's feature repo](https://github.com/lukehoban/es6features#readme) を読むことをおすすめします。
+> **注:** Aureliaアプリケーションを書くのにBabelを使わなければいけないわけではありません。ES7すら使わなくても大丈夫です。TypeScriptやCoffeeScript...もしくは現在のブラウザで動作する言語、すなわちES5を使うことができます。あなたがやらなければいけないことは、利用する言語の標準的なやり方でクラスを作成することです。それでちゃんと動作します。しかし、我々はES7が素晴らしいと思っていますし、まずはそれを使うことをまずは考えて欲しいです。モジュールのexportやクラスといった最新のJavaScriptの機能についてより深く学ぶには、[The Babel Learning Guide](http://babeljs.io/docs/learn-es6/) を読むことをおすすめします。
 
 オーケー。これで基本的なデータと振る舞いのある _ビューモデル_ が用意できました。次にいわば共犯者の... _ビュー_ について見てみます。
 
@@ -163,6 +161,8 @@ gulp watch
 
 ブラウザから [http://localhost:9000/](http://localhost:9000/) を開き、アプリケーションを確認します。フォームの入力コントロールに何か入力すると、Full Nameが計算されて表示されます。ボタンを押すとメソッドが呼ばれるのがわかります。
 
+> **注:** もし動作しないようなら、npmを最新に [アップデート](https://github.com/npm/npm/wiki/Troubleshooting#try-the-latest-stable-version-of-node) してみてください。
+
 > **注:** Aureliaは適応的なテクニックを使い、個々のプロパティの変更を監視するベストな方法を選択します。例えば、もしあなたが [Object.observe](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/observe) が利用できるブラウザを使っている場合、 _firstName_ と _lastName_ の両方をこれを使って監視します。そうでない場合、マイクロタスクキューに変更を蓄積するようなgetterとsetterを生成して、Object.observeの振る舞いをエミュレートします。計算されるプロパティの _fullName_ はこのいずれの方法でも監視できないため、ダーティチェックを行います。状況に応じて最適な手法を使いますが、特殊なモデルの型に応じた監視方法をフレームワークに"教える"ために、あなたが固有の方法を組み込むこともできます。とてもクールだと思っています。
 
 > `.bind` コマンドはすべてのプロパティに対してデフォルトのバインディングを適用します。デフォルトはフォームコントロールに対して双方向の、それ以外の全てに対して一方向のバインディングを行います。この振る舞いは明示的に `.one-way` や `.two-way` 、 `.one-time` コマンドを使って上書きすることが可能です。同様に、 `.delegate` をイベントデリゲーションに使いますが、 `.trigger` を使ってメソッドを直接エレメントに結びつけることもできます。
@@ -174,28 +174,30 @@ gulp watch
 ### app.js
 
 ```javascript
+import {inject} from 'aurelia-framework';
 import {Router} from 'aurelia-router';
-import bootstrap from 'bootstrap';
+import 'bootstrap';
+import 'bootstrap/css/bootstrap.css!';
 
+@inject(Router)
 export class App {
-  static inject() { return [Router]; }
   constructor(router) {
     this.router = router;
     this.router.configure(config => {
       config.title = 'Aurelia';
       config.map([
-        { route: ['','welcome'], moduleId: 'welcome', nav: true, title:'Welcome' }
+        { route: ['','welcome'],  moduleId: './welcome',      nav: true, title:'Welcome' }
       ]);
     });
   }
 }
 ```
 
-オーケー。ここでも興味ぶかい、新しい要素があります。我々はルーターを使うので、ファイルの先頭でルーターをimportしています。これは前にも出てきたES6の能力です。次に主となるアプリケーションのレイアウトのデータと振る舞いを保持する _App_ クラスを作成します。コンストラクタを見てください。そこでは、Appクラスが作成されるときに、 _router_ インスタンスに何か入っていることを想定していますね。どこから与えられるのでしょうか?
+オーケー。ここでも興味ぶかい、新しい要素があります。我々はルーターを使うので、ファイルの先頭でルーターをimportしています。これは前にも出てきたES6/ES7の能力です。次に主となるアプリケーションのレイアウトのデータと振る舞いを保持する _App_ クラスを作成します。コンストラクタを見てください。そこでは、Appクラスが作成されるときに、 _router_ インスタンスに何か入っていることを想定していますね。どこから与えられるのでしょうか?
 
-Aureliaはアプリケーションのレンダリングに必要なUIコンポーネントを作成します。それは上記の例のように、コンストラクタを通じて依存しているオブジェクトを渡す、 [Dependency Injection](http://en.wikipedia.org/wiki/Dependency_injection) コンテナの能力を使って成し遂げられます。どうやってDIシステムは提供しなければいけないものを知るのでしょうか? そのために必要なことは _inject_ というスタティックメソッドを追加し、必要なインスタンスの型の配列を返すことだけです。コンストラクタ引数につき一つのエントリが必要です。上記の例では、一つのルーターインスタンスが必要ですから、 `Router` 型をinjectが返す配列に入れています。
+Aureliaはアプリケーションのレンダリングに必要なUIコンポーネントを作成します。それは上記の例のように、コンストラクタを通じて依存しているオブジェクトを渡す、 [Dependency Injection](http://en.wikipedia.org/wiki/Dependency_injection) コンテナの能力を使って成し遂げられます。どうやってDIシステムは提供しなければいけないものを知るのでしょうか? そのために必要なことは `inject` ES7 デコレータを追加し、必要なインスタンスの型のリストをパラメータとして渡すだけです。コンストラクタ引数につき一つのパラメータが必要です。上記の例では、一つのルーターインスタンスが必要ですから、 `Router` 型をパラメータとして渡しています。
 
-> **注:** Aureliaは次のアップデートでES7のDecoratorに対応する予定です。
+> **注:** もしデコレータを使いたくない場合は、static `inject` メソッドもしくはプロパティをクラスに追加し、injectする型の配列を返すことで代用できます。
 
 ルータはクラスの公開プロパティとして設定する必要があります。プロパティ名は _router_ としなければなりません。これは重要です。この名前を _taco_ にしようとか、そんな妙な考えをおこしてはいけません。いいですか? これはルーターなので、名前は _router_ 。それでみんな幸せになれます。重要なのでもう一度いいます。プロパティ名は _router_ に **しなければなりません** 。
 
@@ -207,6 +209,8 @@ Aureliaはアプリケーションのレンダリングに必要なUIコンポ�
 * `moduleId`: このルートでレンダリングしたいビュー/ビューモデルの組を指定する、現在のビューモデルからの相対パスです。
 * `title`: ドキュメントのタイトルを指定することができます。オプションです。
 * `nav`: このルートを _ナビゲーションモデル_ に含めて、対応するUIを生成したい場合、これをtrue（または順番を指定する数値）にします。
+
+> **注:** ES6のimportを使ってbootstrapのJavascriptとCSSを読み込むやり方に気づいていましたか?
 
 ### app.html
 
@@ -261,17 +265,20 @@ Flickrの画像を幾つか表示してみましょう。そのために、最�
 ### app.js (更新版)
 
 ```javascript
+import {inject} from 'aurelia-framework';
 import {Router} from 'aurelia-router';
+import 'bootstrap';
+import 'bootstrap/css/bootstrap.css!';
 
+@inject(Router)
 export class App {
-  static inject() { return [Router]; }
   constructor(router) {
     this.router = router;
     this.router.configure(config => {
       config.title = 'Aurelia';
       config.map([
-        { route: ['','welcome'],  moduleId: 'welcome',      nav: true, title:'Welcome' },
-        { route: 'flickr',        moduleId: 'flickr',       nav: true }
+        { route: ['','welcome'],  moduleId: './welcome',      nav: true, title:'Welcome' },
+        { route: 'flickr',        moduleId: './flickr',       nav: true }
       ]);
     });
   }
@@ -283,20 +290,21 @@ _flickr.js_ と _flickr.html_ を作る必要があると思っていました�
 ### flickr.js
 
 ```javascript
+import {inject} from 'aurelia-framework';
 import {HttpClient} from 'aurelia-http-client';
 
-var url = 'http://api.flickr.com/services/feeds/photos_public.gne?tags=rainier&tagmode=any&format=json';
-
+@inject(HttpClient)
 export class Flickr{
-  static inject() { return [HttpClient]; }
+  heading = 'Flickr';
+  images = [];
+  url = 'http://api.flickr.com/services/feeds/photos_public.gne?tags=rainier&tagmode=any&format=json';
+
   constructor(http){
-    this.heading = 'Flickr';
-    this.images = [];
     this.http = http;
   }
 
   activate(){
-    return this.http.jsonp(url).then(response => {
+    return this.http.jsonp(this.url).then(response => {
       this.images = response.content.items;
     });
   }
@@ -376,16 +384,14 @@ Aureliaのルータは、ルートが変更されるたびにビュー·モデ�
 ### nav-bar.js
 
 ```javascript
-import {Behavior} from 'aurelia-framework';
+import {bindable} from 'aurelia-framework';
 
 export class NavBar {
-  static metadata(){ return Behavior.withProperty('router'); }
+  @bindable router = null;
 }
 ```
 
-カスタムエレメントを作るために、クラスを作ってexportします。このクラスはHTML内で要素として使用されるので、フレームワークにどのプロパティがエレメントの属性として表れるのかを伝える必要があります。そのためには、 _metadata_ メソッドを使います。以前の _inject_ の例のように、メタデータはAureliaフレームワークにクラスの情報を提供します。Aureliaは賢く、多くのことを推察してくれますが、それができないとき、またはあなたがフレームワークの規約とは異なることをしたいときは、何らかの形でメタデータを使うことになります。この能力を活用するために、スタティックなメソッド_metadata_をクラスに追加し、メタデータインスタンスの配列を返すようにします。(中身は本当に普通のオブジェクトです) この例ではAureliaの `Behavior` メタデータヘルパーを使います。この `withProperty` メソッドは `BehaviorProperty` を追加して、フレームワークにクラス中の `router` プロパティをHTML中で属性として表示したいということを伝えます。属性が表現されていれば、ビューでデータバインドすることができます。
-
-> **注:** 究極的にはすべてのメタデータはES7のDecoratorを使って定義できます。まだそれは利用できませんが、次のアップデートで入る予定です。
+カスタムエレメントを作るために、クラスを作ってexportします。このクラスはHTML内で要素として使用されるので、フレームワークにどのプロパティがエレメントの属性として表れるのかを伝える必要があります。そのためには、 _bindable_ デコレータを使います。以前の _inject_ の例のように、 _bindable_ はAureliaフレームワークにクラスの情報を提供する手段です。Aureliaは賢く、多くのことを推察してくれますが、それができないとき、またはあなたがフレームワークの規約とは異なることをしたいときは、デコレータを通じて追加の情報を提供します。 `bindable` デコレータは、このクラスの `router` プロパティをHTML中で属性として表したいということをフレームワークに伝えます。このようにしておくことで、ビューの中でバインドすることができます。
 
 ### nav-bar.html
 
@@ -454,21 +460,24 @@ export class NavBar {
 
 はじめに、 _app.js_ を新しい設定で更新します。このようになります:
 
-### app.js (更新版...再度)
+### app.js (再更新版)
 
 ```javascript
+import {inject} from 'aurelia-framework';
 import {Router} from 'aurelia-router';
+import 'bootstrap';
+import 'bootstrap/css/bootstrap.css!';
 
+@inject(Router)
 export class App {
-  static inject() { return [Router]; }
   constructor(router) {
     this.router = router;
     this.router.configure(config => {
       config.title = 'Aurelia';
       config.map([
-        { route: ['','welcome'],  moduleId: 'welcome',      nav: true, title:'Welcome' },
-        { route: 'flickr',        moduleId: 'flickr',       nav: true },
-        { route: 'child-router',  moduleId: 'child-router', nav: true, title:'Child Router' }
+        { route: ['','welcome'],  moduleId: './welcome',      nav: true, title:'Welcome' },
+        { route: 'flickr',        moduleId: './flickr',       nav: true },
+        { route: 'child-router',  moduleId: './child-router', nav: true, title:'Child Router' }
       ]);
     });
   }
@@ -480,25 +489,27 @@ export class App {
 ### child-router.js
 
 ```javascript
+import {inject} from 'aurelia-framework';
 import {Router} from 'aurelia-router';
 
+@inject(Router)
 export class ChildRouter{
-  static inject() { return [Router]; }
+  heading = 'Child Router';
+
   constructor(router){
-    this.heading = 'Child Router';
     this.router = router;
     router.configure(config => {
       config.map([
-        { route: ['','welcome'],  moduleId: 'welcome',      nav: true, title:'Welcome' },
-        { route: 'flickr',        moduleId: 'flickr',       nav: true },
-        { route: 'child-router',  moduleId: 'child-router', nav: true, title:'Child Router' }
+        { route: ['','welcome'],  moduleId: './welcome',      nav: true, title:'Welcome' },
+        { route: 'flickr',        moduleId: './flickr',       nav: true },
+        { route: 'child-router',  moduleId: './child-router', nav: true, title:'Child Router' }
       ]);
     });
   }
 }
 ```
 
-ええっ!?これは実質 `App` と同じ? 何? なぜ? うーん...あなたはおそらく実際の生活の中でこれを行うべきではありません...しかし、これはかなりクールです。みなさん、これは再帰的なルーターで、こんなこともできるという例なのです。
+ええっ!?これは実質 `App` と同じ? 何? なぜ? うーん...あなたはおそらく実際にこのようなことをすることはありません...しかし、これはかなりクールです。再帰的なルーターで、こんなこともできるという例です。
 
 仕上げに、これがビューです:
 
