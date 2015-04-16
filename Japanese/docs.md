@@ -10,7 +10,7 @@ Aureliaは、当初は常時更新のあるブラウザ向けに設計されて�
 
 <h2 id="startup-and-configuration"><a href="#startup-and-configuration">起動と設定</a></h2>
 
-ほとんどのプラットフォームでは、"main"やコード実行の開始点があります。Aureliaでも同じです。あなたがすでに [Get Started](/get-started.html) を読んでいれば、 `aurelia-app` 属性について知っていることでしょう。単にHTML要素にこの属性を記載すれば、Aureliaのブートストラッパーは、 _app.js_ と _app.html_ をロードし、データバインドを行い、その属性があるDOM要素にそれを注入します。
+ほとんどのプラットフォームは、コード実行のための"main"またはエントリーポイントを持っています。Aureliaでも同じです。あなたがすでに [Get Started](/get-started.html) を読んでいれば、 `aurelia-app` 属性について知っていることでしょう。単にHTML要素にこの属性を記載すれば、Aureliaのブートストラッパーは、 _app.js_ と _app.html_ をロードし、データバインドを行い、その属性があるDOM要素にそれを注入します。
 
 >**注:** もしあなたがES6の代わりにES5を使っているなら、`es5`属性を追加することで、この言語での利用を簡単にする機能を "on" にすることができます。
 
