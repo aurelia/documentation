@@ -53,15 +53,21 @@
 <!doctype html>
 <html>
   <head>
-    <link rel="stylesheet" type="text/css" href="jspm_packages/github/twbs/bootstrap@3.3.2/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="jspm_packages/npm/font-awesome@4.2.0/css/font-awesome.min.css">
+    <title>Aurelia</title>
+    <link rel="stylesheet" type="text/css" href="jspm_packages/npm/font-awesome@4.3.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="styles/styles.css">
   </head>
   <body aurelia-app>
     <script src="jspm_packages/system.js"></script>
     <script src="config.js"></script>
     <script>
-      System.baseUrl = 'dist';
+     System.config({
+       "paths": {
+         "*": "dist/*.js"
+       }
+     });
+   </script>
+    <script>
       System.import('aurelia-bootstrapper');
     </script>
   </body>
