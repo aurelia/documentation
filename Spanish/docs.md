@@ -4,23 +4,17 @@ Hemos planeado para Aurelia un conjunto muy rico de documentos. Desafortunadamen
 
 >**Nota:** ¿Estás buscando esta guía en otro idioma? Echa un vistazo a nuestro repositorio [documentation](https://github.com/aurelia/documentation).
 
-## Soporte a navegadores
+<h2 id="browser-support"><a href="#browser-support">Soporte a navegadores</a></h2>
 
-Aurelia está diseñado para navegadores con actualización automática y permanente -Evergreen Browsers-. Esto incluye Chrome, Firefox, IE11 y Safari 8. Tal y como viene no funcionará en ninguna versión de IE anterior a la 11.
+Aurelia está diseñado para navegadores con actualización automática y permanente (Evergreen Browsers). Esto incluye Chrome, Firefox, IE11 y Safari 8. Tal y como viene no funcionará en ninguna versión de IE anterior a la 11...por ahora. En cualquier caso, hemos identificado como dar soporte para IE9 en un futuro próximo. Estate atento a una actualización con ese anuncio en breve.
 
-Si necesitas que Aurelia funcione con una versión de IE anterior a la 11 existe un repositorio [Aurelia Skeleton Nav IE Polyfill Test](https://github.com/devmondo/skeleton-navigation-IE-Polyfill-Test) que sirve como prueba de concepto usando ES6Shim. Este experimento fue realizado por la comunidad y parece permitir que (nuestro) marco de trabajo funcione sin problemas aparentes con IE10 e IE9. Esperamos investigar esto en el futuro con más detenimiento y ve si podemos elaborar una solución oficial. Te invitamos a experimentar con esto y a ayudarnos con la posibilidad de dar soporte a navegadores más antiguos.
+<h2 id="startup-and-configuration"><a href="#startup-and-configuration">Arranque y configuración</a></h2>
 
-## Arranque y configuración
+Muchas plataformas tienen un punto de entrada o "main" para la ejecución del código. Aurelia no es diferente. Si has leído la página [Get Started](/get-started.html), entonces ya habrás visto el atributo `aurelia-app`. Basta con colocarlo en un elemento HTML y el iniciador (bootstrapper) de Aurelia cargará los archivos _app.js_ y _app.html_, los enlazará y los inyectará en el elemento DOM en el que colocaste dicho atributo.
 
-Muchas plataformas tienen un punto de entrada o "main" para la ejecución del código. Aurelia no es diferente. Si has leído la página [Get Started](/get-started.html), entonces ya habrás visto el atributo `aurelia-app` . Simplemente, colócalo en algún elemento HTML y el configurador inicial -bootstrapper- de Aurelia cargará _app.js_ y _app.html_, los vinculará y los inyectará en el elemento del DOM en el que incluiste dicho atributo. Si no quieres usar esta convención, provee simplemente de un valor al atributo indicando que modelo (de vista) deseas cargar. Por ejemplo, `<body aurelia-app="todo">` hará que se carguen los archivos _todo.js_ y _todo.html_.
+>**Nota:** Si estás usando ES5 en lugar de ES6, añade un atributo `es5`. De está manera se activa la función que hace más sencillo el uso de estos lenguajes.
 
-El atributo `aurelia-app` está bien para empezar, pero a menudo deseamos configurar nuestro marco de trabajo -framework- o ejecutar algún código antes de mostrarle nada al usuario. Así que cabe la posibilidad, según vaya progresando tu proyecto, de que tiendas a usar `aurelia-main`.
-
->**Nota:** Si estas usando AtScript, añade un atributo `atscript` al elemento DOM de tu aplicación. Si estás usando ES5 en lugar de ES6, añade un atributo `es5`. De está manera se activa la función que hace más sencillo el uso de estos lenguajes.
-
-**¿Cual es la diferencia?**
-
-`aurelia-app` genera un objeto de tipo aplicación Aurelia y lo pre-configura con el conjunto de opciones por defecto del marco de trabajo, después carga el modelo (de vista) de la aplicación. `aurelia-main` carga tu módulo de configuración particular, _main.js_ por defecto, luego invoca tu función `configure`, pasándole el objeto Aurelia que puedes usar entonces para configurar por ti mismo el marco de trabajo y decidir que, cuando y donde mostrar tu interfaz de usuario -UI-. Aquí tienes un ejemplo de archivo _main.js_:
+Pero con frecuencia deseamos configurar el marco de trabajo o ejecutar algún código antes de mostrar nada al usuario. Así que es probable, que según vaya avanzando el proyecto, te encuentres con la necesidad de realizar alguna configuración de arranque. Para ello, puedes proporcionar un valor para el atributo `aurelia-app` que apunte a un módulo de configuración. Este módulo debe exportar exclusivamente una función que se llame `configure`. Aurelia invocará a tu función `configure`, pasándole el objeto Aurelia que podrás entonces usar para configurar el marco de trabajo por ti mismo y decidir que, cuando y donde mostrar tu interfaz de usuario (UI). Aquí tienes un ejemplo de archivo de configuración:
 
 ```javascript
 import {LogManager} from 'aurelia-framework';
@@ -41,54 +35,69 @@ export function configure(aurelia) {
 }
 ```
 
-Con excepción del complemento a medida -custom plugin-, este código se corresponde esencialmente con lo que `aurelia-app` hace normalmente por nosotros. Cuando cambias a `aurelia-main` tienes que configurar todo esto por ti mismo, pero también puedes instalar complementos a medida, montar el contenedor para inyección de dependencias con algunos servicios e instalar recursos globales que hayan de usarse en plantillas de vista -view templates-.
+Con excepción del complemento a medida -custom plugin-, este código se corresponde esencialmente con lo que `aurelia-app` hace normalmente por nosotros. Cuando cambias a un planteamiento con archivo de configuración tienes que configurar todo esto por ti mismo, pero también puedes instalar complementos a medida, montar el contenedor para inyección de dependencias con algunos servicios e instalar recursos globales que hayan de usarse en plantillas de vista -view templates-.
 
->**Nota:** Para activar AtScript en la configuración manual, haz la llamada `aurelia.use.atscript()` y para activar ES5, haz la llamada `aurelia.use.es5()`.
+>**Nota:** Para activar ES5, haz la llamada `aurelia.use.es5()`.
 
-### Sistema de acceso -logging-
+Si quieres pasarte al planteamiento con archivo de configuración de inicio, puedes escribir un sencillo archivo que reúna todas las opciones estándar que enumeramos antes. Este sería su aspecto:
+
+ ```javascript
+export function configure(aurelia) {
+  aurelia.use
+    .standardConfiguration()
+    .developmentLogging();
+
+  aurelia.start().then(a => a.setRoot());
+}
+```
+
+<h3 id="logging"><a href="#logging">Sistema de acceso -logging-</a></h3>
 
 Aurelia tiene una abstracción sencilla para accesos que usa el propio marco de trabajo -framework-. Por defecto, no produce efectos -no-op-. La configuración anterior muestra como instalar un objeto appender que tomará más tarde los datos de acceso -log data- y los sacará por la consola. También puedes ver como se establece el nivel del registro. Las opciones disponibles para este ajuste son: `none`, `error`, `warn`, `info` y `debug`.
 
-Puedes crear fácilmente tus propios objetos appender. Solo implementa una clase que se acomode a la interfaz de appender. La mejor forma de ver como hacerlo es estudiar nuestro propio [código fuente del appender para el registro de consola](https://github.com/aurelia/logging-console/blob/master/src/index.js) .
+Puedes crear fácilmente tus propios objetos appender. Solo implementa una clase que se acomode a la interfaz de appender. La mejor forma de ver como hacerlo es estudiar nuestro propio [código fuente del appender para el registro de consola](https://github.com/aurelia/logging-console/blob/master/src/index.js).
 
-### Complementos -plugins-
+<h3 id="plugins"><a href="#plugins">Plugins</a></h3>
 
-Un _complemento_ -plugin- es solo un módulo con una función `install` exportada. Durante el arranque Aurelia cargará todos los módulos de complementos -plugin modules- y llamará a sus respectivas funciones `install`, pasándoles el objeto Aurelia de manera que puedan configurar correctamente el marco de trabajo. Los complementos  pueden opcionalmente devolver un objeto `Promise` -promesa- a través de su función `install` a fin de realizar tareas asíncronas de configuración. Cuando escribas un complemento asegúrate de seguir estas reglas:
+Un _complemento_ -plugin- es solo un módulo con una función `install` exportada. Durante el arranque Aurelia cargará todos los módulos de complementos -plugin modules- y llamará a sus respectivas funciones `install`, pasándoles el objeto Aurelia de manera que puedan configurar correctamente el marco de trabajo. Los complementos  pueden opcionalmente devolver un objeto `Promise` -promesa- a través de su función `install` a fin de realizar tareas asíncronas de configuración. Cuando escribas un complemento asegúrate de proporcionar todos los metadatos, incluyendo una estrategia de vista para los elementos personalizados.
 
-1. Usa una estructura de directorio plana. No coloques ni comportamientos ni vistas en subdirectorios.
-2. El nombre de archivo y el nombre del comportamiento tienen que coincidir.
-3. Proporciona explícitamente todos los metadatos, incluyendo una estrategia para vistas de elementos a medida.
+Para realizar la configuración de tus complementos desde la aplicación puedes especificar una función como segundo argumento de la función `install`. Tu función de instalación de complementos la puede ejecutar después de que las tareas de instalación se hayan efectuado. Quien quisiera hacer uso de tu complemento escribiría algo así:
 
-> **Nota:** Respecto a #2 y #3: No te fíes de las convenciones para nombres dentro de los complementos. No sabes como va a modificar el usuario de tu complemento las reglas de Aurelia. Los complementos de terceros deben ser explícitos para asegurarnos de que funcionarán correctamente en diferentes contextos.
+```javascript
+aurelia.use.plugin('./path/to/plugin', config => { /* configuration work */ });
+```
 
-#### Promesas -promises-
+> **Nota:** No te fíes de las convenciones para nombres dentro de los complementos. No sabes como va a modificar el usuario de tu complemento las reglas de Aurelia. Los complementos de terceros deben ser explícitos para asegurarnos de que funcionarán correctamente en diferentes contextos.
 
-Aurelia usa por defecto promesas ES6 o un polyfill. En cualquier caso, puedes reemplazar esto con la excelente librería de promesa [Bluebird](https://github.com/petkaantonov/bluebird). Inclúyela simplemente en tu página antes de cualquier referencia a los otros scripts. Te proporcionará su propia implementación ajustada a los estándares de promesas -Promise- que actualmente es más rápida que la (implementación) nativa y tiene un mejor soporte para depuración. Además cuando se usa en combinación con el transpilador 6to5 (compilador de ES6 a ES5), puedes usar [coroutines](https://6to5.org/docs/usage/transformers/#bluebird-coroutines) para código asíncrono mejorado.
+<h4 id="promises"><a href="#promises">Promesas -promises</a></h4>
 
-### El objeto Aurelia
+Aurelia usa por defecto promesas ES6 o un polyfill. En cualquier caso, puedes reemplazar esto con la excelente librería de promesa [Bluebird](https://github.com/petkaantonov/bluebird). Inclúyela simplemente en tu página antes de cualquier referencia a los otros scripts. Te proporcionará su propia implementación ajustada a los estándares de promesas -Promise- que actualmente es más rápida que la (implementación) nativa y tiene un mejor soporte para depuración. Además cuando se usa en combinación con el transpilador Babel (compilador de ES6 a ES5), puedes usar [coroutines](https://babeljs.io/docs/usage/transformers/#bluebird-coroutines) para código asíncrono mejorado.
 
-Puesto que tanto un módulo _main_ a medida como los complementos realizan su trabajo interactuando con el objeto Aurelia, te mostramos una breve explicación de esta API en el código siguiente:
+<h3 id="the-aurelia-object"><a href="#the-aurelia-object">El objeto Aurelia</a></h3>
+
+Puesto que tanto un módulo de configuración a medida como los complementos realizan su trabajo interactuando con el objeto Aurelia, te mostramos una breve explicación de esta API en el código siguiente:
 
 ```javascript
 export class Aurelia {
   loader:Loader; //the module loader
   container:Container; //the app-level dependency injection container
-  use:Plugins; //the plugins api
+  use:Plugins; //the plugins api (see above)
 
   withInstance(type, instance):Aurelia; //DI helper method (pass through to container)
   withSingleton(type, implementation):Aurelia; //DI helper method (pass through to container)
-  withResources(resources):Aurelia; //resource helper method
+  globalizeResources(...resourcePaths):Aurelia; //module ids of resources relative to the configuration/plugin module
+  renameGlobalResource(resourcePath, newName); //renames a globally available resource to avoid naming conflicts
 
   start():Promise; //starts the framework, causing plugins to be installed and resources to be loaded
   setRoot(root, applicationHost):Promise; //set your "root" or "app" view-model and display it
 }
 ```
 
-## Vistas y modelos
+<h2 id="views-and-view-models"><a href="#views-and-view-models">Vistas y modelos</a></h2>
 
-En Aurelia, los elementos de interfaz de usuario están compuestos por parejas de _vista_ y _modelo_ . La _vista_ se escribe con HTML y se despliega en el DOM. El _modelo_ se escribe con JavaScript y provee datos y comportamiento a la _vista_. El motor de plantillas y/o la inyección de dependencias son responsables de la creación de estas parejas y la aplicación de un ciclo de vida previsible para el proceso. Una vez generado, el poderoso _sistema de enlace -databinding-_ enlaza las dos partes permitiendo que los cambios en los datos se reflejen en la _vista_ y viceversa.
+En Aurelia, los elementos de interfaz de usuario están compuestos por parejas de _vista_ y _modelo_ . La _vista_ se escribe con HTML y se despliega en el DOM. El _modelo_ se escribe con JavaScript y provee datos y comportamiento a la _vista_. El motor de plantillas y/o la inyección de dependencias son responsables de la creación de estas parejas y la aplicación de un ciclo de vida previsible para el proceso. Una vez generado, el poderoso _sistema de enlace_ -databinding- enlaza las dos partes permitiendo que los cambios en los datos se reflejen en la _vista_ y viceversa. Esta división de competencias favorece la colaboración desarrollador/diseñador, el mantenimiento, la flexibilidad de la arquitectura e incluso el control del código fuente.
 
-### Inyección de dependencias
+<h3 id="dependency-injection"><a href="#dependency-injection">Inyección de dependencias (DI)</a></h3>
 
 Modelos y otros elementos de interfaz, como los controles de plantilla -Template Controllers- y los comportamientos añadidos -Attached Behaviors-, son creados como clases que son llamadas por el marco de trabajo usando un contenedor de inyección de dependencias. El código escrito con este estilo es fácil de separar en módulos y de testear. En lugar de crear clases voluminosas, puedes desmenuzar las cosas en pequeños objetos que colaborarán para lograr un objetivo. Luego la inyección de dependencias podrá montar por nosotros el conjunto en tiempo de ejecución.
 
@@ -107,7 +116,7 @@ export class CustomerDetail{
 
 Solo necesitamos proporcionar un método estático llamado `inject` que devuelva un vector de cosas para inyectar.
 
-> **Nota:** Si escribes en TypeScript o CoffeeScript, puedes usar una propiedad estática de tipo vector en lugar de un método. En ES5 puedes añadir la propiedad al constructor mismo. También puedes hacer esto con ES6, pero habilitamos la opción del método estático puesto que puede ser ubicado más cerca del constructor en Vanilla JS. Si estás usando AtScript, puedes en realidad sacar partido de la anotación de tipos -type annotations- mediante la definición de tu constructor de la siguiente manera: `constructor(http:HttpClient)`. (Antes de que esto funciones es necesario que incluyas el atributo `atscript` en el elemento que aloja nuestra aplicación o hacer una llamada `aurelia.use.atscript()` manualmente.)
+> **Nota:** Próximamente también podrás proporcionar los datos de inyección con un decorador (Decorator) de ES7/Typescript.
 
 Las dependencias en el vector de inyección no tienen por que ser solo del tipo constructor. También pueden ser objetos del tipo `resolvers`. Por ejemplo, echa un vistazo a esto:
 
@@ -131,8 +140,6 @@ El `lazy resolver` en realidad no nos proporciona un objeto del tipo `HttpClient
     * p.ej. `All.of(Plugin)`
 * `Optional` - Inyecta un objeto de una clase solo si ya existe en el contenedor, en otro caso, null.
     * p.ej. `Optional.of(LoggedInUser)`
-* `Parent` - Puentea el contenedor de inyección de dependencias e intenta inyectar un objeto guardado en un contenedor padre.
-    * p.ej. `Parent.of(Router)`
 
 Junto a estos `resolvers`, también puedes usar anotaciones `Registration` (de registro) para especificar el registro o ciclo de vida por defecto de un objeto. Por defecto, el contenedor de inyección de dependencias asume que todos son objetos singulares -singleton instance-; un objeto por contenedor. Sin embargo, puedes usar una anotación de registro -registration annotation- para cambiar esto. Aquí tienes un ejemplo:
 
@@ -153,9 +160,9 @@ Ahora, cada vez que se le solicita al contenedor de inyección de dependencias u
 
 > **Nota:** Este último ejemplo introduce _metadata_ -metadatos- para proporcionar información sobre el contexto al marco de trabajo. Verás otra vez _metadata_ cuando hablemos acerca de los _comportamientos_ -behaviors-.
 
-## Uso de plantillas -templating-
+<h2 id="templating"><a href="#templating">Uso de plantillas -templating-</a></h2>
 
-El motor de plantillas de Aurelia es responsable de cargar las vistas y sus recursos importados, compilando tu HTML para un rendimiento óptimo y mostrando la interfaz de usuario (UI) en pantalla. Para crear una vista, todo lo que tienes que hacer es escribir un archivo HTML que incluya un `HTMLTemplate`. Aquí tienes una vista sencilla:
+El motor de plantillas de Aurelia es responsable de cargar las vistas y sus recursos requeridos, compilando tu HTML para un rendimiento óptimo y mostrando la interfaz de usuario (UI) en pantalla. Para crear una vista, todo lo que tienes que hacer es escribir un archivo HTML que incluya un `HTMLTemplate`. Aquí tienes una vista sencilla:
 
 ```markup
 <template>
@@ -175,11 +182,11 @@ Todo lo que esté dentro de una etiqueta `template` será manejado por Aurelia. 
 
 De paso, esto te permite cargar dinámicamente hojas de estilo dependiendo de la vista e incluso componentes web -Web Components-.
 
-Cada vez que quieras importar un recurso específico de Aurelia, ya sea un _Custom Element_ -elemento a medida-, _Attached Behavior_ -comportamiento añadido-, _Template Controller_ -control de plantillas- o _Value Converter_ -conversor de valores-, puedes usar en su lugar un elemento `import` dentro de tu vista. Aquí tienes un ejemplo:
+Cada vez que quieras importar un recurso específico de Aurelia, ya sea un _Custom Element_ -elemento a medida-, _Attached Behavior_ -comportamiento añadido-, _Template Controller_ -control de plantillas- o _Value Converter_ -conversor de valores-, puedes usar en su lugar un elemento `require` dentro de tu vista. Aquí tienes un ejemplo:
 
 ```markup
 <template>
-  <import from='./nav-bar'></import>
+  <require from='./nav-bar'></require>
 
   <nav-bar router.bind="router"></nav-bar>
 
@@ -189,13 +196,13 @@ Cada vez que quieras importar un recurso específico de Aurelia, ya sea un _Cust
 </template>
 ```
 
-En este caso `nav-bar` es un _Custom Element_ -elemento a medida- de Aurelia que importamos para usarlo. Usar el elemento `import` de Aurelia hace que el canal para recursos del marco de trabajo procese el elemento importado, lo que tiene las siguientes ventajas:
+En este caso `nav-bar` es un _Custom Element_ -elemento a medida- de Aurelia que requerimos para usarlo. Usar el elemento `require` de Aurelia hace que el canal para recursos del marco de trabajo procese el elemento importado, lo que tiene las siguientes ventajas:
 
-* Evita duplicidades - El recurso se descarga una sola vez para toda la aplicación. Aunque otras vistas importen el mismo elemento, este no será descargado nuevamente.
-* Compilado único - Las plantillas importadas de esta manera para elementos a medida son  compilados una única vez para la aplicación completa.
-* Alcance local - El recurso importado solo es visible dentro de la vista que lo importa, reduciendo la posibilidad de conflictos entre nombres.
-* Renombrado - Los recursos pueden ser renombrados al importarlos, si resulta que dos recursos ajenos con el mismo nombre son usados en la misma vista.
-    - p.ej. `<import from="./nav-bar" as="foo-bar"></import>` - Ahora en vez de usar un elemento `nav-bar` puedes usar un elemento `foo-bar`. (Esto está basado en ES6 para el cual renombrar es considerado un sustitutivo al uso de un alias porque lo que hace es estrictamente renombrar el tipo.)
+* Evita duplicidades - El recurso se descarga una sola vez para toda la aplicación. Aunque otras vistas requieren el mismo elemento, este no será descargado nuevamente.
+* Compilado único - Las plantillas requeridas de esta manera para elementos a medida son  compilados una única vez para la aplicación completa.
+* Alcance local - El recurso requerido solo es visible dentro de la vista que lo requiere, reduciendo la posibilidad de conflictos entre nombres.
+* Renombrado - Los recursos pueden ser renombrados al requerirlos, si resulta que dos recursos ajenos con el mismo nombre son usados en la misma vista.
+    - p.ej. `<require from="./nav-bar" as="foo-bar"></require>` - Ahora en vez de usar un elemento `nav-bar` puedes usar un elemento `foo-bar`. (Esto está basado en la sintaxis `import` de ES6 para el cual renombrar es considerado un sustitutivo al uso de un alias porque lo que hace es estrictamente renombrar el tipo.)
 * Empaquetado - La importación puede señalar a un módulo con múltiples recursos que serán todos importados a la misma vista.
 * Extensibilidad - Puedes definir nuevos tipos de recursos que cuando son importados de esta manera pueden ejecutar la carga (asíncronamente única) y el registro (único por vista) a medida.
 * ES6 - El código es cargado por el cargador -loader- de ES6 en lugar de por el mecanismo _HTMLImport_, habilitándose todas las características y extensibilidad de tu cargador.
@@ -204,13 +211,13 @@ En tus vistas harás aprovechamiento frecuente de los diferentes tipos de recurs
 
 >**Nota:** Puede que te preocupe lo tedioso de tener que importar cosas en cada vista. Recuerda que durante la fase de configuración inicial -bootstrapping- puedes configurar Aurelia para que los recursos globales estén disponibles en todas las vistas.
 
-### Enlazado de datos -databinding-
+<h3 id="databinding"><a href="#databinding">Enlazado de datos -databinding-</a></h3>
 
 El enlazado de datos te permite enlazar el estado y el comportamiento de un objeto Javascript y una vista HTML. Cuando se establece este enlace, cualquier cambio en las propiedades enlazadas puede sincronizarse en una o dos direcciones. Los cambios en el objeto JavaScript pueden reflejarse en la vista y los cambios en la vista pueden reflejarse en el objeto JavaScript. Para establecer este vínculo, harás uso de las órdenes de enlazado -binding commands- en tu HTML. Las órdenes de enlazado son claramente identificables por su uso de "." como una especie de operador de enlace. Siempre que un atributo HTML contenga un ".", el compilador pasará el nombre y el valor del atributo al lenguaje de enlazado para su interpretación. El resultado es una o más expresiones de enlazado capaces de establecer el enlace cuando se crea la vista.
 
 Puedes ampliar el sistema con tus propias órdenes de enlazado, pero Aurelia proporciona una colección para cubrir los casos de uso más frecuentes.
 
-#### bind, one-way, two-way & one-time
+<h4 id="binding-modes"><a href="#binding-modes">bind, one-way, two-way & one-time</a></h4>
 
 La orden de enlazado más común es `.bind` -enlaza-. Esta hará que la propiedad sea vinculada usando un enlace uni-direccional -"one-way"- para todos sus atributos, excepto para el caso de valores de elementos de formulario, que reciben un enlace bi-direccional -"two-way"-.
 
@@ -233,7 +240,7 @@ Aunque siempre puedes ser explícito y usar `.one-way` o `.two-way` en lugar de 
 
 En orden a optimizar el rendimiento y minimizar el uso de CPU y de memoria, puedes aprovechar alternativamente la orden de enlace `.one-time` para enviar datos desde el modelo hacia la vista una sola vez -one time-. Esto ocurrirá durante la fase inicial de enlazado, después de lo cual no habrá ninguna sincronización.
 
-#### delegate, trigger & call
+<h4 id="event-modes"><a href="#event-modes">delegate, trigger & call</a></h4>
 
 Las órdenes de enlace no solo sirven para conectar propiedades y atributos, sino que se pueden usar para lanzar comportamientos. Por ejemplo, para invocar un método en el modelo cuando se pulsa un botón de la vista, usarías la orden `trigger` de la siguiente manera:
 
@@ -247,6 +254,12 @@ Cuando se pulsa el botón, se invoca el método `sayHello` en el modelo. Dicho e
 <button click.delegate="sayHello()">Say Hello</button>
 ```
 
+La propiedad `$event` se puede pasar como un argumento en una llamada a una función delegate/trigger si necesitas acceder al objeto evento.
+
+```markup
+<button click.delegate="sayHello($event)">Say Hello</button>
+```
+
 > **Nota:** Si no estás familiarizado con la delegación de eventos, se trata de una técnica que usa la naturaleza "burbujeante" de los eventos DOM. Cuando usamos `.delegate` se añade un único gestor de eventos al documento, en lugar de a cada elemento. Cuando se dispara el evento del elemento, este "asciende" a través del DOM hasta que alcanza el (nivel de) documento, donde es gestionado (por el gestor asignado). Esta es una manera más eficiente en memoria de gestionar eventos y se recomienda que lo uses como tu mecanismo por defecto.
 
 Todo esto va de una u otra manera en contra de los eventos de DOM. Ocasionalmente puedes encontrarte con un comportamiento a medida de Aurelia que necesite directamente una referencia a tu función de forma que pueda ser invocada posteriormente. Para pasar una referencia de función, usa el enlazador `.`call` (puesto que el comportamiento la _llamará -call-_ más tarde):
@@ -257,7 +270,7 @@ Todo esto va de una u otra manera en contra de los eventos de DOM. Ocasionalment
 
 Ahora el comportamiento asociado recibirá una función que podrá llamar para invocar tu código `sayHello()`.
 
-#### Interpolación de cadenas
+<h4 id="string-interpolation"><a href="#string-interpolation">Interpolación de cadenas</a></h4>
 
 A veces necesitas vincular propiedades directamente dentro del contenido del documento o intercalarlas dentro de un valor de atributo. Para ello puedes usar la sintaxis para interpolación de cadenas  `${expresión}`. La interpolación de cadenas es un enlace uni-direccional cuya salida es convertida en una cadena. Aquí tienes un ejemplo:
 
@@ -275,7 +288,7 @@ En esta linea "dot" es una clase presente estáticamente y "green" solo está pr
 
 > **Nota:** Puedes usar expresiones simples en tu enlace. No intentes hacer cosas demasiado rebuscadas. No queremos que haya código en la vista. Solo buscamos establecer un vínculo entre la vista y su modelo.
 
-#### ref
+<h4 id="ref"><a href="#ref">ref</a></h4>
 
 Además de órdenes e interpolación, el lenguaje de enlazado reconoce el uso de un atributo especial: `ref`. Al usar `ref` puedes crear un nombre local para un elemento que podrás usar como referencia en otra expresión de enlace. También se añadirá como una propiedad en el modelo, de manera que será accesible a través de código. Aquí tienes un ejemplo claro del uso de `ref`:
 
@@ -290,7 +303,132 @@ También puedes usar el enlace especial `.view-model` combinado con `ref` para o
 <i-consume-a-value input.bind="producer.output"></i-consume-a-value>
 ```
 
-### Comportamientos -behaviors-
+<h4 id="select-elements"><a href="#select-elements">Elementos select</a></h4>
+
+`value.bind` sobre un HTMLSelectElement tiene un comportamiento especial para soportar los modos de selección simple y múltiple así como el enlazado a objetos.
+
+Un típico elemento select se muestra usando una combinación de `value.bind` y `repeat`, como el siguiente:
+
+```markup
+<select value.bind="favoriteColor">
+    <option>Select A Color</option>
+    <option repeat.for="color of colors" value.bind="color">${color}</option>
+</select>
+```
+
+A veces deseas trabajar instancias de objeto en lugar de con cadenas. Aquí está el código de marca para construir un elemento select desde un vector teórico de objetos employee:
+
+```markup
+<select value.bind="employeeOfTheMonth">
+  <option>Select An Employee</option>
+  <option repeat.for="employee of employees" model.bind="employee">${employee.fullName}</option>
+</select>
+```
+
+La diferencia fundamental entre este ejemplo y el anterior es que estamos almacenando los valores de opción en una propiedad especial, `model`, en lugar de en la propiedad `value` del elemento option que solo acepta cadenas de texto.
+
+<h4 id="multi-select-elements"><a href="#multi-select-elements">Elementos multi select</a></h4>
+
+Puedes enlazar el valor del elemento select a una propiedad vector en un escenario de selección múltiple. Así es como enlazas un vector de cadenas, `favoriteColors`:
+
+```markup
+<select value.bind="favoriteColors" multiple>
+    <option repeat.for="color of colors" value.bind="color">${color}</option>
+</select>
+```
+
+Esto también funciona con vectores de objetos:
+
+```markup
+<select value.bind="favoriteEmployees" multiple>
+  <option repeat.for="employee of employees" model.bind="employee">${employee.fullName}</option>
+</select>
+```
+
+<h4 id="innerhtml"><a href="#innerhtml">innerHTML</a></h4>
+
+Puedes enlazar con la propiedad `innerHTML` de un elemento usando el atributo `innerhtml`:
+
+``` markup
+<div innerhtml.bind="htmlProperty"></div>
+<div innerhtml="${htmlProperty}"></div>
+```
+
+Aurelia proporciona un sencillo conversor para depuración de HTML que se puede usar de la siguiente manera:
+
+``` markup
+<div innerhtml.bind="htmlProperty | sanitizeHtml"></div>
+<div innerhtml="${htmlProperty | sanitizeHtml}"></div>
+```
+
+Te animamos a usar un depurador HTML más completo como [sanitize-html](https://www.npmjs.com/package/sanitize-html). Así es como construirías usando este paquete:
+
+``` bash
+jspm install npm:sanitize-html
+```
+
+``` javascript
+import sanitizeHtml from 'sanitize-html';
+
+export class MySanitizeHtmlValueConverter {
+  toView(untrustedHtml) {
+    return sanitizeHtml(untrustedHtml);
+  }
+}
+```
+
+> NOTA: Enlazar usando el atributo `innerhtml` simplemente establece la propiedad `innerHTML` del elemento. El marcado no pasa a través del sistema de plantillas de Aurelia. Enlazar expresiones y elementos require no se evaluarán. Una solución para este escenario está siendo seguido en [aurelia/templating#35](https://github.com/aurelia/templating/issues/35).
+
+
+<h4 id="textcontent"><a href="#textcontent">textContent</a></h4>
+
+Puedes enlazar con una propiedad `textContent` de un elemento usando el atributo `textcontent`:
+
+``` markup
+<div textcontent.bind="stringProperty"></div>
+<div textcontent="${stringProperty}"></div>
+```
+
+El enlazado de datos bidireccional es soportado con elementos `contenteditable`:
+
+``` markup
+<div textcontent.bind="stringProperty" contenteditable="true"></div>
+```
+
+<h4 id="style"><a href="#style">style</a></h4>
+
+Puedes enlazar con una cadena o un objeto CSS con el atributo `style` de un elemento:
+
+``` javascript
+export class Foo {
+  constructor() {
+    this.styleString = 'color: red; background-color: blue';
+
+    this.styleObject = {
+      color: 'red',
+      'background-color': 'blue'
+    };
+  }
+}
+```
+
+``` markup
+<div style.bind="styleString"></div>
+<div style.bind="styleObject"></div>
+```
+
+Usa el alias del atributo `style`, `css`, cuando hagas interpolación de cadenas para asegurar que tu aplicación es compatible con Internet Explorer:
+
+``` markup
+<!-- good: -->
+<div css="width: ${width}px; height: ${height}px;"></div>
+
+<!-- incompatible with Internet Explorer: -->
+<div style="width: ${width}px; height: ${height}px;"></div>
+```
+
+
+<h3 id="behaviors"><a href="#behaviors">Comportamientos -behaviors-</a></h3>
 
 Junto al enlazado de datos -databinding-, cuentas con el poder de los comportamientos de Aurelia para usarlo en tus vistas. Son tres los tipos de comportamiento incluidos:
 
@@ -300,7 +438,7 @@ Junto al enlazado de datos -databinding-, cuentas con el poder de los comportami
 
 Naturalmente, todos funcionan sin problemas con el enlazado de datos. Echemos un vistazo a los comportamientos que te proporciona Aurelia y que están disponibles globalmente en todas las vistas.
 
-#### show
+<h4 id="show"><a href="#show">show</a></h4>
 
 El comportamiento añadido `show` te permite condicionar la visualización de un elemento HTML. Si el valor de `show` es `true` el elemento se visualiza el elemento, en caso contrario se mantiene oculto. Este comportamiento no añade/elimina el elemento del DOM, solo modifica su visibilidad. Aquí tienes un ejemplo:
 
@@ -310,7 +448,7 @@ El comportamiento añadido `show` te permite condicionar la visualización de un
 
 Cuando la propiedad `isSaving` es verdadera, el `div` será visible, en caso contrario estará oculto.
 
-#### if
+<h4 id="if"><a href="#if">if</a></h4>
 
 El control de plantillas `if` permite añadir/eliminar un elemento HTML condicionalmente. Si el valor es verdadero, el elemento estará presente en el DOM, en caso contrario no.
 
@@ -329,7 +467,7 @@ Si necesitas añadir/eliminar condicionalmente un grupo de elementos y no puedes
 </template>
 ```
 
-#### repeat
+<h4 id="repeat"><a href="#repeat">repeat</a></h4>
 
 El control de plantillas `repeat` te permite mostrar una plantilla varias veces, una por cada elemento de un vector. Aquí tienes un ejemplo que muestra la lista de nombres de clientes:
 
@@ -343,7 +481,16 @@ Una consideración importante acerca del comportamiento `repeat` es que trabaja 
 
 > **Nota:**: Como el comportamiento `if`, también puedes usar una etiqueta `template` para agrupar una colección de elementos que no tienen elemento padre. De hecho esto es válido para todos los controles de plantillas. Cuando colocas un control de plantillas en un elemento este se transforma en un HTMLTemplate durante la compilación, así que siempre puedes añadir explícitamente tu plantilla a tu marcado si quieres o tienes que hacerlo.
 
-#### compose
+Cada elemento que está siendo repetido por el comportamiento `repeat` cuenta con varios valores contextuales especiales disponibles para enlazar:
+
+* `$parent` - A día de hoy, las propiedades y métodos del modelo de la vista principal no son visibles desde dentro de los elementos repetidos. Esperamos resolver esto en una próxima actualización. Entre tanto, puedes acceder ese modelo de vista (view model) usando `$parent`.
+* `$index` - El índice del elemento en el vector.
+* `$first` - True si el elemento es el primero del vector.
+* `$last` - True si el elemento es el último del vector.
+* `$even` - True si el elemento tiene un índice par.
+* `$odd` - True si el elemento tiene un índice impar.
+
+<h4 id="compose"><a href="#compose">compose</a></h4>
 
 El elemento a medida `compose` te capacita para mostrar dinámicamente interfaz de usuario dentro del DOM. Imagínate que tienes un vector heterogéneo de elementos, pero que cada uno tiene una propiedad `type` que nos dice que es lo que es. Entonces puedes hacer algo así:
 
@@ -358,35 +505,11 @@ El elemento a medida `compose` te capacita para mostrar dinámicamente interfaz 
 
 Ahora, dependiendo del _type_ del elemento, el elemento `compose` cargará un modelo (y vista) diferente y mostrado en el DOM. Si el modelo tiene un método `activate`, el elemento `compose` lo llamará y le`pasará el `model` como parámetro. El método `activate` puede devolver incluso una `Promise` -promesa- que hace que el proceso de composición espere hasta que alguna tarea asíncrona concluya antes de ejecutar realmente los enlaces de datos y el despliegue en el DOM.
 
-El elemento `compose` también tiene un atributo `view` que puede ser usado de la misma manera que `view-model` si no deseas aprovechar la convención estándar de vista/modelo.
+El elemento `compose` también tiene un atributo `view` que puede ser usado de la misma manera que `view-model` si no deseas aprovechar la convención estándar de vista/modelo. Si especificas una vista (view), pero no un modelo-vista (view-model), entonces la vista se enlazará al contexto que la envuelve. 
 
 ¿Que pasa si quieres determinar la vista dinámicamente en base a los datos o a las condiciones en tiempo de ejecución? También puedes hacer esto implementando un método `getViewStrategy()` en tu modelo. Este puede retornar una ruta relativa a la vista o un objeto del tipo `ViewStrategy` para el comportamiento a medida para la carga de vistas. La parte bonita es que este método se ejecuta después de la retrollamada -callback- de `activate`, así que tienes acceso a los datos del modelo al determinar la vista.
 
-#### selected-item
-
-HTMLSelectElement es una bestia interesante. Usualmente, puedes enlazar estos datos combinando un `repeat` para las opciones con un enlace con el valor, como esto:
-
-```markup
-<select value.bind="favoriteNumber">
-    <option>Select A Number</option>
-    <option repeat.for="number of numbers" value.bind="number">${number}</option>
-</select>
-```
-
-Pero a veces deseas trabajar con objetos del tipo selector en lugar de primitivas. Para ello puedes usar el comportamiento añadido `selected-item`. Aquí está como configurar esto para una teórica lista de empleados:
-
-```markup
-<select selected-item.bind="employeeOfTheMonth">
-  <option>Select An Employee</option>
-  <option repeat.for="employee of employees" value.bind="employee.id" model.bind="employee">${employee.fullName}</option>
-</select>
-```
-
-Primero, especificamos la orden de enlace `.bind` para el `selected-item`. Luego usamos un repetidor de la forma habitual, asegurándonos de enlazar `value`con alguna (propiedad) primitiva. También añadimos una segunda propiedad con el nombre `model` que será usado por el comportamiento `selected-item` para correlacionar la selección con un objeto de este tipo. En otras palabras, cuando se selecciona una opción la propiedad `employeeOfTheMonth` recibirá el valor de la propiedad `model` para esa opción. Cuando se establece la propiedad `employeeOfTheMonth` en el modelo, la opción con el correspondiente valor de `model` será seleccionada en la vista.
-
-> **Nota:** Dijimos antes que solo los valores de elementos de formulario se enlazan por defecto bi-direccionalmente, pero en este caso nuestro atributo a medida `selected-item` también está enlazado en modo bi-direccional por defecto. ¿Como funciona esto? Resulta que cuando definimos un comportamiento en Aurelia, podemos especificar opcionalmente el modo por defecto de enlace con las propiedades.
-
-#### global-behavior
+<h4 id="global-behavior"><a href="#global-behavior">global-behavior</a></h4>
 
 Este no es un comportamiento añadido que vayas a usar directamente. En lugar de eso, este funciona en conjunción con una orden de enlace a medida para habilitar dinámicamente el uso declarativo de los complementos jQuery y otras APIs similares en HTML. Veamos un ejemplo para clarificar la idea:
 
@@ -443,9 +566,9 @@ Así que, que opciones tienes para el patrón del sistema de gestión de rutas?
 * rutas estáticas -static routes-
     - p.ej. 'home' - Coincide con la cadena exactamente.
 * rutas parametrizadas -parameterized routes-
-    - p.ej.  'users/:id/detail' - Coincide con la cadena y luego evalúa el parámetro ìd`. La función de retrollamada del modelo `activate` será llamada con un objeto que tiene un parámetro `id` con un valor extraído de la URL.
+    - p.ej.  'users/:id/detail' - Coincide con la cadena y luego evalúa el parámetro ìd`. La función de retrollamada del modelo `activate` será llamada con un objeto que tiene una propiedad `id` con un valor extraído de la URL.
 * rutas comodín -wildcard routes-
-    - p.ej. 'files*path' - Coincide con la cadena seguida de cualquier cosa que le siga. La función de retrollamada `activate` será llamado con un objeto que tiene un parámetro `path` con el valor del comodín.
+    - p.ej. 'files*path' - Coincide con la cadena seguida de cualquier cosa que le siga. La función de retrollamada `activate` será llamado con un objeto que tiene una propiedad `path` con el valor del comodín.
 
 Todas las rutas con una propiedad `nav` verdadera se recogen en un vector `navigation`. Esto hace realmente sencillo usar el enlace de datos para generar una estructura de menú. Otra propiedad importante para el enlazado es la propiedad `isNavigating`. Aquí  tienes un sencillo marcado que muestra lo que podría emparejarse con el modelo mostrado arriba:
 
@@ -580,6 +703,8 @@ this.router.configure(config => {
 });
 ```
 
+También querrás añadir una [etiqueta base](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base) en la cabeza (head) de tu documento HTML. Esta es importante, así que no la dejes fuera.
+
 A continuación, el lado del servidor tiene que ser configurado para devolver el mismo archivo `index.html` independientemente de la petición que se haga desde el lado del cliente. Asi que, si estás usando la tarea `gulp watch` con `browsersync` como en el ejemplo de navegación , entonces puedes modificar tu configuración de esta manera:
 
 Desde la consola en la raíz del proyecto, ejecuta lo siguiente:
@@ -654,17 +779,67 @@ public class IndexModule : NancyModule {
 
 Técnicas similares las puedes emplear en entornos con otros servidores - solo necesitas asegurarte de que cualquiera que sea el servidor que estás usando, este devuelve siempre el mismo `index.html` independientemente de la petición que reciba. Todos los marcos de trabajo del lado del servidor deberían ser capaces de esto. Aurelia encontrará la página que ha de devolver en base a los datos de enrutamiento.
 
-## Extendiendo HTML
+<h3 id="reusing-an-existing-vm"><a href="#reusing-an-existing-vm">Reusing an existing VM</a></h3>
+
+A veces puedes querer usar el mismo modelo-vista (VM, view-model) para varias rutas. Por defecto Aurelia verá esas rutas como alias del mismo modelo-vista para múltiples rutas y así solo realiza el proceso de construcción y añadido, así como un ciclo de vida completo. Puede que esto no sea exactamente lo que estás buscando. Mira el siguiente ejemplo de enrutador:
+
+```javascript
+import {Router} from 'aurelia-router';
+
+export class App {
+  static inject() { return [Router]; }
+  constructor(router) {
+    this.router = router;
+    this.router.configure(config => {
+      config.title = 'Aurelia';
+      config.map([
+        { route: 'product/a',         moduleId: './product'      nav: true },
+        { route: 'product/b',         moduleId: './product',     nav: true },
+      ]);
+    });
+  }
+}
+```
+
+Puesto que el ciclo de vida del modelo-vista (VM) es llamado solo una vez puedes tener problemas para reconocer que el usuario cambie la ruta de `Product A` a `Product B`.
+
+Para corregir esto implementa el método `determineActivationStrategy` en tu modelo-vista (VM) y devuelve indicaciones para el enrutador acerca de que es lo que quieres que ocurra. En este ejemplo, para forzar una reconstrucción del modelo-vista impleméntalo como este:
+
+```javascript
+import {REPLACE} from 'aurelia-router';
+
+export class YourViewModel {
+  determineActivationStrategy(){
+    return REPLACE;
+  }
+}
+```
+
+Si solo deseas forzar un refresco del ciclo de vida (útil con enlaces `<compose>`) puedes hacer algo como esto:
+
+```javascript
+import {INVOKE_LIFECYCLE} from 'aurelia-router';
+
+export class YourViewModel {
+  determineActivationStrategy(){
+    return INVOKE_LIFECYCLE;
+  }
+}
+```
+
+> **Nota:** Recuerda que forzando los refrescos, Aurelia tiene que reconstruir el modelo-vista completo. Por razones de eficiencia un simple observador sobre `router.currentInstruction` podría ser suficiente para escenarios en los que simplemente te gustaría intercambiar algunos datos.
+
+<h2 id="extending-html"><a href="#extending-html">Extendiendo HTML</a></h2>
 
 Aurelia tiene un compilador de plantillas HTML poderoso y extensible. El compilador en si mismo es un algoritmo para interactuar con varios _tipos de comportamiento_ que contiene la lógica para manipular el HTML. A priori, Aurelia proporciona implementaciones para tres tipos de comportamientos del núcleo, los cuales creemos que cubre la mayoría de escenarios que encontrarás en el día a día. Los tres tipos son _Attached Behaviors -comportamientos añadidos-_, _Custom Elements -elementos a medida-_ y _Template Controllers -controles de plantilla-_.
 
 Por defecto, los comportamientos no son visibles para el compilador. Hay tres vías principales para incorporarlos:
 
-* Usar el elemento `import` para importar un comportamiento en una vista. El atributo `from` especifique la ruta relativa al módulo de comportamiento. El comportamiento será definido localmente.
-* Usar el objeto Aurelia durante tu fase de configuración inicial -bootstrapping- para llamar `.withResources(resources)` para registrar comportamientos con visibilidad global en tus aplicaciones.
+* Usar el elemento `require` para requerir un comportamiento en una vista. El atributo `from` especifique la ruta relativa al módulo de comportamiento. El comportamiento será definido localmente.
+* Usar el objeto Aurelia durante tu fase de configuración inicial -bootstrapping- para llamar  `.globalizeResources(...resourcePaths)` para registrar comportamientos con visibilidad global en tus aplicaciones.
 * Instala un complemento que registre comportamientos con visibilidad global en tu aplicación.
 
->**Nota:** Una práctica recomendada para tu propia aplicación es colocar todos tus comportamientos específicos de aplicación, convertidores de valores, etc. en una carpeta _resources_. Luego crear un archivo _index.js_ que lo convierte todo en un complemento interno. Finalmente, instala ese complemento durante la fase de configuración inicial -bootstrapping- de la aplicación. Esto mantiene todos los recursos en una ubicación conocida, junto a su código de registro. Esto además mantendrá tu archivo _main.js_ limpio y sencillo.
+>**Nota:** Una práctica recomendada para tu propia aplicación es colocar todos tus comportamientos específicos de aplicación, convertidores de valores, etc. en una carpeta _resources_. Luego crear un archivo _index.js_ que lo convierte todo en un complemento interno. Finalmente, instala ese complemento durante la fase de configuración inicial -bootstrapping- de la aplicación. Esto mantiene todos los recursos en una ubicación conocida, junto a su código de registro. Esto además mantendrá tu archivo de configuración limpio y sencillo.
 
 Todos los comportamientos pueden incorporarse opcionalmente al ciclo de vida de vista implementando cualquiera de los ganchos siguientes:
 
@@ -675,7 +850,7 @@ Todos los comportamientos pueden incorporarse opcionalmente al ciclo de vida de 
 
 >**Nota:** Si decides implementar la retrollamada `bind`, el enlazado inicial de tu comportamiento fluirá de manera un poco distinta. Habitualmente, si tienes retrollamadas a tus propiedades de comportamiento -Behavior Properties-, estas son llamadas una a una durante la fase de enlazado. Pero si añades la retrollamada `bind`, dichas propiedades no serán llamadas durante la inicialización. En cambio, la retrollamada `bind` será llamada una vez que todas las propiedades tengan asignados sus valores enlazados iniciales. Esta es una importante y útil característica, en particular para comportamientos complejos que puedan querer no "actuar" hasta que no estén disponibles todos los valores evaluados.
 
-### Comportamientos añadidos -attached behaviors-
+<h3 id="attached-behaviors"><a href="#attached-behaviors">Comportamientos añadidos -attached behaviors-</a></h3>
 
 Los comportamientos añadidos añaden nuevo comportamiento o función a un elemento HTML existente mediante la adición de un atributo a medida a tu marcado. Usos comunes para comportamientos añadidos incluyen:
 
@@ -694,7 +869,7 @@ Veamos la implementación de uno de los comportamientos añadidos (propios) de A
 El comportamiento `show` aplicará condicionalmente una clase a un elemento en función de la falsedad de su valor. (La clase, cuando es aplicada, oculta el elemento.) Aquí está la implementación:
 
 ```javascript
-import {Behavior} from 'aurelia-templating';
+import {Behavior} from 'aurelia-framework';
 
 export class Show {
   static metadata(){
@@ -728,7 +903,7 @@ Bien. Hablemos de convenciones.
 * Si el nombre de tu función de retrollamada cumple el patrón   {nombrePropiedad}Changed, entonces no necesitas especificarlo. Así, en el caso anterior, pudimos omitir el valor del segundo parámetro.
 * Si los nombres de tu propiedad y de tu atributo son iguales, entonces no es necesario que los especifiques. En el caso anterior, al ser distintos, es necesario que lo especifiquemos.
 * Los comportamientos añadidos siempre se corresponden con un único atributo. Esto nos permite optimizar un sencillo patrón de uso. Si llamas "value" a tu propiedad, entonces no necesitas incluir los metadatos de la propiedad. Automáticamente estableceremos una correspondencia entre un atributo con el mismo nombre que tu comportamiento y la propiedad `value`.
-* Si el nombre de tu clase cumple el patrón {NombreComportamiento}AttachedBehavior, entonces no necesitas incluir los metadatos del comportamiento añadido. El nombre del atributo será inferido del nombre de la clase eliminando "AttachedBehavior", escribiendo en minúsculas y con guión la parte restante del nombre, p.ej. comportamiento-nombre -behavior-name-.
+* Si el nombre de exportación de tu clase cumple el patrón {NombreComportamiento}AttachedBehavior, entonces no necesitas incluir los metadatos del comportamiento añadido. El nombre del atributo será inferido del nombre de la clase eliminando "AttachedBehavior", escribiendo en minúsculas y con guión la parte restante del nombre, p.ej. comportamiento-nombre (behavior-name).
 
 Estas convenciones significan que podemos definir nuestro comportamiento `show` de esta manera:
 
@@ -757,14 +932,14 @@ Los comportamientos añadidos pueden obtener fácilmente acceso al elemento HTML
 
 Finalmente, veamos la retrollamada `valueChanged`. Dijimos anteriormente que esto está configurado mediante los metadatos de la propiedad de manera que sea llamada siempre que el valor cambie. El sistema de enlazado actualizará automáticamente las propiedades disparando la retrollamada. Así, todo lo que tiene que hacer la implementación es  añadir/eliminar la clase apropiada en función del valor.
 
-### Propiedades con opciones -options properties-
+<h4 id="options-properties"><a href="#options-properties">Propiedades con opciones -options properties-</a></h4>
 
 Puede que te preguntes que hacer si quieres crear un comportamiento añadido con múltiples propiedades teniendo en cuenta que los comportamientos añadidos siempre están en correspondencia con un único atributo. Para este escenario usamos una propiedad `OptionsProperty` que capacita a tu atributo único para funcionar como el atributo nativo `style`, con múltiples propiedades insertadas en él. Aquí tienes un ejemplo de como se usa:
 
 ```javascript
-import {Behavior} from 'aurelia-templating';
+import {Behavior} from 'aurelia-framework'; // or 
 
-export class Show {
+export class MyBehavior {
   static metadata(){
     return Behavior
       .attachedBehavior('my-behavior')
@@ -786,7 +961,7 @@ Fíjate en que no usamos la orden de enlace sobre el comando mismo. En lugar de 
 
 >**Note:** No se usan las órdenes `delegate` y `trigger` dentro de un atributo de opción. Estas están siempre añadidas al elemento mismo, puesto que trabajan directamente con eventos nativos del DOM. En cambio si puedes usar `call`.
 
-### Elementos a medida -custom elements-
+<h3 id="custom-elements"><a href="#custom-elements">Elementos a medida -custom elements-</a></h3>
 
 Los elementos a medida añaden nuevas etiquetas a tu marcado HTML. Cada elemento a la medida pueden tener su propia plantilla de vista puede desplegarse bien en el Light DOM o en el Shadow DOM. Los elementos a medida también pueden tener cualquier número de propiedades que aflorarán como atributos en HTML para dar soporte al enlazado de datos y a los cuales pueden vincularse dentro de su plantilla de vista.
 
@@ -794,7 +969,7 @@ Los elementos a medida añaden nuevas etiquetas a tu marcado HTML. Cada elemento
 
 ```markup
 <template>
-    <import from="./say-hello"></import>
+    <require from="./say-hello"></require>
 
     <input type="text" ref="name">
     <say-hello to.bind="name.value"></say-hello>
@@ -805,7 +980,7 @@ Así que, como lo construimos? Bien, empezamos con una clase, tal y como hicimos
 
 #### say-hello.js
 ```javascript
-import {Behavior} from 'aurelia-templating';
+import {Behavior} from 'aurelia-framework';
 
 export class SayHello {
   static metadata(){
@@ -824,7 +999,7 @@ Si leíste la sección sobre comportamientos añadidos, entonces ya sabes lo que
 
 #### say-hello.js (with conventions)
 ```javascript
-import {Behavior} from 'aurelia-templating';
+import {Behavior} from 'aurelia-framework';
 
 export class SayHelloCustomElement {
   static metadata(){
@@ -854,7 +1029,7 @@ Esto es todo realmente. Sigue las mismas convenciones para nombres que con las p
 * `.noView()` - Si tu elemento a medida no tiene una vista, porque todos su comportamiento está implementado en código, entonces usa esta opción.
 * `.useView(relativePath)` - Si deseas usar una vista diferente de la que se usaría siguiendo las convenciones, puedes usar esta opción de metadatos para especificar una ruta relativa de la vista que quieres usar.
 
-### Controles de plantilla -template controllers-
+<h3 id="template-controllers"><a href="#template-controllers">Controles de plantilla -template controllers-</a></h3>
 
 Los controles de plantilla convierten el DOM en una plantilla HTML inerte. El control podrá decidir cuando y donde (y cuantas veces) generar el contenido de la plantilla en el DOM. Ejemplos de esto son los comportamientos `if` y `repeat`. Coloca simplemente uno de estos comportamientos en un nodo del DOM y este se convertirá en una plantilla, controlada por un comportamiento.
 
@@ -927,7 +1102,7 @@ El sistema de gestión de eventos es una poderosa herramienta cuando necesitas q
 
 ### Eventos del DOM
 
-Los eventos DOM deben usarse cuando han de enviarse mensajes específicos de la interfaz de usuario. No deben ser usados para enviar mensajes específicos de la aplicación. Aurelia no añade ninguna funcionalidad más allá del DOM para eventos de interfaz. Cualquier comportamiento puede tener su elemento -`Element`- asociado inyectado en su constructor. Entonces puedes usar el `Element` para lanzar eventos. Para aprender más acerca de la creación y el lanzamiento de eventos DOM a medida [lee por favor este artículo](https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Creating_and_triggering_events).
+Los eventos DOM deben usarse cuando han de enviarse mensajes específicos de la interfaz de usuario. No deben ser usados para enviar mensajes específicos de la aplicación. Aurelia no añade ninguna funcionalidad más allá del DOM para eventos de interfaz de usuario (por ahora). Cualquier comportamiento puede tener su elemento -`Element`- asociado inyectado en su constructor. Entonces puedes usar el `Element` para lanzar eventos. Para aprender más acerca de la creación y el lanzamiento de eventos DOM a medida [lee por favor este artículo](https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Creating_and_triggering_events).
 
 ### El agregador de eventos
 
@@ -1020,7 +1195,7 @@ El (receptor) suscriptor -subscriber- será llamado cada vez que se publica un o
 
 ## Cliente HTTP
 
-Como ventaja, Aurelia incluye un cliente HTTP `HttpClient` básico para proporcionarnos una interfaz confortable para el objeto XMLHttpRequest del navegador. `HttpClient` no está incluido en el módulo que instala Aurelia con el configurador inicial -bootstrapper-, ya que es completamente opcional y muchas aplicaciones pueden querer usar una estrategia diferente para la recuperación de datos. Así, si quieres usarlo, primero necesitas instalarlo con la orden siguiente:
+Como ventaja, Aurelia incluye un cliente HTTP `HttpClient` básico para proporcionarnos una interfaz confortable para el objeto `XMLHttpRequest` del navegador. `HttpClient` no está incluido en el módulo que instala Aurelia con el configurador inicial -bootstrapper-, ya que es completamente opcional y muchas aplicaciones pueden querer usar una estrategia diferente para la recuperación de datos. Así, si quieres usarlo, primero necesitas instalarlo con la orden siguiente:
 
 ```shell
 jspm install aurelia-http-client
@@ -1048,47 +1223,58 @@ El `HttpClient` -cliente HTTP- tiene la siguiente implementación:
 
 ```javascript
 export class HttpClient {
-  constructor(baseUrl = null, defaultRequestHeaders = new Headers()){
-    this.baseUrl = baseUrl;
-    this.defaultRequestHeaders = defaultRequestHeaders;
+  configure(fn){
+    var builder = new RequestBuilder(this);
+    fn(builder);
+    this.requestTransformers = builder.transformers;
+    return this;
   }
 
-  send(requestMessage, progressCallback){
-    return requestMessage.send(this, progressCallback);
-  }
+  createRequest(uri){
+    let builder = new RequestBuilder(this);
 
-  get(uri){
-    return this.send(new HttpRequestMessage('GET', join(this.baseUrl, uri))
-        .withHeaders(this.defaultRequestHeaders));
-  }
+    if(uri) {
+      builder.withUri(uri);
+    }
 
-  put(uri, content, replacer){
-    return this.send(new HttpRequestMessage('PUT', join(this.baseUrl, uri), content, replacer || this.replacer)
-        .withHeaders(this.defaultRequestHeaders));
-  }
-
-  patch(uri, content, replacer){
-    return this.send(new HttpRequestMessage('PATCH', join(this.baseUrl, uri), content, replacer || this.replacer)
-        .withHeaders(this.defaultRequestHeaders));
-  }
-
-  post(uri, content, replacer){
-    return this.send(new HttpRequestMessage('POST', join(this.baseUrl, uri), content, replacer || this.replacer)
-        .withHeaders(this.defaultRequestHeaders));
+    return builder;
   }
 
   delete(uri){
-    return this.send(new HttpRequestMessage('DELETE', join(this.baseUrl, uri))
-        .withHeaders(this.defaultRequestHeaders));
+    return this.createRequest(uri).asDelete().send();
+  }
+
+  get(uri){
+    return this.createRequest(uri).asGet().send();
+  }
+
+  head(uri){
+    return this.createRequest(uri).asHead().send();
   }
 
   jsonp(uri, callbackParameterName='jsoncallback'){
-    return this.send(new JSONPRequestMessage(join(this.baseUrl, uri), callbackParameterName));
+    return this.createRequest(uri).asJsonp(callbackParameterName).send();
+  }
+
+  options(uri){
+    return this.createRequest(uri).asOptions().send();
+  }
+
+  put(uri, content){
+    return this.createRequest(uri).asPut().withContent(content).send();
+  }
+
+  patch(uri, content){
+    return this.createRequest(uri).asPatch().withContent(content).send();
+  }
+
+  post(uri, content){
+    return this.createRequest(uri).asPost().withContent(content).send();
   }
 }
 ```
 
-Como puedes comprobar, nos proporciona métodos preparados para `get`, `put`, `patch`, `post`, `delete` and `jsonp`. Cada uno de estos métodos envía un `HttpRequestMessage` -mensaje de petición HTTP- excepto `jsonp` que envía un `JSONPRequestMessage` -mensaje de petición JSON-. El resultado de enviar un mensaje es una `Promise` -promesa- de un `HttpResponseMessage` -mensaje de respuesta HTTP-.
+Como puedes comprobar, nos proporciona métodos preparados para todas las acciones estándar, así como para `jsonp`. Cada uno de estos métodos envía un `HttpRequestMessage` -mensaje de petición HTTP- excepto `jsonp` que envía un `JSONPRequestMessage` -mensaje de petición JSON-. El resultado de enviar un mensaje es una `Promise` -promesa- de un `HttpResponseMessage` -mensaje de respuesta HTTP-.
 
 El `HttpResponseMessage` -mensaje de respuesta HTTP- tiene las siguientes propiedades:
 
@@ -1104,9 +1290,35 @@ El `HttpResponseMessage` -mensaje de respuesta HTTP- tiene las siguientes propie
 
 > **Nota:** Por defecto, el `HttpClient` -cliente HTTP- asume que estás esperando una respuesta de tipo JSON -responseType-.
 
-## Ejecución a medida -customization-
+Hay otras dos APIS que merecen ser destacadas. Puedes usar `configure` para acceder a una fluent API para configurar todas las peticiones enviadas por el cliente. También puedes usar `createRequest` para configurar personalmente peticiones individuales. Aquí tienes un ejemplo de configuración:  
 
-### Convenciones relativas a las vistas y a los modelos (de vista)
+```javascript
+var client = new HttpClient()
+  .configure(x => {
+    x.withBaseUri('http://aurelia.io');
+    x.withHeader('Authorization', 'bearer 123');
+  });
+
+client.get('some/cool/path');
+```
+
+En este caso, todas las peticiones del cliente tendrán la baseUri de 'http://aurelia.io' y tendrán el encabezamiento de autorización especificado. La misma API está disponible por medio del constructor de peticiones. Así que puedes hacer lo mismo con una petición individual de esta manera:
+
+```javascript
+var client = new HttpClient();
+
+client.createRequest('some/cool/path')
+  .asGet()
+  .withBaseUri('http://aurelia.io')
+  .withHeader('Authorization', 'bearer 123')
+  .send();
+```
+
+La fluent API tiene los siguientes métodos enlazables: `asDelete()`, `asGet()`, `asHead()`, `asOptions()`, `asPatch()`, `asPost()`, `asPut()`, `asJsonp()`, `withUri()`, `withBaseUri()`, `withContent()`, `withParams()`, `withResponseType()`, `withTimeout()`, `withHeader()`, `withCredentials()`, `withReviver()`, `withReplacer()`, `withProgressCallback()`, and `withCallbackParameterName()`.
+
+<h2 id="customization"><a href="#customization">Ejecución a medida -customization-</a></h2>
+
+<h3 id="view-and-view-model-conventions"><a href="#view-and-view-model-conventions">Convenciones relativas a las vistas y a los modelos (de vista)</a></h3>
 
 ¿Como se enlazan vistas y modelos? Nuestra sencilla convención se basa en la identidad de módulo -module id-. Si cuentas con un modelo de identidad `./foo/bar/baz` (su ruta básicamente) esté será mapeado por defecto con `./foo/bar/baz.js` y `./foo/bar/baz.html`. Supón que quieres seguir otra convención diferente. ¿Que pasa si todos tus modelos están en una carpeta `view-models` y quieres que tus vista estén en una carpeta `views`? ¿Que tendrías que hacer? Para esto necesitas modificar el comportamiento de la estrategia convencional de vistas -Conventional View Strategy-. Así es como lo harías:
 
@@ -1118,6 +1330,6 @@ ConventionalView.convertModuleIdToViewUrl = function(moduleId){
   return moduleId.replace('view-models', 'views') + '.html';
 }
 ```
-Este código tendrías que ejecutarlo como parte de tu lógica de configuración inicial -bootstrapping logic- para que surtiera efecto antes de que se carguen los comportamientos. Esto afectará a *todo* incluido a los elementos a medida. Así que si necesitas o quieres que estos actúen de otra manera, tendrás que tenerlo en cuenta en tu implementación de `convertModuleIdToViewUrl`.
+Este código tendrías que ejecutarlo como parte de tu lógica de configuración inicial -bootstrapping configuration logic- para que surtiera efecto antes de que se carguen los comportamientos. Esto afectará a *todo* incluido a los elementos a medida. Así que si necesitas o quieres que estos actúen de otra manera, tendrás que tenerlo en cuenta en tu implementación de `convertModuleIdToViewUrl`.
 
 >**Nota:** Este es un ejemplo de por que los autores de complementos externos no deben fiarse de las convenciones. Los desarrolladores pueden modificar estas convenciones para adaptarse a las necesidades de su propia aplicación.
