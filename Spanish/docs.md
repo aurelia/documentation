@@ -6,13 +6,26 @@ Hemos planeado para Aurelia un conjunto muy rico de documentos. Desafortunadamen
 
 <h2 id="browser-support"><a href="#browser-support">Soporte a navegadores</a></h2>
 
-Aurelia está diseñado para navegadores con actualización automática y permanente (Evergreen Browsers). Esto incluye Chrome, Firefox, IE11 y Safari 8. Tal y como viene no funcionará en ninguna versión de IE anterior a la 11...por ahora. En cualquier caso, hemos identificado como dar soporte para IE9 en un futuro próximo. Estate atento a una actualización con ese anuncio en breve.
+Aurelia se diseñó para navegadores actualizados automática y permanentemente (Evergreen Browsers). Esto incluye Chrome, Firefox, IE11 y Safari 8. Además hemos identificado como dar soporte para IE9 y sucesivos. Para ello necesitas instalar dos polyfills: MutationObservers y WeakMap. Esto se puede conseguir haciendo una instalación vía jspm de `github:webreflection/es6-collections` y `github:polymer/mutationobservers`. Hay que cargar estos dos scripts antes que system.js.
+
+Tu archivo index.html tendría este aspecto:
+
+```markup
+<script src="jspm_packages/github/webreflection/es6-collections@master/es6-collections.js"></script>
+<script src="jspm_packages/github/polymer/mutationobservers@0.4.2/MutationObserver.js"></script>
+<script src="jspm_packages/system.js"></script>
+<script src="config.js"></script>
+<script>
+  System.import('aurelia-bootstrapper');
+</script>
+```
+
+> **Nota:** Aurelia en si mismo no necesita de WeakMap, pero este es usado por el polyfill MutationObserver. 
+
 
 <h2 id="startup-and-configuration"><a href="#startup-and-configuration">Arranque y configuración</a></h2>
 
 Muchas plataformas tienen un punto de entrada o "main" para la ejecución del código. Aurelia no es diferente. Si has leído la página [Get Started](/get-started.html), entonces ya habrás visto el atributo `aurelia-app`. Basta con colocarlo en un elemento HTML y el iniciador (bootstrapper) de Aurelia cargará los archivos _app.js_ y _app.html_, los enlazará y los inyectará en el elemento DOM en el que colocaste dicho atributo.
-
->**Nota:** Si estás usando ES5 en lugar de ES6, añade un atributo `es5`. De está manera se activa la función que hace más sencillo el uso de estos lenguajes.
 
 Pero con frecuencia deseamos configurar el marco de trabajo o ejecutar algún código antes de mostrar nada al usuario. Así que es probable, que según vaya avanzando el proyecto, te encuentres con la necesidad de realizar alguna configuración de arranque. Para ello, puedes proporcionar un valor para el atributo `aurelia-app` que apunte a un módulo de configuración. Este módulo debe exportar exclusivamente una función que se llame `configure`. Aurelia invocará a tu función `configure`, pasándole el objeto Aurelia que podrás entonces usar para configurar el marco de trabajo por ti mismo y decidir que, cuando y donde mostrar tu interfaz de usuario (UI). Aquí tienes un ejemplo de archivo de configuración:
 
@@ -36,8 +49,6 @@ export function configure(aurelia) {
 ```
 
 Con excepción del complemento a medida -custom plugin-, este código se corresponde esencialmente con lo que `aurelia-app` hace normalmente por nosotros. Cuando cambias a un planteamiento con archivo de configuración tienes que configurar todo esto por ti mismo, pero también puedes instalar complementos a medida, montar el contenedor para inyección de dependencias con algunos servicios e instalar recursos globales que hayan de usarse en plantillas de vista -view templates-.
-
->**Nota:** Para activar ES5, haz la llamada `aurelia.use.es5()`.
 
 Si quieres pasarte al planteamiento con archivo de configuración de inicio, puedes escribir un sencillo archivo que reúna todas las opciones estándar que enumeramos antes. Este sería su aspecto:
 
@@ -99,33 +110,40 @@ En Aurelia, los elementos de interfaz de usuario están compuestos por parejas d
 
 <h3 id="dependency-injection"><a href="#dependency-injection">Inyección de dependencias (DI)</a></h3>
 
-Modelos y otros elementos de interfaz, como los controles de plantilla -Template Controllers- y los comportamientos añadidos -Attached Behaviors-, son creados como clases que son llamadas por el marco de trabajo usando un contenedor de inyección de dependencias. El código escrito con este estilo es fácil de separar en módulos y de testear. En lugar de crear clases voluminosas, puedes desmenuzar las cosas en pequeños objetos que colaborarán para lograr un objetivo. Luego la inyección de dependencias podrá montar por nosotros el conjunto en tiempo de ejecución.
+Modelos y otros elementos de interfaz, como los elementos personalizados -Custom Elements- y los atributos personalizados -Custom Attributes-, son creados como clases que son llamadas por el marco de trabajo usando un contenedor de inyección de dependencias. El código escrito con este estilo es fácil de separar en módulos y de testear. En lugar de crear clases voluminosas, puedes desmenuzar las cosas en pequeños objetos que colaborarán para lograr un objetivo. Luego la inyección de dependencias podrá montar por nosotros el conjunto en tiempo de ejecución.
 
-Para aprovechar la inyección de dependencias tienes simplemente que añadir algunos metadatos a la clase para que esta le indique al marco de trabajo lo que debe pasarle a su constructor (de clase). Aquí tienes un ejemplo de una modelo que depende de un objeto HttpClient de Aurelia.
+Para aprovechar la inyección de dependencias, simplemente "decorar" -decorate. tu clase para que esta le indique al marco de trabajo lo que debe pasarle a su constructor (de clase). Aquí tienes un ejemplo de una modelo que depende de un objeto HttpClient de Aurelia.
 
 ```javascript
+import {inject} from 'aurelia-framework';
 import {HttpClient} from 'aurelia-http-client';
 
+@inject(HttpClient)
 export class CustomerDetail{
-    static inject() { return [HttpClient]; }
     constructor(http){
         this.http = http;
     }
 }
 ```
 
-Solo necesitamos proporcionar un método estático llamado `inject` que devuelva un vector de cosas para inyectar.
+Con los decoradores ES7 o Typescript habilitados, solamente añade el decorador `inject`, pasando un argumento por cada tipo inyectado. Si no estás usando un lenguaje que soporte el patrón Decorator, o si no quieres usarlo, en su lugar puedes añadir a tu clase una propiedad o método estáticos que se llame `inject`. Este debe devolver un vector de tipos inyectables. Aquí tienes el mismo ejemplo, pero en CoffeeScript con módulos CommonJS:
 
-> **Nota:** Próximamente también podrás proporcionar los datos de inyección con un decorador (Decorator) de ES7/Typescript.
+```coffeescript
+HttpClient = require('aurelia-http-client').HttpClient;
 
-Las dependencias en el vector de inyección no tienen por que ser solo del tipo constructor. También pueden ser objetos del tipo `resolvers`. Por ejemplo, echa un vistazo a esto:
+class Flickr
+  constructor: (@http) ->
+  @inject:[HttpClient]
+``` 
+
+Sin embargo, las dependencias en el vector de inyección no tienen por que ser solo del tipo constructor. También pueden ser objetos del tipo `resolvers`. Por ejemplo, echa un vistazo a esto:
 
 ```javascript
-import {Lazy} from 'aurelia-framework';
+import {Lazy, inject} from 'aurelia-framework';
 import {HttpClient} from 'aurelia-http-client';
 
+@inject(Lazy.of(HttpClient))
 export class CustomerDetail{
-    static inject() { return [Lazy.of(HttpClient)]; }
     constructor(getHTTP){
         this.getHTTP = getHTTP;
     }
@@ -141,15 +159,15 @@ El `lazy resolver` en realidad no nos proporciona un objeto del tipo `HttpClient
 * `Optional` - Inyecta un objeto de una clase solo si ya existe en el contenedor, en otro caso, null.
     * p.ej. `Optional.of(LoggedInUser)`
 
-Junto a estos `resolvers`, también puedes usar anotaciones `Registration` (de registro) para especificar el registro o ciclo de vida por defecto de un objeto. Por defecto, el contenedor de inyección de dependencias asume que todos son objetos singulares -singleton instance-; un objeto por contenedor. Sin embargo, puedes usar una anotación de registro -registration annotation- para cambiar esto. Aquí tienes un ejemplo:
+Junto a estos `resolvers`, también puedes usar decoradores `Registration` (de registro) para especificar el registro o ciclo de vida por defecto de un objeto. Por defecto, el contenedor de inyección de dependencias asume que todos son objetos singulares -singleton instance-; un objeto por aplicación. Sin embargo, puedes usar un decorador de registro -registration decorator- para cambiar esto. Aquí tienes un ejemplo:
 
 ```javascript
-import {Metadata} from 'aurelia-framework';
+import {transient, inject} from 'aurelia-framework';
 import {HttpClient} from 'aurelia-http-client';
 
+@transient()
+@inject(HttpClient)
 export class CustomerDetail{
-    static metadata(){ return Metadata.transient(); }
-    static inject() { return [HttpClient]; }
     constructor(http){
         this.http = http;
     }
@@ -158,7 +176,16 @@ export class CustomerDetail{
 
 Ahora, cada vez que se le solicita al contenedor de inyección de dependencias un objeto del tipo `CustomerDetail`, el contenedor devolverá un nuevo objeto, en lugar de uno único -singleton-. Los registros `Singleton` y `Transient` vienen con el paquete, pero puedes crear los tuyos propios escribiendo una clase que herede de `Registration`.
 
-> **Nota:** Este último ejemplo introduce _metadata_ -metadatos- para proporcionar información sobre el contexto al marco de trabajo. Verás otra vez _metadata_ cuando hablemos acerca de los _comportamientos_ -behaviors-.
+No te preocupes si no sabes o no quieres usar decoradores. Disponemos de un mecanismo alternativo. Incluye simplemente una propiedad o método estáticos `decorators` y luego usa nuestro auxiliar -helper- `Decorators` encadenable. El auxiliar dispone de métodos para todos nuestros decoradores, de manera que te resultará fácil de usar en cualquier lenguaje. Así es como se podría escribir el ejemplo anterior en CoffeeScript 
+
+```coffeescript
+HttpClient = require('aurelia-http-client').HttpClient;
+Decorators = require('aurelia-framework').Decorators;
+
+class CustomerDetail
+  constructor: (@http) ->
+  @decorators:Decorators.transient().inject(HttpClient);
+```
 
 <h2 id="templating"><a href="#templating">Uso de plantillas -templating-</a></h2>
 
@@ -182,7 +209,7 @@ Todo lo que esté dentro de una etiqueta `template` será manejado por Aurelia. 
 
 De paso, esto te permite cargar dinámicamente hojas de estilo dependiendo de la vista e incluso componentes web -Web Components-.
 
-Cada vez que quieras importar un recurso específico de Aurelia, ya sea un _Custom Element_ -elemento a medida-, _Attached Behavior_ -comportamiento añadido-, _Template Controller_ -control de plantillas- o _Value Converter_ -conversor de valores-, puedes usar en su lugar un elemento `require` dentro de tu vista. Aquí tienes un ejemplo:
+Cada vez que quieras importar un recurso específico de Aurelia, ya sea un _Custom Element_ -elemento a medida-, _Custom Attribute_ -atributo personalizado-, o _Value Converter_ -conversor de valores-, debes usar en su lugar un elemento `require` dentro de tu vista. Aquí tienes un ejemplo:
 
 ```markup
 <template>
@@ -200,16 +227,16 @@ En este caso `nav-bar` es un _Custom Element_ -elemento a medida- de Aurelia que
 
 * Evita duplicidades - El recurso se descarga una sola vez para toda la aplicación. Aunque otras vistas requieren el mismo elemento, este no será descargado nuevamente.
 * Compilado único - Las plantillas requeridas de esta manera para elementos a medida son  compilados una única vez para la aplicación completa.
-* Alcance local - El recurso requerido solo es visible dentro de la vista que lo requiere, reduciendo la posibilidad de conflictos entre nombres.
-* Renombrado - Los recursos pueden ser renombrados al requerirlos, si resulta que dos recursos ajenos con el mismo nombre son usados en la misma vista.
+* Alcance local - El recurso requerido solo es visible dentro de la vista que lo requiere, reduciendo la posibilidad de conflictos entre nombres y facilitando el mantenimiento y la comprensión (del código) al eliminar los elementos globales.
+* Renombrado - Los recursos pueden ser renombrados al requerirlos, si resulta que dos recursos ajenos con el mismo nombre u otro parecido son usados en la misma vista.
     - p.ej. `<require from="./nav-bar" as="foo-bar"></require>` - Ahora en vez de usar un elemento `nav-bar` puedes usar un elemento `foo-bar`. (Esto está basado en la sintaxis `import` de ES6 para el cual renombrar es considerado un sustitutivo al uso de un alias porque lo que hace es estrictamente renombrar el tipo.)
 * Empaquetado - La importación puede señalar a un módulo con múltiples recursos que serán todos importados a la misma vista.
-* Extensibilidad - Puedes definir nuevos tipos de recursos que cuando son importados de esta manera pueden ejecutar la carga (asíncronamente única) y el registro (único por vista) a medida.
+* Extensibilidad - Puedes definir nuevos tipos de recursos que cuando son importados de esta manera pueden ejecutar la carga (asíncronamente única) y el registro (único por vista) a medida. Se trata de un procedimiento -pipeline- declarativo y extensible para cargar recursos.
 * ES6 - El código es cargado por el cargador -loader- de ES6 en lugar de por el mecanismo _HTMLImport_, habilitándose todas las características y extensibilidad de tu cargador.
 
 En tus vistas harás aprovechamiento frecuente de los diferentes tipos de recursos mencionados con anterioridad así como del enlazado de datos -databinding-.
 
->**Nota:** Puede que te preocupe lo tedioso de tener que importar cosas en cada vista. Recuerda que durante la fase de configuración inicial -bootstrapping- puedes configurar Aurelia para que los recursos globales estén disponibles en todas las vistas.
+>**Nota:** Puede que te preocupe lo tedioso de tener que importar cosas en cada vista. Recuerda que durante la fase de configuración inicial -bootstrapping- puedes configurar Aurelia para que los recursos globales estén disponibles en todas las vistas. Usa solo `aurelia.globalizeResources(...resourcePaths)`.
 
 <h3 id="databinding"><a href="#databinding">Enlazado de datos -databinding-</a></h3>
 
@@ -262,13 +289,13 @@ La propiedad `$event` se puede pasar como un argumento en una llamada a una func
 
 > **Nota:** Si no estás familiarizado con la delegación de eventos, se trata de una técnica que usa la naturaleza "burbujeante" de los eventos DOM. Cuando usamos `.delegate` se añade un único gestor de eventos al documento, en lugar de a cada elemento. Cuando se dispara el evento del elemento, este "asciende" a través del DOM hasta que alcanza el (nivel de) documento, donde es gestionado (por el gestor asignado). Esta es una manera más eficiente en memoria de gestionar eventos y se recomienda que lo uses como tu mecanismo por defecto.
 
-Todo esto va de una u otra manera en contra de los eventos de DOM. Ocasionalmente puedes encontrarte con un comportamiento a medida de Aurelia que necesite directamente una referencia a tu función de forma que pueda ser invocada posteriormente. Para pasar una referencia de función, usa el enlazador `.`call` (puesto que el comportamiento la _llamará -call-_ más tarde):
+Todo esto va de una u otra manera en contra de los eventos de DOM. Ocasionalmente puedes encontrarte con un atributo -Custom Attribute- o elemento a medida -Custom Element- de Aurelia que necesite directamente una referencia a tu función de forma que pueda ser invocada a mano posteriormente. Para pasar una referencia de función, usa el enlazador `.`call` (puesto que el atributo la _llamará -call-_ más tarde):
 
 ```markup
 <div touch.call="sayHello()">Say Hello</button>
 ```
 
-Ahora el comportamiento asociado recibirá una función que podrá llamar para invocar tu código `sayHello()`.
+Ahora el atributo a medida -Custom Attribute- `touch` recibirá una función que podrá llamar para invocar tu código `sayHello()`.
 
 <h4 id="string-interpolation"><a href="#string-interpolation">Interpolación de cadenas</a></h4>
 
@@ -284,7 +311,7 @@ La propiedad `fullName` será directamente interpolada en el contenido del (elem
 <div class="dot ${color} ${isHappy ? 'green' : 'red'}"></div>
 ```
 
-En esta linea "dot" es una clase presente estáticamente y "green" solo está presente si `isHappy`es verdadero, en caso contrario estará presente la clase "red". Además, cualquiera que sea el valor de `color`... este es añadido como clase.
+En esta linea "dot" es una clase presente estáticamente y "green" solo está presente si `isHappy`es verdadero, en caso contrario estará presente la clase "red". Además, cualquiera que sea el valor de `color`... este es añadido como una clase.
 
 > **Nota:** Puedes usar expresiones simples en tu enlace. No intentes hacer cosas demasiado rebuscadas. No queremos que haya código en la vista. Solo buscamos establecer un vínculo entre la vista y su modelo.
 
@@ -379,7 +406,6 @@ export class MySanitizeHtmlValueConverter {
 
 > NOTA: Enlazar usando el atributo `innerhtml` simplemente establece la propiedad `innerHTML` del elemento. El marcado no pasa a través del sistema de plantillas de Aurelia. Enlazar expresiones y elementos require no se evaluarán. Una solución para este escenario está siendo seguido en [aurelia/templating#35](https://github.com/aurelia/templating/issues/35).
 
-
 <h4 id="textcontent"><a href="#textcontent">textContent</a></h4>
 
 Puedes enlazar con una propiedad `textContent` de un elemento usando el atributo `textcontent`:
@@ -428,19 +454,18 @@ Usa el alias del atributo `style`, `css`, cuando hagas interpolación de cadenas
 ```
 
 
-<h3 id="behaviors"><a href="#behaviors">Comportamientos -behaviors-</a></h3>
+<h3 id="html-extensions"><a href="#html-extensions">Extensiones del HTML -HTML Extensions-</a></h3>
 
-Junto al enlazado de datos -databinding-, cuentas con el poder de los comportamientos de Aurelia para usarlo en tus vistas. Son tres los tipos de comportamiento incluidos:
+Junto al enlazado de datos -databinding-, cuentas con el poder de las extensiones al HTML de Aurelia para usarlos en tus vistas. Son dos los tipos:
 
 * Elementos a medida -Custom Elements- ¡Amplía HTML mediante nuevas etiquetas! Tus elementos a medida pueden tener sus propias vistas (que usan el enlazado de datos y otros comportamientos) y, opcionalmente, hacer uso del [ShadowDOM](http://www.html5rocks.com/en/tutorials/webcomponents/shadowdom/) (incluso aunque el navegador no lo soporte).
-* Comportamientos añadidos -Attached Behavior- Amplía HTML con atributos nuevos que pueden añadirse a los elementos, ya sean normales o a medida. Estos atributos "añaden" -attach- nuevo comportamiento a los elementos.
-* Controles de plantillas -Template Controllers- Crean mecanismos nuevos para desplegar las plantillas. Un control de plantillas es una clase capaz de crear interfaz de usuario dinámicamente y de inyectarla en el DOM.
+* Atributos a media -Custom Attributes- Amplía HTML con atributos nuevos que pueden añadirse elementos estándar o a medida. Estos atributos "añaden" -attach- nuevo comportamiento a los elementos.
 
 Naturalmente, todos funcionan sin problemas con el enlazado de datos. Echemos un vistazo a los comportamientos que te proporciona Aurelia y que están disponibles globalmente en todas las vistas.
 
 <h4 id="show"><a href="#show">show</a></h4>
 
-El comportamiento añadido `show` te permite condicionar la visualización de un elemento HTML. Si el valor de `show` es `true` el elemento se visualiza el elemento, en caso contrario se mantiene oculto. Este comportamiento no añade/elimina el elemento del DOM, solo modifica su visibilidad. Aquí tienes un ejemplo:
+El atributo a medida `show` te permite condicionar la visualización de un elemento HTML. Si el valor de `show` es `true` el elemento se visualiza el elemento, en caso contrario se mantiene oculto. Este comportamiento no añade/elimina el elemento del DOM, solo modifica su visibilidad. Aquí tienes un ejemplo:
 
 ```markup
 <div show.bind="isSaving" class="spinner"></div>
@@ -450,7 +475,7 @@ Cuando la propiedad `isSaving` es verdadera, el `div` será visible, en caso con
 
 <h4 id="if"><a href="#if">if</a></h4>
 
-El control de plantillas `if` permite añadir/eliminar un elemento HTML condicionalmente. Si el valor es verdadero, el elemento estará presente en el DOM, en caso contrario no.
+El atributo a medida -Custom Attribute- `if` permite añadir/eliminar un elemento HTML condicionalmente. Si el valor es verdadero, el elemento estará presente en el DOM, en caso contrario no.
 
 ```markup
 <div if.bind="isSaving" class="spinner"></div>
@@ -458,7 +483,7 @@ El control de plantillas `if` permite añadir/eliminar un elemento HTML condicio
 
 Este ejemplo es parecido al anterior con `show`. La diferencia estriba en que si la evaluación de la expresión de enlace resulta falsa, el `div`será eliminado del DOM, en lugar de solo quedar ocultado.
 
-Si necesitas añadir/eliminar condicionalmente un grupo de elementos y no puedes colocar el comportamiento -behavior- `if` en un elemento padre, entonces puedes envolver esos elementos en una etiqueta `template` que incluya el comportamiento `if`. Así es como quedaría:
+Si necesitas añadir/eliminar condicionalmente un grupo de elementos y no puedes colocar el atributo `if` en un elemento padre, entonces puedes envolver esos elementos en una etiqueta `template` que incluya el atributo `if`. Así es como quedaría:
 
 ```markup
 <template if.bind="hasErrors">
@@ -469,7 +494,7 @@ Si necesitas añadir/eliminar condicionalmente un grupo de elementos y no puedes
 
 <h4 id="repeat"><a href="#repeat">repeat</a></h4>
 
-El control de plantillas `repeat` te permite mostrar una plantilla varias veces, una por cada elemento de un vector. Aquí tienes un ejemplo que muestra la lista de nombres de clientes:
+El atributo a medida -Custom Attribute- `repeat` te permite mostrar una plantilla varias veces, una por cada elemento de un vector. Aquí tienes un ejemplo que muestra la lista de nombres de clientes:
 
 ```markup
 <ul>
@@ -477,11 +502,19 @@ El control de plantillas `repeat` te permite mostrar una plantilla varias veces,
 </ul>
 ```
 
-Una consideración importante acerca del comportamiento `repeat` es que trabaja junto con la orden de enlace `.for`. Esta orden de enlace interpreta una sintaxis especial de la forma "elemento de un vector" donde "elemento" es el nombre local que vas a usar en la plantilla y "vector" es una expresión de enlace normal cuya evaluación resulta en un vector.
+Una consideración importante acerca del atributo `repeat` es que trabaja junto con la orden de enlace `.for`. Esta orden de enlace interpreta una sintaxis especial de la forma "elemento de un vector" donde "elemento" es el nombre local que vas a usar en la plantilla y "vector" es una expresión de enlace normal cuya evaluación resulta en un vector.
 
-> **Nota:**: Como el comportamiento `if`, también puedes usar una etiqueta `template` para agrupar una colección de elementos que no tienen elemento padre. De hecho esto es válido para todos los controles de plantillas. Cuando colocas un control de plantillas en un elemento este se transforma en un HTMLTemplate durante la compilación, así que siempre puedes añadir explícitamente tu plantilla a tu marcado si quieres o tienes que hacerlo.
+Hablando de mapas, así es como lo enlazarías con un mapa ES6:
 
-Cada elemento que está siendo repetido por el comportamiento `repeat` cuenta con varios valores contextuales especiales disponibles para enlazar:
+```markup
+<ul>
+  <li repeat.for="[id, customer] of customers">${id} ${customer.fullName}</li>
+</ul>
+```
+
+> **Nota:**: Como el atributo `if`, también puedes usar una etiqueta `template` para agrupar una colección de elementos que no tienen elemento padre.
+
+Cada elemento que está siendo repetido por el atributo `repeat` cuenta con varios valores contextuales especiales disponibles para enlazar:
 
 * `$parent` - A día de hoy, las propiedades y métodos del modelo de la vista principal no son visibles desde dentro de los elementos repetidos. Esperamos resolver esto en una próxima actualización. Entre tanto, puedes acceder ese modelo de vista (view model) usando `$parent`.
 * `$index` - El índice del elemento en el vector.
@@ -511,7 +544,7 @@ El elemento `compose` también tiene un atributo `view` que puede ser usado de l
 
 <h4 id="global-behavior"><a href="#global-behavior">global-behavior</a></h4>
 
-Este no es un comportamiento añadido que vayas a usar directamente. En lugar de eso, este funciona en conjunción con una orden de enlace a medida para habilitar dinámicamente el uso declarativo de los complementos jQuery y otras APIs similares en HTML. Veamos un ejemplo para clarificar la idea:
+Este no es unq mejora HTML que vayas a usar directamente. En lugar de eso, este funciona en conjunción con una orden de enlace a medida para habilitar dinámicamente el uso declarativo de los complementos jQuery y otras APIs similares en HTML. Veamos un ejemplo para clarificar la idea:
 
 ```markup
 <div jquery.modal="show: true; keyboard.bind: allowKeyboard">...</div>
@@ -519,7 +552,7 @@ Este no es un comportamiento añadido que vayas a usar directamente. En lugar de
 
 Este ejemplo está basado en el complemento [Bootstrap modal widget](http://getbootstrap.com/javascript/#modals). En este caso, el complemento `modal` de jQuery será añadido al `div` y será configurado con su opción `show` puesta a `true` y su opción `keyboard` puesta al valor de la propiedad `allowKeyboard` del modelo. Cuando la vista contenedora esté desenlazada, el complemento jQuery será destruido.
 
-Esta capacidad combina el comportamiento añadido especial `global-behaviour` con sintaxis a medida para habilitar estas capacidades. La sintaxis que ves aquí está basada en la sintaxis del atributo nativo (HTML) `style` que lista las propiedades y los valores separados de la misma manera que en el ejemplo. Ten en cuenta que puedes usar órdenes de enlace como `.bind`, para pasar datos de tu modelo directamente al complemento, o `.call`, para pasar una función de retrollamada directamente al complemento.
+Esta capacidad combina el especial `global-behaviour` con sintaxis a medida para habilitar estas capacidades. La sintaxis que ves aquí está basada en la sintaxis del atributo nativo (HTML) `style` que lista las propiedades y los valores separados de la misma manera que en el ejemplo. Ten en cuenta que puedes usar órdenes de enlace como `.bind`, para pasar datos de tu modelo directamente al complemento, o `.call`, para pasar una función de retrollamada directamente al complemento.
 
 Así es como funciona:
 
@@ -536,19 +569,20 @@ Si leíste la guía para empezar, sabrás que hay dos partes en la gestión de r
 Veamos un ejemplo de configuración.
 
 ```javascript
+import {inject} from 'aurelia-framework';
 import {Router} from 'aurelia-router';
 
+@inject(Router)
 export class App {
-  static inject() { return [Router]; }
   constructor(router) {
     this.router = router;
     this.router.configure(config => {
       config.title = 'Aurelia';
       config.map([
-        { route: ['', 'home'],         moduleId: './home/index' },
-        { route: 'users',              moduleId: './users/index', nav: true },
-        { route: 'users/:id/detail',   moduleId: './users/detail' },
-        { route: 'files*path',         moduleId: './files/index', href:'#files',   nav: true }
+        { route: ['', 'home'],               moduleId: './home/index' },
+        { route: 'users',                    moduleId: './users/index',                      nav: true },
+        { route: 'users/:id/detail',         moduleId: './users/detail' },
+        { route: 'files*path',               moduleId: './files/index',     href:'#files',   nav: true }
       ]);
     });
   }
@@ -633,11 +667,10 @@ El ejemplo a continuación muestra como añadir una autorización a tu aplicaci�
 
 ```javascript
 import {Router, Redirect} from 'aurelia-router';
-import {Container} from 'aurelia-dependency-injection';
-import bootstrap from 'bootstrap';
+import {inject} from 'aurelia-framework';
 
+@inject(Router)
 export class App {
-  static inject() { return [Router]; }
   constructor(router) {
     this.router = router;
     this.router.configure(config => {
@@ -654,10 +687,6 @@ export class App {
 }
 
 class AuthorizeStep {
-  static inject() { return []; }
-  constructor() {
-  }
-
   run(routingContext, next) {
     // Check if the route has an "auth" key
     // The reason for using `nextInstructions` is because
@@ -667,11 +696,9 @@ class AuthorizeStep {
       if (!isLoggedIn) {
         return next.cancel(new Redirect('login'));
       }
-
-      return next();
-    } else {
-      return next();
     }
+
+    return next();
   }
 }
 ```
@@ -686,7 +713,7 @@ config.addPipelineStep('myname', MySecondStep); // Adds another step to it.
 config.addPipelineStep('modelbind', 'myname'); // Makes the entire `myname` pipeline run as part of the `modelbind` pipeline.
 ```
 
-### Configurando PushState
+<h3 id="configuring-push-state"><a href="#configuring-push-state">Configurando PushState</a></h3>
 
 Si prefieres desprenderte de los `#` (almohadilla) en tus URLs, entonces vas a tener que habilitar `pushState` en tu aplicación. ¡Por suerte Aurelia admite esto! Tendrás que hacer algún ajuste también del lado del servidor para que esto funcione correctamente. Empecemos por el lado de Aurelia en la ecuación.
 
@@ -784,10 +811,11 @@ Técnicas similares las puedes emplear en entornos con otros servidores - solo n
 A veces puedes querer usar el mismo modelo-vista (VM, view-model) para varias rutas. Por defecto Aurelia verá esas rutas como alias del mismo modelo-vista para múltiples rutas y así solo realiza el proceso de construcción y añadido, así como un ciclo de vida completo. Puede que esto no sea exactamente lo que estás buscando. Mira el siguiente ejemplo de enrutador:
 
 ```javascript
+import {inject} from 'aurelia-framework';
 import {Router} from 'aurelia-router';
 
+@inject(Router)
 export class App {
-  static inject() { return [Router]; }
   constructor(router) {
     this.router = router;
     this.router.configure(config => {
@@ -831,13 +859,13 @@ export class YourViewModel {
 
 <h2 id="extending-html"><a href="#extending-html">Extendiendo HTML</a></h2>
 
-Aurelia tiene un compilador de plantillas HTML poderoso y extensible. El compilador en si mismo es un algoritmo para interactuar con varios _tipos de comportamiento_ que contiene la lógica para manipular el HTML. A priori, Aurelia proporciona implementaciones para tres tipos de comportamientos del núcleo, los cuales creemos que cubre la mayoría de escenarios que encontrarás en el día a día. Los tres tipos son _Attached Behaviors -comportamientos añadidos-_, _Custom Elements -elementos a medida-_ y _Template Controllers -controles de plantilla-_.
+Aurelia tiene un compilador de plantillas HTML poderoso y extensible. El compilador en si es un algoritmo para interactuar con estas extensiones del HTML. De entrada, Aurelia proporciona dos extensiones: _Custom Elements_ elementos a medida, y _Custom Attributes_ atributos a medida.
 
-Por defecto, los comportamientos no son visibles para el compilador. Hay tres vías principales para incorporarlos:
+Por defecto, estas extensiones no son visibles para el compilador. Hay tres vías principales para incorporarlos:
 
-* Usar el elemento `require` para requerir un comportamiento en una vista. El atributo `from` especifique la ruta relativa al módulo de comportamiento. El comportamiento será definido localmente.
-* Usar el objeto Aurelia durante tu fase de configuración inicial -bootstrapping- para llamar  `.globalizeResources(...resourcePaths)` para registrar comportamientos con visibilidad global en tus aplicaciones.
-* Instala un complemento que registre comportamientos con visibilidad global en tu aplicación.
+* Usar el elemento `require` para requerir una extensión en una vista. El atributo `from` especifique la ruta relativa al módulo de extensión. La extensión será definida localmente.
+* Usar el objeto Aurelia durante tu fase de configuración inicial -bootstrapping- para llamar  `.globalizeResources(...resourcePaths)` para registrar extensiones con visibilidad global en tus aplicaciones.
+* Instala un complemento que registre extensiones con visibilidad global en tu aplicación.
 
 >**Nota:** Una práctica recomendada para tu propia aplicación es colocar todos tus comportamientos específicos de aplicación, convertidores de valores, etc. en una carpeta _resources_. Luego crear un archivo _index.js_ que lo convierte todo en un complemento interno. Finalmente, instala ese complemento durante la fase de configuración inicial -bootstrapping- de la aplicación. Esto mantiene todos los recursos en una ubicación conocida, junto a su código de registro. Esto además mantendrá tu archivo de configuración limpio y sencillo.
 
@@ -845,40 +873,35 @@ Todos los comportamientos pueden incorporarse opcionalmente al ciclo de vida de 
 
 * `bind(bindingContext)` - Invocado cuando el motor de enlazado de datos enlaza la vista. El contexto de enlazado es el objeto al que está enlazada la vista.
 * `unbind()` - Invocado cuando el motor de enlazado de datos desvincula la vista.
-* `attached()` - Invocado cuando la vista que contiene ese comportamiento es añadida al DOM.
-* `detached()` - Invocado cuando la vista que contiene ese comportamiento es eliminada del DOM.
+* `attached()` - Invocado cuando la vista que contiene esa extensión es añadida al DOM.
+* `detached()` - Invocado cuando la vista que contiene esa extensión es eliminada del DOM.
 
->**Nota:** Si decides implementar la retrollamada `bind`, el enlazado inicial de tu comportamiento fluirá de manera un poco distinta. Habitualmente, si tienes retrollamadas a tus propiedades de comportamiento -Behavior Properties-, estas son llamadas una a una durante la fase de enlazado. Pero si añades la retrollamada `bind`, dichas propiedades no serán llamadas durante la inicialización. En cambio, la retrollamada `bind` será llamada una vez que todas las propiedades tengan asignados sus valores enlazados iniciales. Esta es una importante y útil característica, en particular para comportamientos complejos que puedan querer no "actuar" hasta que no estén disponibles todos los valores evaluados.
+>**Nota:** Si decides implementar la retro-llamada `bind`, el enlazado inicial de tu extensión fluirá de manera un poco distinta. Habitualmente, si tienes retrollamadas a las propiedades enlazables de tus extensiones, estas son llamadas una a una durante la fase de enlazado. Pero si añades la retro-llamada `bind`, dichas propiedades no serán llamadas durante la inicialización, sino que, la retrollamada `bind` será llamada una vez que todas las propiedades tengan asignados sus valores enlazados iniciales. Esta es una importante y útil característica, en particular para extensiones complejas que puedan querer no "actuar" hasta que no estén disponibles todos los valores evaluados.
 
-<h3 id="attached-behaviors"><a href="#attached-behaviors">Comportamientos añadidos -attached behaviors-</a></h3>
+<h3 id="custom-attributes"><a href="#custom-attributes">Atributos a medida -Custom Attributes-</a></h3>
 
-Los comportamientos añadidos añaden nuevo comportamiento o función a un elemento HTML existente mediante la adición de un atributo a medida a tu marcado. Usos comunes para comportamientos añadidos incluyen:
+Los atributos a medida -Custom Attributes- añaden nuevo comportamiento a elementos HTML. Usos comunes para atributos a medida añadidos incluyen:
 
 * Envolver complementos jQuery y similares (cuando el comportamiento global -`global-behavior`- es insuficiente).
 * Atajos para enlazados comunes a estilo, clases o atributos.
-* Simplemente todo que requiera cambiar un elemento HTML existente o incluso un elemento a medida que no puedes modificar directamente.
+* Simplemente todo que requiera cambiar un elemento HTML existente o incluso un elemento a medida -Custom Element- que no puedes modificar directamente.
 
-Los comportamientos añadidos tienden a representar competencias transversales. Por ejemplo, puedes crear un comportamiento recomendado a medida que puedes añadir a cualquier elemento. Esta idea es mejor que la de crear la función recomendada directamente en cada elemento a medida que crees.
+Los atributos a medida tienden a representar competencias transversales. Por ejemplo, puedes crear un atributo recomendado a medida que puedes añadir a cualquier elemento. Esta idea es mejor que la de crear la funcionalidad recomendada directamente en cada elemento a medida que crees.
 
-Veamos la implementación de uno de los comportamientos añadidos (propios) de Aurelia: `show`. Aquí tienes como se usa:
+Veamos la implementación de uno de los atributos a medida (propio) de Aurelia: `show`. Aquí tienes como se usa:
 
 ```markup
 <div show.bind="isSaving" class="spinner"></div>
 ```
 
-El comportamiento `show` aplicará condicionalmente una clase a un elemento en función de la falsedad de su valor. (La clase, cuando es aplicada, oculta el elemento.) Aquí está la implementación:
+El atributo `show` aplicará condicionalmente una clase a un elemento en función de la falsedad de su valor. (La clase, cuando es aplicada, oculta el elemento.) Aquí está la implementación:
 
 ```javascript
-import {Behavior} from 'aurelia-framework';
+import {inject, customAttribute} from 'aurelia-framework';
 
+@customAttribute('show')
+@inject(Element)
 export class Show {
-  static metadata(){
-    return Behavior
-      .attachedBehavior('show')
-      .withProperty('value', 'valueChanged', 'show');
-  }
-
-  static inject() { return [Element]; }
   constructor(element) {
     this.element = element;
   }
@@ -893,23 +916,25 @@ export class Show {
 }
 ```
 
-Lo primero a destacar es que un comportamiento añadido es una clase y sigue los mismos patrones que hemos visto anteriormente. Observa que los `metadata` -metadatos- juegan un importante papel en la definición de un comportamiento. Aquí tienes lo que los metadatos están haciendo:
+Lo primero a destacar es que los atributos a medida son clases y siguen los mismos patrones que hemos visto anteriormente. Observa que los decoradores -decorators- juegan un importante papel en la definición de un atributo. Aquí tienes lo que hacen:
 
-* `.attachedBehavior('show')` - Crea un objeto de tipo metadato `AttachedBehavior` para comunicarle al compilador HTML como se integra esta clase. El comportamiento será reconocido por el compilador siempre que encuentre un atributo con el nombre `show`. En Aurelia, los comportamientos añadidos siempre se vinculan a un único atributo  HTML. Se establece una relación de uno a uno.
-* `.withProperty('value', 'valueChanged', 'show')` - Crea una propiedad de comportamiento -`BehaviorProperty`- que le dice al compilador de HTML que hay una propiedad específica en tu clase que se corresponde con un atributo en HTML. El primer parámetro de este método es el nombre de la propiedad de tu clase. El último parámetro es el nombre del atributo, que solo se necesita si es distinto del nombre de la propiedad. El segundo parámetro indica opcionalmente una retrollamada a la clase que será invocada cada vez que cambie la propiedad.
+* `@customAttribute('show')` - Indica que esta clase es un atributo a medida de manera que el compilador HTML sepa como se integra esta clase. Este atributo será reconocido por el compilador cada vez que encuentre un atributo con el nombre `show`. 
+* `inject` - Esto forma parte del sistema de inyección de dependencias; lo mismo que hemos visto antes. Los atributos a medida pueden recibir inyectado en sus constructores el elemento sobre el que están definido. Eso es lo que ocurre aquí. Todo lo que tienes que hacer es usar el tipo `Element` del navegador para indicarlo.
+
+Hay algunas otras cosas que tienen lugar.
+
+* Los atributos en HTML tienen un valor. Por lo tanto, tu clase de elemento a medida tendrá una propiedad que se mantendrá sincronizada con el HTML. Si implementas un método `valueChanged` -valor modificado-, este será invocado cada vez que el valor del atributo cambie. Su primer argumento será el nuevo valor y el segundo será el antiguo. 
 
 Bien. Hablemos de convenciones.
 
-* Si el nombre de tu función de retrollamada cumple el patrón   {nombrePropiedad}Changed, entonces no necesitas especificarlo. Así, en el caso anterior, pudimos omitir el valor del segundo parámetro.
-* Si los nombres de tu propiedad y de tu atributo son iguales, entonces no es necesario que los especifiques. En el caso anterior, al ser distintos, es necesario que lo especifiquemos.
-* Los comportamientos añadidos siempre se corresponden con un único atributo. Esto nos permite optimizar un sencillo patrón de uso. Si llamas "value" a tu propiedad, entonces no necesitas incluir los metadatos de la propiedad. Automáticamente estableceremos una correspondencia entre un atributo con el mismo nombre que tu comportamiento y la propiedad `value`.
-* Si el nombre de exportación de tu clase cumple el patrón {NombreComportamiento}AttachedBehavior, entonces no necesitas incluir los metadatos del comportamiento añadido. El nombre del atributo será inferido del nombre de la clase eliminando "AttachedBehavior", escribiendo en minúsculas y con guión la parte restante del nombre, p.ej. comportamiento-nombre (behavior-name).
+Si el nombre de exportación de tu clase cumple el patrón {UnNombre}AtributoAMedida, entonces no necesitas incluir el decorador `@customAttribute`. El nombre del atributo será inferido del nombre de exportación de la clase eliminando "AtributoAMedida", escribiendo en minúsculas y con guión la parte restante del nombre, p.ej. "un-nombre".
 
 Estas convenciones significan que podemos definir nuestro comportamiento `show` de esta manera:
 
 ```javascript
-export class ShowAttachedBehavior {
-  static inject() { return [Element]; }
+export class ShowCustomAttribute {
+  static inject = [Element]; //showing non-decorator method here for variety
+
   constructor(element) {
     this.element = element;
   }
@@ -924,128 +949,63 @@ export class ShowAttachedBehavior {
 }
 ```
 
-> **Nota:** ¿Y por qué no aprovecha Aurelia mismo internamente estas convenciones? Siempre que estemos creando una librería externa de comportamientos, lo mejor es ser explícitos. Tu no sabes si los desarrolladores que utilicen tu librería van a cambiar o no las convenciones de Aurelia, quebrando así tu librería. Para evitar esto, indica siempre explícitamente los metadatos para los comportamientos que previsiblemente van a ser usados en otras aplicaciones. Dentro de tu propia aplicación puedes usar las convenciones que quieras para simplificar el desarrollo.
+> **Nota:** ¿Y por qué no aprovecha Aurelia mismo internamente estas convenciones? Siempre que estemos creando una librería externa, lo mejor es ser explícitos. Tu no sabes si los desarrolladores que utilicen tu librería van a cambiar o no las convenciones de Aurelia, quebrando así tu librería. Para evitar esto, se siempre explícito usando decoradores. Dentro de tus propias aplicaciones puedes usar las convenciones que quieras para simplificar el desarrollo.
 
-A continuación, veamos el constructor.
+<h4 id="options-properties"><a href="#options-properties">Atributos de opciones -options attributes-</a></h4>
 
-Los comportamientos añadidos pueden obtener fácilmente acceso al elemento HTML al que se han añadido especificándolo en el vector `inject`. El comportamiento `show` almacene la referencia de manera que puede actualizar `classList` posteriormente.
-
-Finalmente, veamos la retrollamada `valueChanged`. Dijimos anteriormente que esto está configurado mediante los metadatos de la propiedad de manera que sea llamada siempre que el valor cambie. El sistema de enlazado actualizará automáticamente las propiedades disparando la retrollamada. Así, todo lo que tiene que hacer la implementación es  añadir/eliminar la clase apropiada en función del valor.
-
-<h4 id="options-properties"><a href="#options-properties">Propiedades con opciones -options properties-</a></h4>
-
-Puede que te preguntes que hacer si quieres crear un comportamiento añadido con múltiples propiedades teniendo en cuenta que los comportamientos añadidos siempre están en correspondencia con un único atributo. Para este escenario usamos una propiedad `OptionsProperty` que capacita a tu atributo único para funcionar como el atributo nativo `style`, con múltiples propiedades insertadas en él. Aquí tienes un ejemplo de como se usa:
+Puede que te preguntes que hacer si quieres crear un atributo a medida con varias propiedades, teniendo en cuenta que habitualmente los atributos se corresponden con un único valor. Aquí tienes un ejemplo de como se usa:
 
 ```javascript
-import {Behavior} from 'aurelia-framework'; // or 
+import {customAttribute, bindable} from 'aurelia-framework';
 
-export class MyBehavior {
-  static metadata(){
-    return Behavior
-      .attachedBehavior('my-behavior')
-      .withOptions().and(x => {
-        x.withProperty('foo');
-        x.withProperty('bar');
-      });
-  }
+@customAttribute('my-attribute')
+export class MyAttribite {
+  @bindable foo;
+  @bindable bar;
 }
 ```
 
-Esto crea un comportamiento añadido de nombre `my-behavior` con dos propiedades `foo` and `bar`. Cada una de estas propiedades están disponibles directamente en la clase, aunque su configuración en HTML es algo distinta. Aquí está como lo haríamos:
+Esto crea un atributo a medida de nombre `my-behavior` con dos propiedades `foo` and `bar`. Cada una de estas propiedades están disponibles directamente en la clase. Ambas pueden tener (funciones) retrollamada para modificarlas, `fooChanged` y `barChanged` respectivamente. En cualquier caso su configuración en HTML es algo distinta. Aquí está como lo haríamos:
 
 ```markup
-<div my-behavior="foo: some literal value; bar.bind: some.expression"></div>
+<div my-attribute="foo: some literal value; bar.bind: some.expression"></div>
 ```
 
-Fíjate en que no usamos la orden de enlace sobre el comando mismo. En lugar de eso, lo usamos con cada propiedad individual dentro del valor del atributo. Puedes utilizar literales u órdenes de enlazado estándar.
+Fíjate en que no usamos una orden de enlace directamente sobre el atributo. En lugar de eso, lo usamos sobre cada propiedad individual dentro del valor del atributo. Puedes utilizar literales u órdenes de enlazado estándar.
 
 >**Note:** No se usan las órdenes `delegate` y `trigger` dentro de un atributo de opción. Estas están siempre añadidas al elemento mismo, puesto que trabajan directamente con eventos nativos del DOM. En cambio si puedes usar `call`.
 
-<h3 id="custom-elements"><a href="#custom-elements">Elementos a medida -custom elements-</a></h3>
-
-Los elementos a medida añaden nuevas etiquetas a tu marcado HTML. Cada elemento a la medida pueden tener su propia plantilla de vista puede desplegarse bien en el Light DOM o en el Shadow DOM. Los elementos a medida también pueden tener cualquier número de propiedades que aflorarán como atributos en HTML para dar soporte al enlazado de datos y a los cuales pueden vincularse dentro de su plantilla de vista.
-
-¿Por qué no creamos un sencillo elemento a medida para ver como funciona esto? Vamos a crear un elemento que salude a alguien, llamado `say-hello`. Aquí está como queremos poder usarlo una vez que esté hecho:
-
-```markup
-<template>
-    <require from="./say-hello"></require>
-
-    <input type="text" ref="name">
-    <say-hello to.bind="name.value"></say-hello>
-</template>
-```
-
-Así que, como lo construimos? Bien, empezamos con una clase, tal y como hicimos con el comportamiento añadido. Aquí está el código:
-
-#### say-hello.js
-```javascript
-import {Behavior} from 'aurelia-framework';
-
-export class SayHello {
-  static metadata(){
-    return Behavior
-      .customElement('say-hello')
-      .withProperty('to');
-  }
-
-  speak(){
-    alert('Hello ${this.to}!');
-  }
-}
-```
-
-Si leíste la sección sobre comportamientos añadidos, entonces ya sabes lo que hace esto. Aquí también hay algunas convenciones, lo que significa que podríamos hacer eso si quisiéramos:
-
-#### say-hello.js (with conventions)
-```javascript
-import {Behavior} from 'aurelia-framework';
-
-export class SayHelloCustomElement {
-  static metadata(){
-    return Behavior.withProperty('to');
-  }
-
-  speak(){
-    alert('Hello ${this.to}!');
-  }
-}
-```
-
-Por defecto, los elementos a medida tienen una vista. Aquí está la del nuestro:
-
-#### say-hello.html
-```markup
-<template>
-    <button click.delegate="speak()">Say Hello To ${to}</button>
-</template>
-```
-
-Como puedes ver, contamos con acceso a las propiedades y métodos de nuestra clase. Es importante señalar que o necesitas declarar metadatos de la propiedad para cada propiedad con la que deseas establecer un enlace en tu plantilla. Solo necesitas declararlos para propiedades que quieres que existan como atributos en tu elemento a medida.
-
-Esto es todo realmente. Sigue las mismas convenciones para nombres que con las parejas vista/modelo y todos los mismos patrones para los elementos a medida. Hay algunas pocas opciones únicas de metadatos para los elementos a medida que debes conocer:
-
-* `.useShadowDOM()` - Esta hace que las vistas de tus componentes sean desplegadas en el Shadow DOM en lugar de en Light DOM. Si no estás familiarizado con estos términos, lee [este artículo](http://www.html5rocks.com/en/tutorials/webcomponents/shadowdom/). Cuando usamos el Shadow DOM, puedes usar _selectores de contenido_ -content selectors- en tu plantilla de vista.
-* `.noView()` - Si tu elemento a medida no tiene una vista, porque todos su comportamiento está implementado en código, entonces usa esta opción.
-* `.useView(relativePath)` - Si deseas usar una vista diferente de la que se usaría siguiendo las convenciones, puedes usar esta opción de metadatos para especificar una ruta relativa de la vista que quieres usar.
-
-<h3 id="template-controllers"><a href="#template-controllers">Controles de plantilla -template controllers-</a></h3>
-
-Los controles de plantilla convierten el DOM en una plantilla HTML inerte. El control podrá decidir cuando y donde (y cuantas veces) generar el contenido de la plantilla en el DOM. Ejemplos de esto son los comportamientos `if` y `repeat`. Coloca simplemente uno de estos comportamientos en un nodo del DOM y este se convertirá en una plantilla, controlada por un comportamiento.
-
-Echemos una ojeada a la implementación del comportamiento `if` para ver como se compone uno de estos. Aquí está el código fuente completo:
+Si no estás usando inicializadores de propiedad de ES7, puedes añadirle el decorador `@bindable` directamente a la clase. Unicamente asegúrate de proporcionar un nombre de propiedad del tipo `@bindable('nombrePropiedad')`. Para especificar más detalles de una propiedad enlazable, necesitas pasar un objeto de opciones como el siguiente:
 
 ```javascript
-import {Behavior, BoundViewFactory, ViewSlot} from 'aurelia-templating';
+@bindable({
+  name:'myProperty', //name of the property on the class
+  attribute:'my-property', //name of the attribute in HTML
+  changeHandler:'myPropertyChanged', //name of the method to invoke when the property changes
+  defaultBindingMode: ONE_WAY, //default binding mode used with the .bind command
+  defaultValue: undefined //default value of the property, if not bound or set in HTML
+})
+```
 
+Los valores por defecto y convenciones se muestran arriba. De esta manera, solo necesitas especificar estas opciones si tienes que desviarte de ello.
+
+> **Nota:** También existe un decorador especial `@dynamicOptions`. Este permite que un atributo a medida disponga de un conjunto dinámico de propiedades que se mapean desde la sintaxis de las opciones de atributo a la clase en tiempo de ejecución. No declares propiedades `bindable` -enlazables-. Simplemente añade un solo decorador `@dynamicOptions` y cualquier cosa que el usuario liste en la sintaxis de opciones de atributo se mapeara.
+
+> **Nota:** Recuerda que todos los decoradores disponibles se encuentran en el auxiliar `Decorators` -decoradores- y puede especificarse usando una propiedad o método estáticos como decoradores si lo prefieres (o si estás usando un lenguaje que no soporta decoradores). Veanse más arriba los ejemplos con CoffeeScript.
+
+<h4 id="template-controllers"><a href="#template-controllers">Controles de plantillas -Template Controllers-</a></h4>
+
+Los atributos a medida pueden indicar que se trata controles de plantilla con el decorador `@templateController`. Esto indica que transforman el DOM en una plantilla HTML inerte. La clase del atributo a medida puede luego decidir cuando y donde (o cuantas veces) insertar y desplegar la plantilla en el DOM. Ejemplos de esto son los atributos `if` y `repeat`. Coloca simplemente uno de ellos en un nodo DOM y este se convertirá en una plantilla, controlada por la clase del atributo a medida.
+
+Echemos un vistazo a la implementación del atributo a medida `if` para ver como se construye uno. Aquí está el código fuente completo:
+
+```javascript
+import {BoundViewFactory, ViewSlot, customAttribute, templateController, inject} from 'aurelia-framework';
+
+@customAttribute('if')
+@templateController
+@inject(BoundViewFactory, ViewSlot)
 export class If {
-  static metadata(){
-    return Behavior
-      .templateController('if')
-      .withProperty('value', 'valueChanged', 'if');
-  }
-
-  static inject() { return [BoundViewFactory, ViewSlot]; }
   constructor(viewFactory, viewSlot){
     this.viewFactory = viewFactory;
     this.viewSlot = viewSlot;
@@ -1080,31 +1040,96 @@ export class If {
 }
 ```
 
-Antes de profundizar en los aspectos únicos de los controles de plantilla, déjame recordarte aquello que ya hemos visto que es similar. Primero, tenemos una clase simple con metadatos. Nuestras metadatos son declarados de la misma manera que en los dos tipos anteriores de comportamiento. Las convenciones también funcionan de la misma manera. Así que puedes llamar a esta clase `IfTemplateController` y no necesitarías especificarlo en los metadatos. También podrías prescindir de los metadatos de la propiedad al declarar la retrollamada `valueChanged`. Sigue el mismo patrón que los comportamientos añadidos -AttachedBehaviors-.
+Antes de adentrarnos en los aspectos únicos, déjame recordarte la parte de ello que es compartida. Primero tenemos simplemente una clase con decoradores. Además por defecto también tiene una propiedad de valor único que podemos observar añadiendo una retro-llamada `valueChanged` -valor modificado-.
 
-Bien, que es distinto? Observa el constructor. Nuestro control de plantilla recibe inyectados únicamente dos elementos: `BoundViewFactory` y `ViewSlot`.
+Bien, y que distinto? Echemos un vistazo al constructor. Tenemos dos elementos únicos inyectados: `BoundViewFactory` y `ViewSlot`.
 
-La función `BoundViewFactory` es capaz de generar objetos del tipo plantilla HTML a la que está vinculado el control. No hay necesidad de preocuparse por el compilado, etc. Ya nos hemos ocupado de ello por ti. ¿Pero por qué se llama "Bound" View Factory (factoría de vista enlazada)? Bien, se está refiriendo al contexto (padre) de enlazado. Este está enlazado -"bound"- en cierto sentido. Así, si llamas a su método `create` este va a generar una nueva vista a partir de la plantilla que va a estar enlazada a ese contexto. Esto es lo que quieres cuando usas un comportamiento `if`. Esto no es lo que quieres con un comportamiento `repeat`. En ese caso, cada vez que llamas a `create` quieres una vista vinculada a un elemento (de vector) en particular. Para conseguir esto, simplemente pásale al método `create` cualquier objeto al que quieras vincular la vista.
+`BoundViewFactory` es capaz de generar objetos a partir de las plantillas HTML a las que está vinculada el atributo. No hay necesidad de preocuparse por la compilación, etc. Todo eso ya se ha tenido en cuenta. ¿Por que se llama `BoundViewFactory` -factoría de vista vinculada-? Bien, ya se refiere al contexto antecesor de enlazado. Por lo tanto, en un sentido está vinculado. Así que si llamas a su método `create` este generará una nueva vista -View- a partir de la plantilla que será enlazada a dicho contexto. Esto es lo que buscamos con un atributo `if`. Esto no es lo que quieres con un atributo `repeat`. En este caso, cada vez que llamas a `create` quieres generar una nueva vista vinculada a cada uno de los elementos del vector. Para conseguir esto, simplemente pasa el objeto que deseas vincular a la vista en el método `create`.   
 
-`ViewSlot` (espacio para vista) representa el espacio o ubicación dentro del DOM del que la plantilla fue extraída. Esta es usualmente la ubicación en la que quieres añadir los objetos de tipo View.
+`ViewSlot` representa el hueco o localización en el DOM desde la que se extrajo la plantilla. Normalmente se trata de la localización en la que deseas añadir los objetos del tipo View.
 
->**Nota**: A diferencia de los comportamientos previos, el control de plantilla funciona más directamente con las _primitivas_ -primitives- del marco de trabajo. Views, ViewFactories y ViewSlots son todos componentes de bajo nivel del motor de plantillas.
+> **Nota:** A diferencia de atributos anteriores, un controlador de plantilla trabaja más directamente con las primitivas del marco de trabajo (Aurelia). Views, ViewFactories y ViewSlots son todos componentes de bajo nivel del motor de plantillas.
 
-Mira con atención la función de retrollamada `valueChanged`. Aquí puedes ver donde está el comportamiento `if` creando la vista y añadiéndola al hueco, en base a la verdad del valor. Hay algunos detalles importantes de esto:
+Echa un vistazo con más detenimiento a la función (retro-llamada) `valueChanged`. Aquí puedes ver donde está creando el atributo `if` la vista y añadiendola al hueco, en función de la verdad del valor. Hay unos cuantos detalles importantes de esto:
 
-* El comportamiento siempre llama a `bind` en la vista View _antes de_ añadirla a la posición ViewSlot. Esto garantiza que todos los enlaces internos se evalúan fuera del DOM activo. Esto es importante para el rendimiento.
-* De forma parecida, siempre llama a `unbind` _después de_ eliminar la vista View del DOM.
-* Después de que la vista View sea creada inicialmente, el comportamiento `if` no la desecha cuando el valor se vuelve falso. Mantiene el objeto del tipo View en memoria (cache). Aurelia puede hacer un nuevo uso de estos objetos View y re-dirigirlos  a diferentes contextos de enlazado. Nuevamente, esto es importante para el rendimiento, puesto que elimina la necesidad de recrear estos objetos del tipo View.
+* El atributo siempre llama a `bind` en la vista _antes_ de añadirla al hueco -ViewSlot- correspondiente. Esto asegura que todos los enlaces internos son inicialmente evaluados fuera del DOM visible -live-. Esto es importante para el rendimiento.
+* Análogamente, siempre llama a `unbind` _después_ de eliminar la vista del DOM.
+* Después de que la vista sea creada inicialmente, el atributo `if` no la deshecha aunque el valor resulte falso. La almacena temporalmente en memoria -cache-. Aurelia puede reusar las vistas e incluso redirigirlas a diferentes contextos de enlazado. De nuevo, esto es importante para el rendimiento, puesto que se elimina la re-creación innecesaria de vistas.
 
-## La gestión de eventos -eventing-
+
+<h3 id="custom-elements"><a href="#custom-elements">Elementos a medida -Custom Elements-</a></h3>
+
+Los elementos a medida añaden nuevas etiquetas a tu marcado HTML. Cada elemento a la medida pueden tener su propia plantilla de vista puede desplegarse bien en el Light DOM o en el Shadow DOM. Los elementos a medida también pueden tener cualquier número de propiedades que aflorarán como atributos en HTML para dar soporte al enlazado de datos y a los cuales pueden vincularse dentro de su plantilla de vista.
+
+¿Por qué no creamos un sencillo elemento a medida para ver como funciona esto? Vamos a crear un elemento que salude a alguien, llamado `say-hello`. Aquí está como queremos poder usarlo una vez que esté hecho:
+
+```markup
+<template>
+    <require from="./say-hello"></require>
+
+    <input type="text" ref="name">
+    <say-hello to.bind="name.value"></say-hello>
+</template>
+```
+
+Así que, como lo construimos? Bien, empezamos con una clase, tal y como hicimos con el comportamiento añadido. Aquí está el código:
+
+#### say-hello.js
+```javascript
+import {customElement, bindable} from 'aurelia-framework';
+
+@customElement('say-hello')
+export class SayHello {
+  @bindable to;
+
+  speak(){
+    alert('Hello ${this.to}!');
+  }
+}
+```
+
+Si leíste la sección sobre atributos a medida, entonces ya sabes lo que hace esto. Aquí también hay algunas convenciones, lo que significa que podríamos hacer eso si quisiéramos:
+
+#### say-hello.js (with conventions)
+```javascript
+import {bindable} from 'aurelia-framework';
+
+export class SayHelloCustomElement {
+  @bindable to;
+
+  speak(){
+    alert('Hello ${this.to}!');
+  }
+}
+```
+
+Por defecto, los elementos a medida tienen una vista. Aquí está la del nuestro:
+
+#### say-hello.html
+```markup
+<template>
+    <button click.delegate="speak()">Say Hello To ${to}</button>
+</template>
+```
+
+Como puedes ver, contamos con acceso a las propiedades y métodos de nuestra clase. Es importante señalar que no necesitas declarar propiedades `@bindable` -enlazable- para cada propiedad con la que deseas establecer un enlace en tu plantilla. Solo necesitas declararlos para propiedades que quieres que existan como atributos en tu elemento a medida.
+
+Esto es todo realmente. Sigue las mismas convenciones para nombres que con las parejas vista/modelo y todos los mismos patrones para los elementos a medida. Hay algunos pocos decoradores para los elementos a medida que puedes necesitar:
+
+* `@syncChildren(propiedad, gestorCambio, selector)` - Crea una propiedad vector en tu clase cuyos elementos son sincronizados automáticamente con su vista en base a un selector de búsqueda.
+*  `@skipContentProcessing` - Le dice al compilador que no procese el contenido de tu elemento a medida. Se supone que vas a realizar tu propio procesamiento a medida.
+*  `@useView(path)` - Especifica una vista diferente a usar.
+*  `@noView` - Indica que este elemento a medida no tiene una vista y que el autor pretende que el elemento gestione su propia representación internamente.
+
+<h2 id="eventing"><a href="#eventing">La gestión de eventos -Eventing-</a></h2>
 
 El sistema de gestión de eventos es una poderosa herramienta cuando necesitas que componentes inconexos de tu aplicación se comuniquen entre si. Aurelia soporta tanto eventos estándar del DOM como eventos más específicos de aplicación a través de `EventAggregator` (agregador de eventos).
 
-### Eventos del DOM
+<h3 id="dom-events"><a href="#dom-events">Eventos del DOM -DOM Events-</a></h3>
 
-Los eventos DOM deben usarse cuando han de enviarse mensajes específicos de la interfaz de usuario. No deben ser usados para enviar mensajes específicos de la aplicación. Aurelia no añade ninguna funcionalidad más allá del DOM para eventos de interfaz de usuario (por ahora). Cualquier comportamiento puede tener su elemento -`Element`- asociado inyectado en su constructor. Entonces puedes usar el `Element` para lanzar eventos. Para aprender más acerca de la creación y el lanzamiento de eventos DOM a medida [lee por favor este artículo](https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Creating_and_triggering_events).
+Los eventos DOM deben usarse cuando han de enviarse mensajes específicos de la interfaz de usuario. No deben ser usados para enviar mensajes específicos de la aplicación. Aurelia no añade ninguna funcionalidad más allá del DOM para eventos de interfaz de usuario (por ahora). Cualquier atributo o elemento a medida puede tener su elemento -`Element`- asociado inyectado en su constructor. Entonces puedes usar el `Element` para lanzar eventos. Para aprender más acerca de la creación y el lanzamiento de eventos DOM a medida [lee por favor este artículo](https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Creating_and_triggering_events).
 
-### El agregador de eventos
+<h3 id="the-event-aggregator"><a href="#the-event-aggregator">El agregador de eventos</a></h3>
 
 Si necesitas eventos de aplicación acoplados débilmente, querrás usar el `EventAggregator`. Su interfaz pub/sub simplificada lo hace ideal para un amplio rango de escenarios de gestión de mensajes.
 
@@ -1114,7 +1139,7 @@ El agregador de eventos puede publicar eventos en un canal de mensajes o puede p
 import {EventAggregator} from 'aurelia-event-aggregator';
 
 export class APublisher{
-    static inject(){ return [EventAggregator]; }
+    static inject = [EventAggregator];
     constructor(eventAggregator){
         this.eventAggregator = eventAggregator;
     }
@@ -1132,7 +1157,7 @@ Empezamos por recibir a través de la inyección de dependencias una función si
 import {EventAggregator} from 'aurelia-event-aggregator';
 
 export class ASubscriber{
-    static inject(){ return [EventAggregator]; }
+    static inject = [EventAggregator];
     constructor(eventAggregator){
         this.eventAggregator = eventAggregator;
     }
@@ -1145,7 +1170,7 @@ export class ASubscriber{
 }
 ```
 
-Como puedes ver, se usa el mismo nombre de canal, pero se proporciona una función de retrollamada, que será invocada con cada mensaje enviado por este canal.
+Como puedes ver, se usa el mismo nombre de canal, pero se proporciona una función de retro-llamada, que será invocada con cada mensaje enviado por este canal.
 
 Alternativamente, puedes publicar y suscribirte a mensajes fuertemente tipificados. Aquí tienes un ejemplo de editor -publisher:
 
@@ -1158,7 +1183,7 @@ import {EventAggregator} from 'aurelia-event-aggregator';
 import {SomeMessage} from './some-message';
 
 export class APublisher{
-    static inject(){ return [EventAggregator]; }
+    static inject = [EventAggregator];
     constructor(eventAggregator){
         this.eventAggregator = eventAggregator;
     }
@@ -1176,7 +1201,7 @@ import {EventAggregator} from 'aurelia-event-aggregator';
 import {SomeMessage} from './some-message';
 
 export class ASubscriber{
-    static inject(){ return [EventAggregator]; }
+    static inject = [EventAggregator];
     constructor(eventAggregator){
         this.eventAggregator = eventAggregator;
     }
@@ -1191,9 +1216,9 @@ export class ASubscriber{
 
 El (receptor) suscriptor -subscriber- será llamado cada vez que se publica un objeto del tipo `SomeMessage`. La suscripción -subscription- es polimórfica, así que si se publica un objeto de un tipo subclase de `SomeMessage`, este (suscriptor) también recibirá notificación de ello.
 
->**Nota:** Todas las formas del método `subscribe` devuelven una _función desechar_ -dispose function-. Puedes llamar a esta función para desechar la suscripción y dejar de recibir mensajes. Un lugar adecuado para desechar (una suscripción) es en una (función de) de retrollamada `deactivate` -desactivar- del modelo, si este es manejado por un enrutador, o en su retrollamada `detached`, si se encuentra en cualquier otro modelo.
+>**Nota:** Todas las formas del método `subscribe` devuelven una _función desechar_ -dispose function-. Puedes llamar a esta función para desechar la suscripción y dejar de recibir mensajes. Un lugar adecuado para desechar (una suscripción) es en una (función de) de retrollamada `deactivate` -desactivar- del modelo, si este es manejado por un enrutador, o en su retrollamada `detached`, si se encuentra en cualquier otro modelo de vista.
 
-## Cliente HTTP
+<h2 id="http-client"><a href="#http-client">Cliente HTTP</a></h2>
 
 Como ventaja, Aurelia incluye un cliente HTTP `HttpClient` básico para proporcionarnos una interfaz confortable para el objeto `XMLHttpRequest` del navegador. `HttpClient` no está incluido en el módulo que instala Aurelia con el configurador inicial -bootstrapper-, ya que es completamente opcional y muchas aplicaciones pueden querer usar una estrategia diferente para la recuperación de datos. Así, si quieres usarlo, primero necesitas instalarlo con la orden siguiente:
 
@@ -1312,16 +1337,15 @@ client.createRequest('some/cool/path')
   .withBaseUri('http://aurelia.io')
   .withHeader('Authorization', 'bearer 123')
   .send();
-```
+`````
 
-La fluent API tiene los siguientes métodos enlazables: `asDelete()`, `asGet()`, `asHead()`, `asOptions()`, `asPatch()`, `asPost()`, `asPut()`, `asJsonp()`, `withUri()`, `withBaseUri()`, `withContent()`, `withParams()`, `withResponseType()`, `withTimeout()`, `withHeader()`, `withCredentials()`, `withReviver()`, `withReplacer()`, `withProgressCallback()`, and `withCallbackParameterName()`.
+La fluent API tiene los siguientes métodos enlazables: `asDelete()`, `asGet()`, `asHead()`, `asOptions()`, `asPatch()`, `asPost()`, `asPut()`, `asJsonp()`, `withUri()`, `withBaseUri()`, `withContent()`, `withParams()`, `withResponseType()`, `withTimeout()`, `withHeader()`, `withCredentials()`, `withReviver()`, `withReplacer()`, `withProgressCallback()`, y `withCallbackParameterName()`.
 
 <h2 id="customization"><a href="#customization">Ejecución a medida -customization-</a></h2>
 
 <h3 id="view-and-view-model-conventions"><a href="#view-and-view-model-conventions">Convenciones relativas a las vistas y a los modelos (de vista)</a></h3>
 
 ¿Como se enlazan vistas y modelos? Nuestra sencilla convención se basa en la identidad de módulo -module id-. Si cuentas con un modelo de identidad `./foo/bar/baz` (su ruta básicamente) esté será mapeado por defecto con `./foo/bar/baz.js` y `./foo/bar/baz.html`. Supón que quieres seguir otra convención diferente. ¿Que pasa si todos tus modelos están en una carpeta `view-models` y quieres que tus vista estén en una carpeta `views`? ¿Que tendrías que hacer? Para esto necesitas modificar el comportamiento de la estrategia convencional de vistas -Conventional View Strategy-. Así es como lo harías:
-
 
 ```javascript
 import {ConventionalView} from 'aurelia-framework';
@@ -1330,6 +1354,7 @@ ConventionalView.convertModuleIdToViewUrl = function(moduleId){
   return moduleId.replace('view-models', 'views') + '.html';
 }
 ```
+
 Este código tendrías que ejecutarlo como parte de tu lógica de configuración inicial -bootstrapping configuration logic- para que surtiera efecto antes de que se carguen los comportamientos. Esto afectará a *todo* incluido a los elementos a medida. Así que si necesitas o quieres que estos actúen de otra manera, tendrás que tenerlo en cuenta en tu implementación de `convertModuleIdToViewUrl`.
 
 >**Nota:** Este es un ejemplo de por que los autores de complementos externos no deben fiarse de las convenciones. Los desarrolladores pueden modificar estas convenciones para adaptarse a las necesidades de su propia aplicación.
