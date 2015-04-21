@@ -6,17 +6,21 @@
 
 <h2 id="browser-support"><a href="#browser-support">対応ブラウザ</a></h2>
 
-Aureliaは、当初は常時更新のあるブラウザ向けに設計されていました。それには、Chrome、Firefox、IE11そしてSafari 8が含まれます。しかし、IE9以上をサポートする方法を見つけました。これを有効にするには、追加で二つのpolyfillが必要になります。MutationObserverとWeakMapです。この二つはjspmでインストールすることができ、それぞれ `github:webreflection/es6-collections` 、 `github:polymer/mutationobservers` です。この二つを system.js の前にロードしてください。
-
-index.htmlは以下のようになります:
+Aureliaは、当初は常時更新のあるブラウザ向けに設計されていました。それには、Chrome、Firefox、IE11そしてSafari 8が含まれます。しかし、IE9以上をサポートする方法を見つけました。これを有効にするには、MutationObserverのpolyfillが必要になります。これはjspmで、 `github:polymer/mutationobservers` からインストールできます。その後、 `aurelia-bootstrapper` を次のようにラップしてください:
 
 ```markup
-<script src="jspm_packages/github/webreflection/es6-collections@master/es6-collections.js"></script>
 <script src="jspm_packages/github/polymer/mutationobservers@0.4.2/MutationObserver.js"></script>
 <script src="jspm_packages/system.js"></script>
 <script src="config.js"></script>
 <script>
-  System.import('aurelia-bootstrapper');
+  // MutationObserver に必要なWeakMap polyfillを読み込む
+  System.import('core-js').then( function() {
+    // MutationObserver polyfill をimport
+    System.import('mutationobservers').then( function() {
+      // IE9に必要なものをすべてロードした後にAureliaを起動する
+      System.import('aurelia-bootstrapper');
+    })
+  });
 </script>
 ```
 
@@ -25,9 +29,9 @@ index.htmlは以下のようになります:
 
 <h2 id="startup-and-configuration"><a href="#startup-and-configuration">起動と設定</a></h2>
 
-ほとんどのプラットフォームは、コード実行のための"main"またはエントリーポイントを持っています。Aureliaでも同じです。あなたがすでに [Get Started](/get-started.html) を読んでいれば、 `aurelia-app` 属性について知っていることでしょう。単にHTML要素にこの属性を記載すれば、Aureliaのブートストラッパーは、 _app.js_ と _app.html_ をロードし、データバインドを行い、その属性があるDOM要素にそれを注入します。
+ほとんどのプラットフォームは、コード実行のための"main"またはエントリーポイントを持っています。Aureliaでも同じです。あなたがすでに [Get Started](/get-started.html) を読んでいれば、その役目を果たす `aurelia-app` 属性を見たことがあるはずです。HTML要素にこの属性を記載すれば、Aureliaのブートストラッパーは、 _app.js_ と _app.html_ をロードし、それらのデータバインドを行い、 `aurelia-app` 属性があるDOM要素にそれを注入します。
 
-多くの場合において、画面に何かを表示する前に、フレームワークを設定したり、何か先行して処理を走らせたりしたいと思うことでしょう。そのため、プロジェクトの開発が進むにつれ、開始時設定を追加することになります。開始時設定のために、 `aurelia-app` 属性の値ととして、設定モジュールを指定することができます。このモジュールには唯一のexport関数 `configure` があります。Aureliaはこの `configure` 関数にAureliaオブジェクトを渡して起動し、フレームワークの設定を可能とします。これにより自分で何をいつUI上のどこに表示するかを自分で設定することが可能になります。 下記は設定モジュールの例です:
+画面に何かを表示する前に、フレームワークを設定したり、何か先行して処理を走らせたりしたいと思うことは度々あります。プロジェクトの開発が進むにつれ、開始時の設定がどんどん必要になることはよくあります。このような開始時設定のために、独自の設定モジュールを `aurelia-app` 属性の値として設定することができます。このモジュールは唯一のexport関数 `configure` を持ちます。Aureliaはこの `configure` 関数にAureliaオブジェクトを渡して起動し、フレームワークの設定ができるようにしてくれます。これにより自分で何をいつUI上のどこに表示するかを自分で設定できるようになります。 下記は設定モジュールの例です:
 
 ```javascript
 import {LogManager} from 'aurelia-framework';
@@ -48,9 +52,9 @@ export function configure(aurelia) {
 }
 ```
 
-カスタムプラグインを除けば、このコードは通常 `aurelia-app` が行う処理と本質的には一緒です。あなたが設定モジュールを指定する方法に切り替える際、これらの処理は自分自身で設定する必要があります。しかし、カスタムプラグインをインストールしたり、ビューテンプレートで共通に使われるサービスのDIを設定することも、同時にできるようになるのです。
+上記のうち、カスタムプラグインの設定を除いたコードは、通常 `aurelia-app` が行う処理です。あなたが独自の設定モジュールを指定する場合は、これらの処理を自分で呼びださなければなりません。しかし同時に、カスタムプラグインをインストールしたり、ビューテンプレートで共通に使われるサービスのDIを設定することもできるようになるわけです。
 
-設定モジュールを使う場合は、実際のところ上記の標準オプションをすべて含んだ記法が存在します。次のようにします:
+独自の設定モジュールを使う場合は、上記の標準オプションをすべて含んだ記法を利用できます。それを使うと、下記のようになります:
 
 ```javascript
 export function configure(aurelia) {
@@ -64,21 +68,21 @@ export function configure(aurelia) {
 
 <h3 id="logging"><a href="#logging">ロギング</a></h3>
 
-Aureliaはフレームワーク自身の用途として、シンプルなログ抽象化を持っています。デフォルトではこれは何もしません。上記の設定例では、アペンダーをインストールして、ログをコンソールに出力する方法を示しています。ログレベルの設定方法も同様に理解できるでしょう。ログレベルのオプションは: `none` , `error` , `warn` , `info` そして `debug` があります。
+Aureliaにはシンプルなログ抽象化があり、フレームワーク自体も利用しています。デフォルトではこれは何もしません。上記の設定例では、ログをコンソールに出力するアペンダーをインストールする方法を示しています。ログレベルの設定方法も同様に理解できるでしょう。ログレベルのオプションは: `none` , `error` , `warn` , `info` そして `debug` があります。
 
-自分でアペンダーを作成することも容易にできます。アペンダーのインターフェースに合致するようなクラスを作成するだけです。どうすればよいかを知るためには、我々の [コンソールログアペンダーのソースコード](https://github.com/aurelia/logging-console/blob/master/src/index.js) を見てください。
+自分でアペンダーを作成することも簡単です。アペンダーのインターフェースに合致するようなクラスを作成するだけです。やり方は、我々の [コンソールログアペンダーのソースコード](https://github.com/aurelia/logging-console/blob/master/src/index.js) を見てください。
 
 <h3 id="plugins"><a href="#plugins">プラグイン</a></h3>
 
-_plugin_ はexportされた `install` 関数をもつモジュールに過ぎません。起動時にAureliaはプラグインモジュールをロードして、Aureliaインスタンスを引数としてそれらの `install` 関数を呼び出します。それによりプラグインはフレームワークを適切に設定することができます。プラグインは非同期の設定タスクを実施できるように、 `install` 関数の返値として `Promise` を返すこともできます。プラグインを書く際には、ビューストラテジーやカスタムエレメントを含め、すべてのメタデータを明示的に指定するようにしてください。
+_plugin_ はexportされた `install` 関数をもつモジュールです。起動時にAureliaはプラグインモジュールをロードして、Aureliaインスタンスを引数としてそれらの `install` 関数を呼び出します。その引数を使って、プラグイン側でフレームワークを適切に設定することができます。プラグインは設定タスクを非同期で実行できるように、 `install` 関数の返値として `Promise` を返すこともできます。プラグインを書く際には、ビューストラテジーやカスタムエレメントを含め、すべてのメタデータを明示的に指定するようにしてください。
 
-アプリケシーション中からプラグインの設定を行うために、 `install` 関数の第二引数として関数を指定することができます。これによってインストール後にプラグインのインストール関数がそれを実行することができるようになります。プラグインの利用者は次のようなコードを書くことになります:
+アプリケシーション中からプラグインを設定するために、 `install` 関数の第二引数として関数を指定することができます。これにより、intall内で渡された関数を実行することができます。ユーザーは次のように書きます:
 
 ```javascript
 aurelia.use.plugin('./path/to/plugin', config => { /* 設定処理 */ });
 ```
 
-> **注:** プラグイン中では名前付け規約に頼ってはいけません。あなたには、あなたのプラグインの利用者がAureliaの規約をどのように変更するかは知るすべがありません。サードパーティのプラグインは様々なコンテキストにおいて、正しく動作することを保証するため、明示的に指定しておかなければなりません。
+> **注:** プラグイン中では名前付け規約に頼ってはいけません。プラグインのユーザーがAureliaの規約を変えてしまっているかもしれません。サードパーティのプラグインは様々なコンテキストにおいて、正しく動作できるように、明示的に書く必要があります。
 
 <h4 id="promises"><a href="#promises">Promise</a></h4>
 
@@ -237,6 +241,28 @@ Aureliaに固有のリソース、Aureliaの _カスタムエレメント_ や�
 ビューではデータバインディングとともに、上記のような様々な種類のリソースを活用することになるでしょう。
 
 >**注:** あなたはおそらく、それぞれのビューにインポートしないといけないなんてうんざりだと思っていることでしょう。ブートストラップ時に、すべてのビューでグローバルなリソースを使えるように、Aureliaを設定できます。 `aurelia.globalizeResources(...resourcePaths)` を使うだけです。 覚えておきましょう。
+
+Aureliaはテンプレートをサポートしていないブラウザに対してpolyfillを行います。ただ、いくつかのテンプレートの機能はpolyfillできず、ワークアラウンドが必要になります。とりわけ、 `<select>` や `<table>` の中で、 `<template>` を使うときに顕著です。次の例は、テンプレートをサポートしていないブラウザでは動作しません
+
+```markup
+  <table>
+    <template repeat.for="customer of customers">
+      <tr>
+        <td>${customer.fullName}</td>
+      </tr>
+    </template>
+  </table>
+```
+
+`<tr>` エレメントを繰り返すためには、 `<tr>` 自身に `repeat` を書く必要があります
+
+```markup
+  <table>
+    <tr repeat.for="customer of customers">
+      <td>${customer.fullName}</td>
+    </tr>
+  </table>
+```
 
 <h3 id="databinding"><a href="#databinding">データバインディング</a></h3>
 
