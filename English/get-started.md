@@ -24,7 +24,18 @@ Next, we need to install [jspm](http://jspm.io/). This will serve as our client-
 
 ## Setting up the Project Structure and Build
 
-With the tooling installed, we can now turn our attention to setting up a basic structure for your app. Begin by [downloading the navigation skeleton](https://github.com/aurelia/skeleton-navigation/releases). Unzip it and rename the folder to _navigation-app_. Inside this folder you will find everything you need including a basic build, package configuration, styles and more. Because we want to teach you how to build your own app, please delete the contents of the _src_ folder as well as the _index.html_ file. We'll learn about how to create these in a minute.
+With the tooling installed, we can now turn our attention to setting up a basic structure for your app. Begin by [downloading the navigation skeleton](https://github.com/aurelia/skeleton-navigation/releases). Unzip it and rename the folder to _navigation-app_.
+
+> **Note:** Alternatively use can use [Yeoman](http://yeoman.io) to "generate" the skeleton project in the target folder, as follows:
+>
+>  ```
+>  npm install -g yo generator-aurelia
+>  yo aurelia
+>  ```
+
+Inside the folder you will now find everything you need including a basic build, package configuration, styles and more.
+
+You may examine the provided _index.html_ file and the rest of the files in _src_, however we recommend deleting both before moving on with this tutorial. That way you can more effectively learn how to build an Aurelia app from scratch.
 
 With all this in place, let's run some commands.
 
@@ -47,7 +58,7 @@ Everything we've done so far is standard Node.js build and package management pr
 
 ## Setting Up The HTML Page
 
-If you've followed along this far, you now have all the libraries, build configuration and tools you need to create amazing JavaScript apps with Aurelia. The next thing to do is open up the _index.html_ file in the root of your project folder. This example file provides a good template for new Aurelia-based web pages/apps.
+If you've followed along this far, you now have all the libraries, build configuration and tools you need to create amazing JavaScript apps with Aurelia. The next thing to do is create the _index.html_ file in the root of your project folder. This example file provides a good template for new Aurelia-based apps.
 
 ### index.html
 ```markup
