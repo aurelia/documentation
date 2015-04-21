@@ -47,7 +47,7 @@ Everything we've done so far is standard Node.js build and package management pr
 
 ## Setting Up The HTML Page
 
-If you've followed along this far, you now have all the libraries, build configuration and tools you need to create amazing JavaScript apps with Aurelia. The next thing we need to do is create our _index.html_ file in the root of our project folder. Create that now and use the markup below.
+If you've followed along this far, you now have all the libraries, build configuration and tools you need to create amazing JavaScript apps with Aurelia. The next thing to do is open up the _index.html_ file in the root of your project folder. This example file provides a good template for new Aurelia-based web pages/apps.
 
 ### index.html
 ```markup
