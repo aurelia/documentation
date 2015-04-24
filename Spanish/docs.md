@@ -6,17 +6,21 @@ Hemos planeado para Aurelia un conjunto muy rico de documentos. Desafortunadamen
 
 <h2 id="browser-support"><a href="#browser-support">Soporte a navegadores</a></h2>
 
-Aurelia se diseñó para navegadores actualizados automática y permanentemente (Evergreen Browsers). Esto incluye Chrome, Firefox, IE11 y Safari 8. Además hemos identificado como dar soporte para IE9 y sucesivos. Para ello necesitas instalar dos polyfills: MutationObservers y WeakMap. Esto se puede conseguir haciendo una instalación vía jspm de `github:webreflection/es6-collections` y `github:polymer/mutationobservers`. Hay que cargar estos dos scripts antes que system.js.
-
-Tu archivo index.html tendría este aspecto:
+Aurelia se diseñó para navegadores actualizados automática y permanentemente (Evergreen Browsers). Esto incluye Chrome, Firefox, IE11 y Safari 8. Además hemos identificado como dar soporte para IE9 y sucesivos. Para ello necesitas instalar un polyfill adicional para MutationObservers. Esto se puede conseguir haciendo una instalación vía jspm de `github:polymer/mutationobservers`. A continuación envuelve la llamada a `aurelia-bootstrpper` de la siguiente manera:
 
 ```markup
-<script src="jspm_packages/github/webreflection/es6-collections@master/es6-collections.js"></script>
 <script src="jspm_packages/github/polymer/mutationobservers@0.4.2/MutationObserver.js"></script>
 <script src="jspm_packages/system.js"></script>
 <script src="config.js"></script>
 <script>
-  System.import('aurelia-bootstrapper');
+  // Loads WeakMap polyfill needed by MutationObservers
+  System.import('core-js').then( function() {
+    // Imports MutationObserver polyfill
+    System.import('mutationobservers').then( function() {
+      // Ensures start of Aurelia when all required IE9 dependencies are loaded
+      System.import('aurelia-bootstrapper');
+    })
+  });
 </script>
 ```
 
