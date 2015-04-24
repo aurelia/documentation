@@ -24,7 +24,18 @@ A continuación, necesitamos instalar [jspm](http://jspm.io/). Este nos servirá
 
 ## Configurar la estructura y el montaje del proyecto
 
-Con las herramientas ya instaladas, podemos ocuparnos ahora de la creación de una estructura básica para tu aplicación. Empieza [descargándote el esqueleto de navegación](https://github.com/aurelia/skeleton-navigation/releases). Descomprímelo y renombra la carpeta a _navigation-app_. Dentro de esta carpeta encontrarás todo lo que necesitas, incluyendo un montaje básico, una configuración de paquetes, estilos y demás. Como queremos enseñarte a construir tu propia aplicación, borra por favor el contenido de la carpeta _src_ y el archivo `index.html`. En un minuto aprenderemos a crearlos.
+Con las herramientas ya instaladas, podemos ocuparnos ahora de la creación de una estructura básica para tu aplicación. Empieza [descargándote el esqueleto de navegación](https://github.com/aurelia/skeleton-navigation/releases). Descomprímelo y renombra la carpeta a _navigation-app_.
+
+> **Nota:** Disponemos de la alternativa de usar [Yeoman](http://yeoman.io) para generar el esqueleto del proyecto en la carpeta de destino, de la siguiente manera:
+>
+>  ```
+>  npm install -g yo generator-aurelia
+>  yo aurelia
+>  ```
+
+Dentro de esta carpeta encontrarás todo lo que necesitas, incluyendo un montaje básico, una configuración de paquetes, estilos y demás.
+
+Puedes examinar el archivo _index.html_ y el resto de archivos en _src_, pero nosotros te recomendamos eliminarlos antes de seguir con este tutorial. De esta manera aprenderás más efectivamente a crear una aplicación Aurelia desde cero.
 
 Con estos archivos colocados en su sitio, vamos a ejecutar algunos comandos.
 
@@ -47,7 +58,7 @@ Hasta aquí todo lo que hemos hecho son procedimientos Node.js normales de monta
 
 ## Configurar la página HTML
 
-Si nos has seguido hasta aquí, ahora dispones de todas las librerías, configuración de montaje y herramientas necesarias para crear aplicaciones sorprendentes con Aurelia. Lo próximo que has de hacer es crear el archivo _index.html_ en la raíz de nuestra carpeta de proyecto. Créalo ahora y utiliza el código que viene a continuación.
+Si nos has seguido hasta aquí, ahora dispones de todas las librerías, configuración de montaje y herramientas necesarias para crear aplicaciones sorprendentes con Aurelia. Lo próximo que has de hacer es crear el archivo _index.html_ en la raíz de nuestra carpeta de proyecto. Este archivo de ejemplo proporciona una buena plantilla para nuevas aplicaciones basadas en Aurelia.
 
 ### index.html
 ```markup
