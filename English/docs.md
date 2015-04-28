@@ -860,11 +860,11 @@ Since the VM's life-cycle is called only once you may have problems to recognize
 To work around this issue implement the method `determineActivationStrategy` in your VM and return hints for the router about what you'd like to happen. E.g in order to force a rebuild of the VM implement it like this:
 
 ```javascript
-import {REPLACE} from 'aurelia-router';
+import {activationStrategy} from 'aurelia-router';
 
 export class YourViewModel {
   determineActivationStrategy(){
-    return REPLACE;
+    return activationStrategy.replace;
   }
 }
 ```
@@ -872,11 +872,11 @@ export class YourViewModel {
 If you just want to force a refresh of the life-cycle (useful with `<compose>` bindings) you may do something like the following:
 
 ```javascript
-import {INVOKE_LIFECYCLE} from 'aurelia-router';
+import {activationStrategy} from 'aurelia-router';
 
 export class YourViewModel {
   determineActivationStrategy(){
-    return INVOKE_LIFECYCLE;
+    return activationStrategy.invokeLifecycle;
   }
 }
 ```
@@ -1008,7 +1008,7 @@ If you aren't using ES7 property initializers, you can put the `@bindable` decor
   name:'myProperty', //name of the property on the class
   attribute:'my-property', //name of the attribute in HTML
   changeHandler:'myPropertyChanged', //name of the method to invoke when the property changes
-  defaultBindingMode: ONE_WAY, //default binding mode used with the .bind command
+  defaultBindingMode: bindingMode.oneWay, //default binding mode used with the .bind command
   defaultValue: undefined //default value of the property, if not bound or set in HTML
 })
 ```

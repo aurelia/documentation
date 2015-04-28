@@ -860,11 +860,11 @@ export class App {
 この問題に対処するには、 `determineActivationStrategy` メソッドを実装し、ルーターに何をすればいいかのヒントを返す必要があります。例として、ビューモデルの再構成を行う場合は、次のように書きます:
 
 ```javascript
-import {REPLACE} from 'aurelia-router';
+import {activationStrategy} from 'aurelia-router';
 
 export class YourViewModel {
   determineActivationStrategy(){
-    return REPLACE;
+    return activationStrategy.replace;
   }
 }
 ```
@@ -872,11 +872,11 @@ export class YourViewModel {
 もしライフサイクルのリフレッシュを行いたいなら ( `<compose>` バインディングと合わせて使うと有効です) 次のようにします:
 
 ```javascript
-import {INVOKE_LIFECYCLE} from 'aurelia-router';
+import {activationStrategy} from 'aurelia-router';
 
 export class YourViewModel {
   determineActivationStrategy(){
-    return INVOKE_LIFECYCLE;
+    return activationStrategy.invokeLifecycle;
   }
 }
 ```
@@ -1008,7 +1008,7 @@ export class MyAttribite {
   name:'myProperty', //クラス中のプロパティ名
   attribute:'my-property', //HTML中の属性名
   changeHandler:'myPropertyChanged', //変更通知コールバック
-  defaultBindingMode: ONE_WAY, //.bindコマンドでのバインディングモード
+  defaultBindingMode: bindingMode.oneWay, //.bindコマンドでのバインディングモード
   defaultValue: undefined //HTML中で指定が無いときのデフォルト値
 })
 ```

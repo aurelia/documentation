@@ -838,11 +838,11 @@ Puesto que el ciclo de vida del modelo-vista (VM) es llamado solo una vez puedes
 Para corregir esto implementa el método `determineActivationStrategy` en tu modelo-vista (VM) y devuelve indicaciones para el enrutador acerca de que es lo que quieres que ocurra. En este ejemplo, para forzar una reconstrucción del modelo-vista impleméntalo como este:
 
 ```javascript
-import {REPLACE} from 'aurelia-router';
+import {activationStrategy} from 'aurelia-router';
 
 export class YourViewModel {
   determineActivationStrategy(){
-    return REPLACE;
+    return activationStrategy.replace;
   }
 }
 ```
@@ -850,11 +850,11 @@ export class YourViewModel {
 Si solo deseas forzar un refresco del ciclo de vida (útil con enlaces `<compose>`) puedes hacer algo como esto:
 
 ```javascript
-import {INVOKE_LIFECYCLE} from 'aurelia-router';
+import {activationStrategy} from 'aurelia-router';
 
 export class YourViewModel {
   determineActivationStrategy(){
-    return INVOKE_LIFECYCLE;
+    return activationStrategy.invokeLifecycle;
   }
 }
 ```
@@ -986,7 +986,7 @@ Si no estás usando inicializadores de propiedad de ES7, puedes añadirle el dec
   name:'myProperty', //name of the property on the class
   attribute:'my-property', //name of the attribute in HTML
   changeHandler:'myPropertyChanged', //name of the method to invoke when the property changes
-  defaultBindingMode: ONE_WAY, //default binding mode used with the .bind command
+  defaultBindingMode: bindingMode.oneWay, //default binding mode used with the .bind command
   defaultValue: undefined //default value of the property, if not bound or set in HTML
 })
 ```
