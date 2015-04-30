@@ -539,6 +539,85 @@ Use the `style` attribute's alias, `css` when doing string interpolation to ensu
 <div style="width: ${width}px; height: ${height}px;"></div>
 ```
 
+<h4 id="adaptive-binding"><a href="#adaptive-binding">Adaptive Binding</a></h4>
+
+Aurelia has an adaptive binding system that chooses from a number of strategies when determining how to most efficiently observe changes.  For more info on how this works checkout [this post](http://blog.durandal.io/2015/04/03/aurelia-adaptive-binding/).  For the most part you don't need to think about these details however it does help to be aware of scenarios that lead to inefficient use of the binding system.
+
+**The #1 thing to be aware of is computed properties (properties with getter functions) are observed using dirty-checking.**  More efficient strategies such as Object.observe and property rewriting are not compatible with these types of properties.  
+
+In today's browser environment dirty-checking is a necessary evil.  Very few browsers support Object.observe at the time of this writing.  Aurelia's dirty-checking mechanism is similar to that used in [Polymer](https://www.polymer-project.org/).  It's very efficient and utilizes Aurelia's micro-task-queue to batch updates to the DOM.  
+
+A few bindings using dirty-checking will not cause performance problems in your application.  Extensive use of dirty-checking may.  Fortunately there's a way you can avoid dirty-checking simple computed properties.  Consider the 'fullName' property in the example below:
+
+```javascript
+export class Person {
+  firstName = 'John';
+  lastName = 'Doe';
+  
+  @computedFrom('firstName', 'lastName')
+  get fullName(){
+    return `${this.firstName} ${this.lastName}`;
+  }
+}
+```
+
+We've used the `@computedFrom` decorator to provide a hint to the Aurelia binding system.  The binding system now knows to only check `fullName` for changes when `firstName` or `lastName` changes.
+
+It's also important to be mindful of how dirty-checking works.  When a property is "dirty-checked" the binding system periodically checks whether the property's current value matches the previously observed value for the property.  By default this check happens every 120 milliseconds.  This means your property's getter function has the potential to be called quite often which means it should be as efficient as possible.  You should also avoid unnecessarily returning new instances of objects or arrays.  Consider the following view:
+
+```markup
+<template>
+  <label for="search">Search Issues:</label>
+  <input id="search" type="text" value.bind="searchText" />
+  <ul>
+    <li repeat.for="issue of filteredIssues">${issue.abstract}</li>
+  </ul>
+</template>
+```
+
+Naive view model implementation:
+
+```javascript
+export class IssueSearch {
+  searchText = '';
+  
+  constructor(allIssues) {
+    this.allIssues = allIssues;
+  }
+  
+  // this returns a new array instance on every call which will in-turn result in a lot of DOM updates.
+  get filteredIssues() {
+    if (this.searchText === '')
+      return [];
+    return this.allIssues.filter(x => x.abstract.indexOf(this.searchText) !== -1);
+  }
+}
+```
+
+Improved view model implementation:
+
+```javascript
+export class IssueSearch {
+  filteredIssues = [];
+  _searchText = '';
+  
+  constructor(allIssues) {
+    this.allIssues = allIssues;
+  }
+  
+  get searchText() {
+    return this._searchText;
+  }
+  set searchText(newValue) {
+    this._searchText = newValue;
+    if (newValue === '') {
+      this.filteredIssues = [];
+    } else {
+      this.filteredIssues = this.allIssues.filter(x => x.abstract.indexOf(this.searchText) !== -1);
+    }
+  }
+}
+```
 
 <h3 id="html-extensions"><a href="#html-extensions">HTML Extensions</a></h3>
 
