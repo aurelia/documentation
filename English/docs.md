@@ -398,6 +398,66 @@ This works with arrays of objects as well:
 </select>
 ```
 
+<h4 id="radios"><a href="#radios">radios</a></h4>
+
+`checked.bind` on an HTMLInputElement has special behavior to support binding non-boolean values such as strings and objects.
+
+A typical radio button group is rendered using a combination of `value.bind` and `repeat`, like this:
+
+```markup
+<label repeat.for="color of colors">
+  <input type="radio" name="clrs" value.bind="color" checked.bind="$parent.favoriteColor" />
+  ${color}
+</label>
+```
+
+Sometimes you want to work with object instances rather than strings.  Here's the markup for building a radio button group from a theoretical array of employee objects:
+
+```markup
+<label repeat.for="employee of employees">
+  <input type="radio" name="emps" model.bind="employee" checked.bind="$parent.employeeOfTheMonth" />
+  ${employee.fullName}
+</label>
+```
+
+The primary difference between this example and the previous example is we're storing the input values in a special property, `model`, instead of the input element's `value` property which only accepts strings.
+
+You can also bind a radio group to a boolean property like this:
+
+```markup
+<label><input type="radio" name="tacos" model.bind="null" checked.bind="likesTacos" />Unanswered</label>
+<label><input type="radio" name="tacos" model.bind="true" checked.bind="likesTacos" />Yes</label>
+<label><input type="radio" name="tacos" model.bind="false" checked.bind="likesTacos" />No</label>
+```
+
+<h4 id="checkboxes"><a href="#checkboxes">checkboxes</a></h4>
+
+To better support multi-select scenarios Aurelia enables binding an input element's checked property to an array.  Here's how you'd bind an array of strings, `favoriteColors`:
+
+```markup
+<label repeat.for="color of colors">
+  <input type="checkbox" value.bind="color" checked.bind="$parent.favoriteColors" />
+  ${color}
+</label>
+```
+
+This works with arrays of objects as well:
+
+```markup
+<label repeat.for="employee of employees">
+  <input type="checkbox" model.bind="employee" checked.bind="$parent.favoriteEmployees" />
+  ${employee.fullName}
+</label>
+```
+
+You can of course bind each checkboxs to it's boolean properties like this:
+
+```markup
+<li><label><input type="checkbox" checked.bind="wantsFudge" />Fudge</label></li>
+<li><label><input type="checkbox" checked.bind="wantsSprinkles" />Sprinkles</label></li>
+<li><label><input type="checkbox" checked.bind="wantsCherry" />Cherry</label></li>
+```
+
 <h4 id="innerhtml"><a href="#innerhtml">innerHTML</a></h4>
 
 You can bind an element's `innerHTML` property using the `innerhtml` attribute:
