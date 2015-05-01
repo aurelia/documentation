@@ -1403,7 +1403,7 @@ export class WebAPI {
     }
 
     getAllContacts(){
-        return this.http.get('uri goes here');
+        return this.http.get('url goes here');
     }
 }
 
@@ -1420,46 +1420,46 @@ export class HttpClient {
     return this;
   }
 
-  createRequest(uri){
+  createRequest(url){
     let builder = new RequestBuilder(this);
 
-    if(uri) {
-      builder.withUri(uri);
+    if(url) {
+      builder.withUrl(url);
     }
 
     return builder;
   }
 
-  delete(uri){
-    return this.createRequest(uri).asDelete().send();
+  delete(url){
+    return this.createRequest(url).asDelete().send();
   }
 
-  get(uri){
-    return this.createRequest(uri).asGet().send();
+  get(url){
+    return this.createRequest(url).asGet().send();
   }
 
-  head(uri){
-    return this.createRequest(uri).asHead().send();
+  head(url){
+    return this.createRequest(url).asHead().send();
   }
 
-  jsonp(uri, callbackParameterName='jsoncallback'){
-    return this.createRequest(uri).asJsonp(callbackParameterName).send();
+  jsonp(url, callbackParameterName='jsoncallback'){
+    return this.createRequest(url).asJsonp(callbackParameterName).send();
   }
 
-  options(uri){
-    return this.createRequest(uri).asOptions().send();
+  options(url){
+    return this.createRequest(url).asOptions().send();
   }
 
-  put(uri, content){
-    return this.createRequest(uri).asPut().withContent(content).send();
+  put(url, content){
+    return this.createRequest(url).asPut().withContent(content).send();
   }
 
-  patch(uri, content){
-    return this.createRequest(uri).asPatch().withContent(content).send();
+  patch(url, content){
+    return this.createRequest(url).asPatch().withContent(content).send();
   }
 
-  post(uri, content){
-    return this.createRequest(uri).asPost().withContent(content).send();
+  post(url, content){
+    return this.createRequest(url).asPost().withContent(content).send();
   }
 }
 ```
@@ -1485,26 +1485,26 @@ There are two other apis that are worth noting. You can use `configure` to acces
 ```javascript
 var client = new HttpClient()
   .configure(x => {
-    x.withBaseUri('http://aurelia.io');
+    x.withBaseUrl('http://aurelia.io');
     x.withHeader('Authorization', 'bearer 123');
   });
 
 client.get('some/cool/path');
 ```
 
-In this case, all requests from the client will have the baseUri of 'http://aurelia.io' and will have the specified Authorization header. The same API is available via the request builder. So, you can accomplish the same thing on an individual request like this:
+In this case, all requests from the client will have the baseUrl of 'http://aurelia.io' and will have the specified Authorization header. The same API is available via the request builder. So, you can accomplish the same thing on an individual request like this:
 
 ```javascript
 var client = new HttpClient();
 
 client.createRequest('some/cool/path')
   .asGet()
-  .withBaseUri('http://aurelia.io')
+  .withBaseUrl('http://aurelia.io')
   .withHeader('Authorization', 'bearer 123')
   .send();
 ```
 
-The fluent API has the following chainable methods: `asDelete()`, `asGet()`, `asHead()`, `asOptions()`, `asPatch()`, `asPost()`, `asPut()`, `asJsonp()`, `withUri()`, `withBaseUri()`, `withContent()`, `withParams()`, `withResponseType()`, `withTimeout()`, `withHeader()`, `withCredentials()`, `withReviver()`, `withReplacer()`, `withProgressCallback()`, and `withCallbackParameterName()`.
+The fluent API has the following chainable methods: `asDelete()`, `asGet()`, `asHead()`, `asOptions()`, `asPatch()`, `asPost()`, `asPut()`, `asJsonp()`, `withUrl()`, `withBaseUrl()`, `withContent()`, `withParams()`, `withResponseType()`, `withTimeout()`, `withHeader()`, `withCredentials()`, `withReviver()`, `withReplacer()`, `withProgressCallback()`, and `withCallbackParameterName()`.
 
 <h2 id="customization"><a href="#customization">Customization</a></h2>
 
