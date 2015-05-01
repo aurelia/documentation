@@ -86,7 +86,7 @@ aurelia.use.plugin('./path/to/plugin', config => { /* configuration work */ });
 
 <h4 id="promises"><a href="#promises">Promises</a></h4>
 
-By default, Aurelia uses ES6 native Promises or a polyfill. However, you can replace this with the excellent [Bluebird](https://github.com/petkaantonov/bluebird) Promise library. Simply include it in your page before you reference the other scripts. It will provide its own standards-compliant Promise implementation which is currently faster than native and has better debugging support. Additionally, when used in combination with the Babel transpiler, you can use [coroutines](https://babeljs.io/docs/usage/transformers/#bluebird-coroutines) for improved async code.
+By default, Aurelia uses ES6 native Promises or a polyfill. However, you can replace this with the excellent [Bluebird](https://github.com/petkaantonov/bluebird) Promise library. Simply include it in your page before you reference the other scripts. It will provide its own standards-compliant Promise implementation which is currently faster than native and has better debugging support. Additionally, when used in combination with the Babel transpiler, you can use [coroutines](http://babeljs.io/docs/usage/transformers/other/bluebird-coroutines/) for improved async code.
 
 <h3 id="the-aurelia-object"><a href="#the-aurelia-object">The Aurelia Object</a></h3>
 
