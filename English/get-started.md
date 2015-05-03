@@ -185,36 +185,22 @@ Since this is a navigation app, we should probably add some more screens and set
 ### app.js
 
 ```javascript
-import {inject} from 'aurelia-framework';
-import {Router} from 'aurelia-router';
 import 'bootstrap';
 import 'bootstrap/css/bootstrap.css!';
 
-@inject(Router)
 export class App {
-  constructor(router) {
+  configureRouter(config, router){
+    config.title = 'Aurelia';
+    config.map([
+      { route: ['','welcome'],  moduleId: './welcome',      nav: true, title:'Welcome' }
+    ]);
+
     this.router = router;
-    this.router.configure(config => {
-      config.title = 'Aurelia';
-      config.map([
-        { route: ['','welcome'],  moduleId: './welcome',      nav: true, title:'Welcome' }
-      ]);
-    });
   }
 }
 ```
 
-Ok, there's some really interesting new stuff here. We want to use the router, so we begin by importing it at the top of the file. This is the power of the ES6/ES7 again. We then create our _App_ class to hold our data and behavior for the main application layout. Take a look at the constructor function. It's expecting something to pass in a _router_ instance when the App class is created. Where does that come from?
-
-Aurelia creates the UI components as needed to render your app. It does this by using a [Dependency Injection](http://en.wikipedia.org/wiki/Dependency_injection) container capable of providing constructor dependencies like this. How does the DI system know what to provide? All you have to do is add an ES7 `inject` decorator to your class that passes a list of types to provide instances of. There should be one argument for each constructor parameter. In the above example, we needed a router instance, so we added the `Router` type.
-
-> **Note:** If you don't like using a decorator in this case, you can also add a static `inject` method or property to the class that returns an array of types to inject.
-
-We need to set the router to a public property on the class. The property must be named _router_. This is important. Don't get any fancy ideas here like naming it _taco_ or something like that ok? It's a router..so name it _router_ and everyone will be happy. Did we mention you **must** name it _router_?
-
-> **Note:** We hope to lift this silly restriction in an upcoming update.
-
-Alrighty. Time to configure the router. It's easy. You can set a title to use when generating the document's title. Then you set up your routes. Each route has the following properties:
+Ok, there's some really interesting new stuff here. We want to use the router, so we begin by creating our _App_ class and having it implement the `configureRouter` callback. You can set a title to use when generating the document's title. Then you map your routes. Each route has the following properties:
 
 * `route`: This is a pattern which, when matched, will cause the router to navigate to this route. You can use static routes like above, but you can also use parameters like this: `customer/:id`. There's also support for wildcard routes and query string parameters. The route can be a single string pattern or an array of patterns.
 * `moduleId`: This is a path relative to the current view-model which specifies the view/view-model pair you want to render for this route.
@@ -261,7 +247,7 @@ Following our simple app-building convention, the `App` class will be databound 
 
 Also on the `li` you can see a demonstration of how to use string interpolation to dynamically add/remove classes. Further down in the view, there's a second `ul`. See the binding on its single child `li`? `if.bind="router.isNavigating"` This conditionally adds/removes the `li` based on the value of the bound expression. Conveniently, the router will update its `isNavigating` property whenever it is....navigating.
 
-The last piece we want to look at is the `router-view` element near the bottom of the view. Any time you have a `Router` in your view-model, you need to have a `router-view` in your view. These two are comrades and will connect automatically such that whatever route the `Router` says is current will be displayed in the `router-view`.
+The last piece we want to look at is the `router-view` element near the bottom of the view. This represents the location in the DOM where the current "page" will be rendered, based on the configured router's state.
 
 With this in place, go ahead and start the dev server with `gulp watch`. Open the browser and have a look. You should now see a main navigation with a single selected tab for our "welcome" route. The _welcome_ view should display in the main content area and function as before. Open up the browser's debug tools and have a look at the live DOM. You will see that the _welcome_ view content is displayed inside the `router-view`.
 
@@ -276,22 +262,18 @@ Let's display some images from Flickr. To do that, let's first configure our rou
 ### app.js (updated)
 
 ```javascript
-import {inject} from 'aurelia-framework';
-import {Router} from 'aurelia-router';
 import 'bootstrap';
 import 'bootstrap/css/bootstrap.css!';
 
-@inject(Router)
 export class App {
-  constructor(router) {
+  configureRouter(config, router){
+    config.title = 'Aurelia';
+    config.map([
+      { route: ['','welcome'],  moduleId: './welcome',      nav: true, title:'Welcome' },
+      { route: 'flickr',        moduleId: './flickr',       nav: true }
+    ]);
+
     this.router = router;
-    this.router.configure(config => {
-      config.title = 'Aurelia';
-      config.map([
-        { route: ['','welcome'],  moduleId: './welcome',      nav: true, title:'Welcome' },
-        { route: 'flickr',        moduleId: './flickr',       nav: true }
-      ]);
-    });
   }
 }
 ```
@@ -334,7 +316,25 @@ jspm install aurelia-http-client
 
 Now I hope you see the power of the integrated package manager and loader. You simply install a package with jspm and then you import it in your code using the same exact identifier. You can install anything from GitHub or NPM in this way.
 
-Like before, we're using dependency injection to have the `HttpClient` instance provided to the view-model. We don't use it, however, until the _activate_ method. What's the significance of that you say? I was just getting to that...
+Now, take a look at that ES7 `inject` decorator? What does that do? Well, Aurelia creates the UI components as needed to render your app. It does this by using a [Dependency Injection](http://en.wikipedia.org/wiki/Dependency_injection) container capable of providing constructor dependencies like HttpClient. How does the DI system know what to provide? All you have to do is add that ES7 `inject` decorator to your class that passes a list of types to provide instances of. There should be one argument for each constructor parameter. In the above example, we needed an HttpClient instance, so we added the `HttpClient` type in the `inject` decorator and then added an corresponding parameter in the constructor.
+
+> **Note:** If you don't like using a decorator in this case, you can also add a static `inject` method or property to the class that returns an array of types to inject.
+
+If you are using TypeScript >= 1.5, you can add the `autoinject()` decorator to your class and leave out the Types in the decorator call, but just use them on the constructor's signature. Here's what that would look like:
+
+```javascript
+import {autoinject} from 'aurelia-framework';
+import {HttpClient} from 'aurelia-http-client';
+
+@autoinject()
+export class Flickr{
+  ...
+
+  constructor(public http:Flickr){}
+
+  ...
+}
+```
 
 Aurelia's router enforces a lifecycle on view-models whenever routes change. This is referred to as the "Screen Activation Lifecycle". View-models can optionally hook into various parts of the lifecycle to control flow into and out of the route. When your route is ready to activate the router will call the `activate` hook, if present. In the above code, we use this hook to call the Flickr api and get some images back. Notice that we return the result of the http request back from our `activate` method. All the `HttpClient` APIs return a `Promise`. The router will detect a `Promise` and wait to complete navigation until after it resolves. So, in this way, you can optionally force the router to delay displaying the page until it is populated with data.
 
@@ -461,9 +461,9 @@ To recap: First we have a `require` element. Aurelia uses this to load the custo
 
 > **Note:** You can also load app-wide elements and other behaviors for convenience so you don't have to require common resources in every view.
 
-You may wonder how Aurelia determines the name of the custom element. By convention, it will use the export name, lowered and hyphenated. However, you can always be explicit. To do so, add more metadata by chaining `.customElement('nav-bar')` on `Behavior`. What if your custom element doesn't have a view template because it's all implemented in code? No problem, chain `.noView()`. Want to use ShadowDOM for your custom element? Do it like a pro by chaining `.useShadowDOM()`. Don't worry about whether or not the browser supports it. We have an efficient, full-fidelity ShadowDOM fallback implementation.
+You may wonder how Aurelia determines the name of the custom element. By convention, it will use the export name, lowered and hyphenated. However, you can always be explicit. To do so, add `@customElement('nav-bar')` decorator. What if your custom element doesn't have a view template because it's all implemented in code? No problem, add `@noView()`. Want to use ShadowDOM for your custom element? Do it like a pro by using `@useShadowDOM()`. Don't worry about whether or not the browser supports it. We have an efficient, full-fidelity ShadowDOM fallback implementation.
 
-In addition to creating custom elements, you can also create standalone attributes which add new behavior to existing elements. We call these _Attached Behaviors_. On occasion you may need to create _Template Controllers_ for dynamically adding and removing DOM from the view, like the `repeat` and `if` we used above. That's not all you can do either. Aurelia's templating engine is both powerful and extensible.
+In addition to creating custom elements, you can also create custom attributes which add new behavior to existing elements. On occasion you may even need an attribute to dynamically control templates by adding and removing DOM from the view, like the `repeat` and `if` we used above. You can do all that and much more with Aurelia's powerful and extensible templating engine.
 
 ## Bonus: Leveraging Child Routers
 
@@ -474,23 +474,19 @@ First, let's update our _app.js_ with the new configuration. Here's what it shou
 ### app.js (updated...again)
 
 ```javascript
-import {inject} from 'aurelia-framework';
-import {Router} from 'aurelia-router';
 import 'bootstrap';
 import 'bootstrap/css/bootstrap.css!';
 
-@inject(Router)
 export class App {
-  constructor(router) {
+  configureRouter(config, router){
+    config.title = 'Aurelia';
+    config.map([
+      { route: ['','welcome'],  moduleId: './welcome',      nav: true, title:'Welcome' },
+      { route: 'flickr',        moduleId: './flickr',       nav: true },
+      { route: 'child-router',  moduleId: './child-router', nav: true, title:'Child Router' }
+    ]);
+
     this.router = router;
-    this.router.configure(config => {
-      config.title = 'Aurelia';
-      config.map([
-        { route: ['','welcome'],  moduleId: './welcome',      nav: true, title:'Welcome' },
-        { route: 'flickr',        moduleId: './flickr',       nav: true },
-        { route: 'child-router',  moduleId: './child-router', nav: true, title:'Child Router' }
-      ]);
-    });
   }
 }
 ```
@@ -500,22 +496,17 @@ Nothing new there. The interesting part is what's inside _child-router.js_...
 ### child-router.js
 
 ```javascript
-import {inject} from 'aurelia-framework';
-import {Router} from 'aurelia-router';
-
-@inject(Router)
 export class ChildRouter{
   heading = 'Child Router';
 
-  constructor(router){
+  configureRouter(config, router){
+    config.map([
+      { route: ['','welcome'],  moduleId: './welcome',      nav: true, title:'Welcome' },
+      { route: 'flickr',        moduleId: './flickr',       nav: true },
+      { route: 'child-router',  moduleId: './child-router', nav: true, title:'Child Router' }
+    ]);
+
     this.router = router;
-    router.configure(config => {
-      config.map([
-        { route: ['','welcome'],  moduleId: './welcome',      nav: true, title:'Welcome' },
-        { route: 'flickr',        moduleId: './flickr',       nav: true },
-        { route: 'child-router',  moduleId: './child-router', nav: true, title:'Child Router' }
-      ]);
-    });
   }
 }
 ```
