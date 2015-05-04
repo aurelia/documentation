@@ -258,7 +258,7 @@ In your view you will often leverage the different types of resources mentioned 
 
 >**Note:** You may be concerned about the tediousness of having to import things into each view. Remember, during the bootstrapping phase you can configure Aurelia with global resources to be available in every view. Just use `aurelia.globalizeResources(...resourcePaths)`.
 
-Aurelia polyfills browsers that don't support templates. However, a few features of templates can't be polyfilled and require workarounds. In particular this occurs when adding `<tamplate>` elements inside `<select>` and `<table>` elements. The following can't be done in a browser that doesn't natively support templates:
+Aurelia polyfills browsers that don't support templates. However, a few features of templates can't be polyfilled and require workarounds. In particular this occurs when adding `<template>` elements inside `<select>` and `<table>` elements. The following can't be done in a browser that doesn't natively support templates:
 
 ```markup
   <table>
