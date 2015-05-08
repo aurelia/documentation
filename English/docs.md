@@ -207,6 +207,20 @@ class CustomerDetail
   @decorators:Decorators.transient().inject(HttpClient);
 ```
 
+<h3 id="parent-vm-reference"><a href="#parent-vm-reference">Parent View Models</a></h3>
+
+By default a View-model's access is limited to injected objects as well as children of the
+class. Sometimes it may be desirable to refer to objects and methods on a parent View-model,
+which can be achieved by storing the parent during the _bind_ method of the view lifecycle:
+
+```javascript
+class ChildViewModel {
+  bind(bindingContext) {
+    this.$parent = bindingContext;
+  }
+}
+```
+
 <h2 id="templating"><a href="#templating">Templating</a></h2>
 
 Aurelia's templating engine is responsible for loading your views and their required resources, compiling your HTML for optimal performance and rendering your UI to the screen. To create a view, all you need to do is author an HTML file with an `HTMLTemplate` inside. Here's a simple view:
@@ -374,7 +388,7 @@ You can also use the special `.view-model` binding in conjunction with `ref` to 
 
 <h4 id="select-elements"><a href="#select-elements">select elements</a></h4>
 
-`value.bind` on an HTMLSelectElement has special behavior to support the element's single and multi-select modes as well as binding to objects.  
+`value.bind` on an HTMLSelectElement has special behavior to support the element's single and multi-select modes as well as binding to objects.
 
 A typical select element is rendered using a combination of `value.bind` and `repeat`, like this:
 
@@ -559,9 +573,9 @@ Use the `style` attribute's alias, `css` when doing string interpolation to ensu
 
 Aurelia has an adaptive binding system that chooses from a number of strategies when determining how to most efficiently observe changes.  For more info on how this works checkout [this post](http://blog.durandal.io/2015/04/03/aurelia-adaptive-binding/).  For the most part you don't need to think about these details however it does help to be aware of scenarios that lead to inefficient use of the binding system.
 
-**The #1 thing to be aware of is computed properties (properties with getter functions) are observed using dirty-checking.**  More efficient strategies such as Object.observe and property rewriting are not compatible with these types of properties.  
+**The #1 thing to be aware of is computed properties (properties with getter functions) are observed using dirty-checking.**  More efficient strategies such as Object.observe and property rewriting are not compatible with these types of properties.
 
-In today's browser environment dirty-checking is a necessary evil.  Very few browsers support Object.observe at the time of this writing.  Aurelia's dirty-checking mechanism is similar to that used in [Polymer](https://www.polymer-project.org/).  It's very efficient and utilizes Aurelia's micro-task-queue to batch updates to the DOM.  
+In today's browser environment dirty-checking is a necessary evil.  Very few browsers support Object.observe at the time of this writing.  Aurelia's dirty-checking mechanism is similar to that used in [Polymer](https://www.polymer-project.org/).  It's very efficient and utilizes Aurelia's micro-task-queue to batch updates to the DOM.
 
 A few bindings using dirty-checking will not cause performance problems in your application.  Extensive use of dirty-checking may.  Fortunately there's a way you can avoid dirty-checking simple computed properties.  Consider the 'fullName' property in the example below:
 
