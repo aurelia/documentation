@@ -1516,9 +1516,9 @@ The fluent API has the following chainable methods: `asDelete()`, `asGet()`, `as
 How are views and view-models linked? Our simple convention is based on module id. If you've got a view-model with id (essentially path) './foo/bar/baz' then that will map to `./foo/bar/baz.js` and `./foo/bar/baz.html` by default. Suppose you want to follow a different convention though. What if all your view-models live in a `view-models` folder and you want their views to live in a `views` folder? How would you do that? In order to do this, you want to change the behavior of the Conventional View Strategy. Here's how you do it:
 
 ```javascript
-import {ConventionalView} from 'aurelia-framework';
+import {ConventionalViewStrategy} from 'aurelia-framework';
 
-ConventionalView.convertModuleIdToViewUrl = function(moduleId){
+ConventionalViewStrategy.convertModuleIdToViewUrl = function(moduleId){
   return moduleId.replace('view-models', 'views') + '.html';
 }
 ```
