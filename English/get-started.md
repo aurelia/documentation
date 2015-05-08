@@ -180,7 +180,7 @@ You can now browse to [http://localhost:9000/](http://localhost:9000/) to see th
 
 ## Adding Navigation
 
-Since this is a navigation app, we should probably add some more screens and set up a client-side router don't you think? Let's begin by renaming our _app.js_ and _app.html_ to _welcome.js_ and _welcome.html_ respectively. This will be the first page of our app. Now, lets create a new _app.js_ and _app.html_ which will serve as our "layout" or "master page". The view will contain our navigation UI and the content placeholder for the current page and the view-model will have a router instance, configured with our routes. We'll start with the view-model so you can see how to set up the router:
+Since this is a navigation app, we should probably add some more screens and set up a client-side router, don't you think? Let's begin by renaming our _app.js_ and _app.html_ to _welcome.js_ and _welcome.html_ respectively. This will be the first page of our app. Now, lets create a new _app.js_ and _app.html_ which will serve as our "layout" or "master page". The view will contain our navigation UI and the content placeholder for the current page and the view-model will have a router instance, configured with our routes. We'll start with the view-model so you can see how to set up the router:
 
 ### app.js
 
@@ -192,7 +192,7 @@ export class App {
   configureRouter(config, router){
     config.title = 'Aurelia';
     config.map([
-      { route: ['','welcome'],  moduleId: './welcome',      nav: true, title:'Welcome' }
+      { route: ['','welcome'], name: 'welcome',  moduleId: './welcome',      nav: true, title:'Welcome' }
     ]);
 
     this.router = router;
@@ -203,6 +203,7 @@ export class App {
 Ok, there's some really interesting new stuff here. We want to use the router, so we begin by creating our _App_ class and having it implement the `configureRouter` callback. You can set a title to use when generating the document's title. Then you map your routes. Each route has the following properties:
 
 * `route`: This is a pattern which, when matched, will cause the router to navigate to this route. You can use static routes like above, but you can also use parameters like this: `customer/:id`. There's also support for wildcard routes and query string parameters. The route can be a single string pattern or an array of patterns.
+* `name`: This is a name to use in code when generating URLs for the route.
 * `moduleId`: This is a path relative to the current view-model which specifies the view/view-model pair you want to render for this route.
 * `title`: You can optionally provide a title to be used in generating the document's title.
 * `nav`: If this route should be included in the _navigation model_ because you want to generate a UI with it, set this to true (or a number indicating order).
@@ -269,8 +270,8 @@ export class App {
   configureRouter(config, router){
     config.title = 'Aurelia';
     config.map([
-      { route: ['','welcome'],  moduleId: './welcome',      nav: true, title:'Welcome' },
-      { route: 'flickr',        moduleId: './flickr',       nav: true }
+      { route: ['','welcome'], name: 'welcome',  moduleId: './welcome',      nav: true, title:'Welcome' },
+      { route: 'flickr',       name: 'flickr',   moduleId: './flickr',       nav: true }
     ]);
 
     this.router = router;
@@ -481,9 +482,9 @@ export class App {
   configureRouter(config, router){
     config.title = 'Aurelia';
     config.map([
-      { route: ['','welcome'],  moduleId: './welcome',      nav: true, title:'Welcome' },
-      { route: 'flickr',        moduleId: './flickr',       nav: true },
-      { route: 'child-router',  moduleId: './child-router', nav: true, title:'Child Router' }
+      { route: ['','welcome'], name: 'welcome',      moduleId: './welcome',      nav: true, title:'Welcome' },
+      { route: 'flickr',       name: 'flickr',       moduleId: './flickr',       nav: true },
+      { route: 'child-router', name: 'childRouter',  moduleId: './child-router', nav: true, title:'Child Router' }
     ]);
 
     this.router = router;
@@ -501,9 +502,9 @@ export class ChildRouter{
 
   configureRouter(config, router){
     config.map([
-      { route: ['','welcome'],  moduleId: './welcome',      nav: true, title:'Welcome' },
-      { route: 'flickr',        moduleId: './flickr',       nav: true },
-      { route: 'child-router',  moduleId: './child-router', nav: true, title:'Child Router' }
+      { route: ['','welcome'], name: 'welcome',     moduleId: './welcome',      nav: true, title:'Welcome' },
+      { route: 'flickr',       name: 'flickr',      moduleId: './flickr',       nav: true },
+      { route: 'child-router', name: 'childRouter', moduleId: './child-router', nav: true, title:'Child Router' }
     ]);
 
     this.router = router;
