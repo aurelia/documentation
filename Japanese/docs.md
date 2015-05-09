@@ -38,7 +38,7 @@ import {LogManager} from 'aurelia-framework';
 import {ConsoleAppender} from 'aurelia-logging-console';
 
 LogManager.addAppender(new ConsoleAppender());
-LogManager.setLevel(LogManager.levels.debug);
+LogManager.setLevel(LogManager.logLevel.debug);
 
 export function configure(aurelia) {
   aurelia.use
@@ -68,15 +68,15 @@ export function configure(aurelia) {
 
 <h3 id="logging"><a href="#logging">ロギング</a></h3>
 
-Aureliaにはシンプルなログ抽象化があり、フレームワーク自体も利用しています。デフォルトではこれは何もしません。上記の設定例では、ログをコンソールに出力するアペンダーをインストールする方法を示しています。ログレベルの設定方法も同様に理解できるでしょう。ログレベルのオプションは: `none` , `error` , `warn` , `info` そして `debug` があります。
+Aureliaにはシンプルなログ抽象化があり、フレームワーク自体も利用しています。デフォルトではこれは何もしません。上記の設定例では、ログをコンソールに出力するアペンダーをインストールする方法を示しています。ログレベルの設定方法も同様に理解できるでしょう。`logLevel` enumeration に含まれる値は: `none` , `error` , `warn` , `info` そして `debug` があります。
 
 自分でアペンダーを作成することも簡単です。アペンダーのインターフェースに合致するようなクラスを作成するだけです。やり方は、我々の [コンソールログアペンダーのソースコード](https://github.com/aurelia/logging-console/blob/master/src/index.js) を見てください。
 
 <h3 id="plugins"><a href="#plugins">プラグイン</a></h3>
 
-_plugin_ はexportされた `install` 関数をもつモジュールです。起動時にAureliaはプラグインモジュールをロードして、Aureliaインスタンスを引数としてそれらの `install` 関数を呼び出します。その引数を使って、プラグイン側でフレームワークを適切に設定することができます。プラグインは設定タスクを非同期で実行できるように、 `install` 関数の返値として `Promise` を返すこともできます。プラグインを書く際には、ビューストラテジーやカスタムエレメントを含め、すべてのメタデータを明示的に指定するようにしてください。
+_plugin_ はexportされた `configure` 関数をもつモジュールです。起動時にAureliaはプラグインモジュールをロードして、Aureliaインスタンスを引数としてそれらの `configure` 関数を呼び出します。その引数を使って、プラグイン側でフレームワークを適切に設定することができます。プラグインは設定タスクを非同期で実行できるように、 `configure` 関数の返値として `Promise` を返すこともできます。プラグインを書く際には、ビューストラテジーやカスタムエレメントを含め、すべてのメタデータを明示的に指定するようにしてください。
 
-アプリケシーション中からプラグインを設定するために、 `install` 関数の第二引数として関数を指定することができます。これにより、intall内で渡された関数を実行することができます。ユーザーは次のように書きます:
+アプリケシーション中からプラグインを設定するために、 `configure` 関数の第二引数として関数を指定することができます。これにより、configure内で渡された関数を実行することができます。ユーザーは次のように書きます:
 
 ```javascript
 aurelia.use.plugin('./path/to/plugin', config => { /* 設定処理 */ });
@@ -86,7 +86,7 @@ aurelia.use.plugin('./path/to/plugin', config => { /* 設定処理 */ });
 
 <h4 id="promises"><a href="#promises">Promise</a></h4>
 
-デフォルトでは、AureliaはES6ネイティブ実装のPromise、もしくはポリフィルのPromiseを使います。一方、この挙動を置き換えて、素晴らしい [Bluebird](https://github.com/petkaantonov/bluebird) Promiseライブラリを使うようにすることもできます。ページで他のスクリプトを読み込む前にこのライブラリを読み込むだけです。このライブラリは独自の標準準拠のPromise実装を持ち、現在のところ言語ネイティブの実装より高速で、デバッグサポートも良いものです。それにくわえて、Babelトランスパイラと組み合わせて使う際には、 [コルーチン](https://babeljs.io/docs/usage/transformers/#bluebird-coroutines) を非同期処理の改善に利用できます。
+デフォルトでは、AureliaはES6ネイティブ実装のPromise、もしくはポリフィルのPromiseを使います。一方、この挙動を置き換えて、素晴らしい [Bluebird](https://github.com/petkaantonov/bluebird) Promiseライブラリを使うようにすることもできます。ページで他のスクリプトを読み込む前にこのライブラリを読み込むだけです。このライブラリは独自の標準準拠のPromise実装を持ち、現在のところ言語ネイティブの実装より高速で、デバッグサポートも良いものです。それにくわえて、Babelトランスパイラと組み合わせて使う際には、 [コルーチン](http://babeljs.io/docs/usage/transformers/other/bluebird-coroutines/) を非同期処理の改善に利用できます。
 
 <h3 id="the-aurelia-object"><a href="#the-aurelia-object">Aureliaオブジェクト</a></h3>
 
@@ -140,7 +140,23 @@ class Flickr
   @inject:[HttpClient]
 ```
 
-injectの配列に入れるものはコンストラクタに必要な型だけではありません。 `リゾルバ` インスタンスでも良いです。例として、下記を見てください:
+TypeScriptを利用しているなら、`--emitDecoratorMetadata` コンパイラオプションと、 `@autoinject()` デコレータを利用して、フレームワークにTSの型情報を読み込ませることが可能です。それにより、型を型を繰り返し書く必要がありません。次のようになります:
+
+```javascript
+import {autoinject} from 'aurelia-framework';
+import {HttpClient} from 'aurelia-http-client';
+
+@autoinject()
+export class CustomerDetail{
+    constructor(http:HttpClient){
+        this.http = http;
+    }
+}
+```
+
+> **注:** このこのコンパイラオプションの実装は面白いです。実際のところ、この挙動はすべてのデコレータに共通のものです。そのため、他のデコレータが同じクラスに付いている場合は、 `autoinject` を含める必要はありません。その場合でも、AureliaのDIフレームワークは型情報を見つけることができます。
+
+明示的に依存を示す場合には、 コンストラクタの引数型以外のものを含めることができることも知っておくとよいでしょう。 `リゾルバ` のインスタンスも利用できます。例として、下記を見てください:
 
 ```javascript
 import {Lazy, inject} from 'aurelia-framework';
@@ -178,7 +194,7 @@ export class CustomerDetail{
 }
 ```
 
-この例では、DIコンテナが `CustomerDetail` のインスタンスを要求されるたびに、コンテナはシングルトンではなく、新しいインスタンスを生成して返します。 `singleton` や `transient` はフレームワークが提供する、すぐに使えるレジストレーションです。 `Registration` を継承して独自のレジストレーションを作成することも可能です。
+この例では、DIコンテナが `CustomerDetail` のインスタンスを要求されるたびに、コンテナはシングルトンではなく、新しいインスタンスを生成して返します。 `singleton` や `transient` はフレームワークが提供する、すぐに使えるレジストレーションです。また、独自のレジストレーションを作成することも可能です。`register(container, key, fn)` メソッドを実装したクラスを作成し、そのインスタンスを `registration` デコレータで指定します。 
 
 デコレータを使えない、もしくは使いたくないんだけど、という方も心配しないでください。フォールバックの仕組みを用意しています。スタティックな `decorators` プロパティもしくはメソッドを用意し、チェイン可能な `Decorators` ヘルパを使うだけです。このヘルパには我々が提供するすべてのデコレータを取得するメソッドを持っていますから、どんな言語でも利用することができます。上記の例をCoffeeScriptで書いてみます:
 
@@ -189,6 +205,20 @@ Decorators = require('aurelia-framework').Decorators;
 class CustomerDetail
   constructor: (@http) ->
   @decorators:Decorators.transient().inject(HttpClient);
+```
+
+<h3 id="parent-vm-reference"><a href="#parent-vm-reference">親ビューモデル</a></h3>
+
+デフォルトでは、ビューモデルがアクセスできる範囲は、インジェクトされたオブジェクト、および自分自身の子供に限定されます。親ビューモデルのもつオブジェクトやメソッドにアクセスしたい場合、ビューライフサイクルの _bind_ メソッド中で親ビューモデルへのリファレンスを保持することで、アクセスが可能になります。
+
+
+
+```javascript
+class ChildViewModel {
+  bind(bindingContext) {
+    this.$parent = bindingContext;
+  }
+}
 ```
 
 <h2 id="templating"><a href="#templating">テンプレート</a></h2>
@@ -236,7 +266,7 @@ Aureliaに固有のリソース、Aureliaの _カスタムエレメント_ や�
     - 例. `<require from="./nav-bar" as="foo-bar"></require>` - `nav-bar` 要素の代わりに、 `foo-bar` として使うことができます。(これはES6にもとづいています。ES6では、リネームはエイリアスの代替として考えられており、それはエイリアスが厳密に型の名前を変えてしまうからです。)
 * パッケージ - requireは、一つのビューにインポートされることになる複数リソースからなるモジュールを指すこともできます。
 * 拡張性 - あなたは新しいタイプのリソースを定義することも可能です。このように読み込まれた時に、独自のローディング(非同期に一度だけ)や、登録(ビューごとに)を行うようにできます。これは宣言的で、拡張可能なリソースローディングパイプラインです。
-* ES6 - コードはHTMLインポートではなく、ES6ローダーによりロードされ、ローダーの機能、拡張性のすべてを利用できます。
+* ES6 - コードはHTMLインポートではなく、ES6ローダーによりロードされ、ローダーの機能、拡張性のすべてを利用できます。この設計方針は、リソースがJavaScript、HTMLどちらから読み込まれたかに関係なく、アプリケーションに必要なリソースのロードを統一することができるのです。
 
 ビューではデータバインディングとともに、上記のような様々な種類のリソースを活用することになるでしょう。
 
@@ -291,7 +321,7 @@ _これは何を意味するのでしょうか?_
 <markdown-editor value.two-way="markdown"></markdown-editor>
 ```
 
-パフォーマンスを最適化して、CPUやメモリの消費を最小とするために、ビューモデルからビューへ `1回だけ` データを反映させる、 `one-time` バインディングコマンドを活用することができます。これは初回のバインディング時に行われ、それ以降の同期はありません。
+パフォーマンスを最適化して、CPUやメモリの消費を最小とするために、ビューモデルからビューへ 「1回だけ」データを反映させる、 `one-time` バインディングコマンドを活用することができます。これは初回のバインディング時に行われ、それ以降の同期はありません。
 
 <h4 id="event-modes"><a href="#event-modes">移譲、トリガー&呼び出し</a></h4>
 
@@ -321,7 +351,7 @@ _これは何を意味するのでしょうか?_
 <div touch.call="sayHello()">Say Hello</button>
 ```
 
-これで、カスタム属性 `touch` は、 `sayHello()` を実行する関数を手に入れました。
+これで、カスタム属性 `touch` は、 `sayHello()` を実行する関数を手に入れました。必要があれば、呼び出し元からデータを受け取ることも可能です。これは、triggerやdelegateに `$event` オブジェクトを渡すこと同じ働きをします。
 
 <h4 id="string-interpolation"><a href="#string-interpolation">文字列補完</a></h4>
 
@@ -396,6 +426,66 @@ _これは何を意味するのでしょうか?_
 <select value.bind="favoriteEmployees" multiple>
   <option repeat.for="employee of employees" model.bind="employee">${employee.fullName}</option>
 </select>
+```
+
+<h4 id="radios"><a href="#radios">ラジオボタン</a></h4>
+
+HTMLInputElementの、 `checked.bind` は、真偽値ではない、文字列やオブジェクトをバインドするための特別な挙動があります。
+
+典型的なラジオグループは `value.bind` と `repeat` を組み合わせて、次のようにレンダリングされます:
+
+```markup
+<label repeat.for="color of colors">
+  <input type="radio" name="clrs" value.bind="color" checked.bind="$parent.favoriteColor" />
+  ${color}
+</label>
+```
+
+文字列ではなく、オブジェクトインスタンスを使いたい時もあるでしょう。下記は従業員オブジェクトの配列からラジオグループを作成する例です:
+
+```markup
+<label repeat.for="employee of employees">
+  <input type="radio" name="emps" model.bind="employee" checked.bind="$parent.employeeOfTheMonth" />
+  ${employee.fullName}
+</label>
+```
+
+この二つの例の大きな違いは、上記の例ではInput要素の `value` プロパティを使っていて、文字列のみ許容しているのに対し、後の例では `model` という特別なプロパティを使っている点です。
+
+ラジオグループを、次のように真偽値にバインドすることもできます:
+
+```markup
+<label><input type="radio" name="tacos" model.bind="null" checked.bind="likesTacos" />Unanswered</label>
+<label><input type="radio" name="tacos" model.bind="true" checked.bind="likesTacos" />Yes</label>
+<label><input type="radio" name="tacos" model.bind="false" checked.bind="likesTacos" />No</label>
+```
+
+<h4 id="checkboxes"><a href="#checkboxes">チェックボックス</a></h4>
+
+複数選択を行いたいときのために、AureliaではInput要素のcheckedプロパティを配列にバインドすることができます。以下の例は、 `favoriteColors` 文字列配列にバインドする例です。
+
+```markup
+<label repeat.for="color of colors">
+  <input type="checkbox" value.bind="color" checked.bind="$parent.favoriteColors" />
+  ${color}
+</label>
+```
+
+これはオブジェクトの配列に対しても同様です:
+
+```markup
+<label repeat.for="employee of employees">
+  <input type="checkbox" model.bind="employee" checked.bind="$parent.favoriteEmployees" />
+  ${employee.fullName}
+</label>
+```
+
+個々のチェックボックスを真偽値にバインドすることも、もちろん可能です:
+
+```markup
+<li><label><input type="checkbox" checked.bind="wantsFudge" />Fudge</label></li>
+<li><label><input type="checkbox" checked.bind="wantsSprinkles" />Sprinkles</label></li>
+<li><label><input type="checkbox" checked.bind="wantsCherry" />Cherry</label></li>
 ```
 
 <h4 id="innerhtml"><a href="#innerhtml">innerHTML</a></h4>
@@ -479,6 +569,85 @@ export class Foo {
 <div style="width: ${width}px; height: ${height}px;"></div>
 ```
 
+<h4 id="adaptive-binding"><a href="#adaptive-binding">適応バインディング</a></h4>
+
+Aureliaは変更を監視するのに最適なストラテジを決定する、適応バインディングシステムを持っています。適応バインディングの詳細については、 [このポスト](http://blog.durandal.io/2015/04/03/aurelia-adaptive-binding/) を読んで下さい。ほとんどの場合このような詳細について考える必要はありませんが、バインディングシステムの非効率な利用につながるシナリオについて知っておくことは有益だと思います。
+
+**一番に知っておくべきことは、計算プロパティ(getter関数経由のプロパティ)は、ダーティチェック方式で監視されるということです。** より効率のよい、Object.observe や、プロパティ書き換えといった方法は、この種類のプロパティには適用できません。
+
+現在のブラウザ環境において、ダーティチェックは必要悪です。現時点では、ほとんどのブラウザがObject.observeをサポートしていません。Aureliaのダーティチェックは [Polymer](https://www.polymer-project.org/) で使われているものに似ています。Aureliaのマイクロタスクキューを利用して、DOMをバッチ更新しており、非常に効率的です。
+
+多少のダーティチェックを使うバインディングがあっても、性能問題を引き起こすことは無いでしょう。幸いなことに、簡単な計算プロパティについては、ダーティチェックを行わないようにする方法があります。下記の例のような、'fullName' プロパティを考えます:
+
+```javascript
+export class Person {
+  firstName = 'John';
+  lastName = 'Doe';
+
+  @computedFrom('firstName', 'lastName')
+  get fullName(){
+    return `${this.firstName} ${this.lastName}`;
+  }
+}
+```
+
+上記の例で、 `@computedFrom` デコレータをつかうことで、Aureliaのバインディングシステムにヒントを与えています。これによりバインディングシステムは `firstName` もしくは `lastName` に変更があった時のみ、 `fullName` をチェックすれば良いことを知ります。
+
+ダーティチェックがどのように動作するのかについて注意することも重要です。プロパティが「ダーティチェック」されるとき、バインディングシステムは定期的にプロパティの現在の値と、以前観測された値を比較します。デフォルトではこれは120ms毎に行われます。これは、プロパティのgetterは頻繁に呼ばれる可能性があるため、可能な限り効率的にしておく必要があるということです。また、不必要なオブジェクトインスタンスや配列を返さないようにする必要もあります。下記のビューを見て下さい:
+
+```markup
+<template>
+  <label for="search">Search Issues:</label>
+  <input id="search" type="text" value.bind="searchText" />
+  <ul>
+    <li repeat.for="issue of filteredIssues">${issue.abstract}</li>
+  </ul>
+</template>
+```
+
+素直なビューモデルの実装は下記です:
+
+```javascript
+export class IssueSearch {
+  searchText = '';
+
+  constructor(allIssues) {
+    this.allIssues = allIssues;
+  }
+
+  // ここでは新しい配列インスタンスを返しており、結果として多くのDOM更新が発生する
+  get filteredIssues() {
+    if (this.searchText === '')
+      return [];
+    return this.allIssues.filter(x => x.abstract.indexOf(this.searchText) !== -1);
+  }
+}
+```
+
+改良後のビューモデル実装です:
+
+```javascript
+export class IssueSearch {
+  filteredIssues = [];
+  _searchText = '';
+
+  constructor(allIssues) {
+    this.allIssues = allIssues;
+  }
+
+  get searchText() {
+    return this._searchText;
+  }
+  set searchText(newValue) {
+    this._searchText = newValue;
+    if (newValue === '') {
+      this.filteredIssues = [];
+    } else {
+      this.filteredIssues = this.allIssues.filter(x => x.abstract.indexOf(this.searchText) !== -1);
+    }
+  }
+}
+```
 
 <h3 id="html-extensions"><a href="#html-extensions">HTML拡張</a></h3>
 
@@ -595,29 +764,22 @@ export class Foo {
 設定の例をみてみましょう。
 
 ```javascript
-import {inject} from 'aurelia-framework';
-import {Router} from 'aurelia-router';
-
-@inject(Router)
 export class App {
-  constructor(router) {
+  configureRouter(config, router){
     this.router = router;
-    this.router.configure(config => {
-      config.title = 'Aurelia';
-      config.map([
-        { route: ['', 'home'],               moduleId: './home/index' },
-        { route: 'users',                    moduleId: './users/index',                      nav: true },
-        { route: 'users/:id/detail',         moduleId: './users/detail' },
-        { route: 'files*path',               moduleId: './files/index',     href:'#files',   nav: true }
-      ]);
-    });
+
+    config.title = 'Aurelia';
+    config.map([
+      { route: ['', 'home'],               moduleId: './home/index' },
+      { route: 'users',                    moduleId: './users/index',                      nav: true },
+      { route: 'users/:id/detail',         moduleId: './users/detail' },
+      { route: 'files*path',               moduleId: './files/index',     href:'#files',   nav: true }
+    ]);
   }
 }
 ```
 
-まず `Router` が挿入されるようにする必要があります。その後、そのインスタンスをビューモデルの `router` プロパティに設定します。 _プロパティ名は **router** としなければなりません_ 。次に `configure` APIを呼びます。 `configure` APIには関数を渡し、APIは設定オブジェクトを渡します。
-
-ドキュメントのタイトルに使う `title` プロパティを設定することもできます。ただ、一番重要なのはルートの設定の部分です。ルーターの `map` メソッドは、あなたのルート情報を表す、シンプルなJSONデータを引数にとります。最も重要なプロパティは二つで、ルートのパターンを定義する `route` (文字列、もしくは文字列の配列) と、ビューモデルの相対パスを持つ `moduleId` です。他にも、ドキュメントのタイトルを設定する `title` プロパティ、ナビゲーションモデルに含めるかどうかを指定する(この指定は順番を意味する数字でも良い) `nav` プロパティ、 _ナビゲーションモデル_ とバインドする `href` プロパティを設定することもできます。
+まず、 `configureRouter` メソッドを実装します。 ドキュメントのタイトルに使う `title` プロパティを設定することもできます。ただ、一番重要なのはルートの設定の部分です。ルーターの `map` メソッドは、あなたのルート情報を表す、シンプルなJSONデータを引数にとります。最も重要なプロパティは二つで、ルートのパターンを定義する `route` (文字列、もしくは文字列の配列) と、ビューモデルの相対パスを持つ `moduleId` です。他にも、ドキュメントのタイトルを設定する `title` プロパティ、ナビゲーションモデルに含めるかどうかを指定する(この指定は順番を意味する数字でも良い) `nav` プロパティ、 _ナビゲーションモデル_ とバインドする `href` プロパティを設定することもできます。
 
 >**注:** 指定しなかったプロパティは、与えられた情報を踏まえて、フレームワークが規約にもとづいて決めます。
 
@@ -651,8 +813,8 @@ export class App {
 
 ルーターが画面遷移を処理する際には、遷移元と遷移先のビューモデルに対して、厳格なライフサイクルを適用します。ライフサイクルには4つのステージがあります。ビューモデルのクラスに適切なメソッドを定義することで、任意のステージに対する処理を記述できます。以下にライフサイクルコールバックの一覧を示します:
 
-* `canActivate(params, queryString, routeConfig)` - もしビューモデルに対して _遷移可能か_ どうかを判断させたいときは、このフックを実装します。返値は真偽値、真偽値を返すPromise、またはナビゲーションコマンドです。
-* `activate(params, queryString, routeConfig)` - ビューオデルが描画する直前に処理を実行したい場合は、このフックを実装します。Promiseを返して、ルーターにビューとの接続とデータバインドを処理が終わるまで待たせることもできます。
+* `canActivate(params, routeConfig)` - もしビューモデルに対して _遷移可能か_ どうかを判断させたいときは、このフックを実装します。返値は真偽値、真偽値を返すPromise、またはナビゲーションコマンドです。
+* `activate(params, routeConfig)` - ビューモデルが描画する直前に処理を実行したい場合は、このフックを実装します。Promiseを返して、ルーターにビューとの接続とデータバインドを処理が終わるまで待たせることもできます。
 * `canDeactivate()` - ビューモデルから_遷移して良いか_を制御したい場合は、このフックを実装します。返値は真偽値、真偽値を返すPromise、またはナビゲーションコマンドです。
 * `deactivate()` - ビューモデルで、他の画面への遷移時に処理を行いたい場合は、このフックを実装します。Promiseを返して、ルーターを処理が終わるまで待たせることもできます。
 
@@ -666,24 +828,26 @@ export class App {
 
 ルートをビューモデルに対応づけるとき、そのビューモデルは更に独自のルータを持つこともできるのです...そして、そのルーターに対してルートを設定するとき...更にそれと対応付けられたビューモデルは独自のルーターを持つことができ...と、このように入れ子にできます。パスのパターンは親ルーターに対する相対パスとなり、モジュールとビューのidはビューモデルに対して相対となります。これにより、機能や子アプリケーションをカプセル化し、複雑で階層的な状態を扱うことが容易となります。
 
-子ルーターは他のルーターと何もかわりません。そのため、今まで説明してきたことはすべて子ルーターにも適用できます。子ルーターを追加するには、 `Router` を挿入するようにして、子ルートをそれに設定するだけです。すでに説明した画面初期化ライフサイクルは、子ルーターにも当てはまります。ライフサイクルの個々のフェーズは、次のフェーズに移る前にルーター階層全てに対して実行されます。activateフックはトップダウンに実行され、deactivateフックはボトムアップに実行されます。
+子ルーターは他のルーターと何もかわりません。そのため、今まで説明してきたことはすべて子ルーターにも適用できます。子ルーターを追加するには、 `configureRouter` メソッドを再度実装します。すでに説明した画面初期化ライフサイクルは、子ルーターにも当てはまります。ライフサイクルの個々のフェーズは、次のフェーズに移る前にルーター階層全てに対して実行されます。activateフックはトップダウンに実行され、deactivateフックはボトムアップに実行されます。
 
 <h3 id="conventional-routing"><a href="#conventional-routing">規約によるルーティング</a></h3>
 
-Aureliaの全てで、我々は規約による開発を強力にサポートしています。事前にすべてのルートを設定しておくのではなく、動的にルートを選択することも可能です。以下は動的にルートを選択する例です:
+Aureliaの全てにおいて、我々は規約による開発を強力にサポートしています。事前にすべてのルートを設定しておくのではなく、動的にルートを選択することも可能です。以下は動的にルートを選択する例です:
 
 ```javascript
-router.configure(config => {
-  config.mapUnknownRoutes(instruction => {
-    //check instruction.fragment
-    //set instruction.config.moduleId
-  });
-});
+export class App {
+  configureRouter(config){
+    config.mapUnknownRoutes(instruction => {
+      //check instruction.fragment
+      //set instruction.config.moduleId
+    });
+  }
+}
 ```
 
 やらなければならないことは、 `config.moduleId` プロパティをセットするだけです。それで、準備は完了です。また、 `mapUnknownRoutes` でPromiseを返すことで、遷移先を非同期に決定することもできます。
 
->**注:** 規約によるルーティングに関係があるわけではないですが、ルーターを非同期に設定する必要に駆られることがあるかもしれません例えば、ルートの設定の前に、ユーザーの権限を取得するWebサービスを呼び出さなければいけない、などです。これを実現するためには、ルーターのビューモデルで、 `configureRouter` コールバックを呼び出してください。このコールバックでは、ルーターを設定することも、必要があればPromiseを返すこともできます。
+>**注:** 規約によるルーティングに関係があるわけではないですが、ルーターを非同期に設定する必要に駆られることがあるかもしれません例えば、ルートの設定の前に、ユーザーの権限を取得するWebサービスを呼び出さなければいけない、などです。これを実現するためには、 `configureRouter` で Promise を返すようにしてください。
 
 <h3 id="customizing-the-navigation-pipeline"><a href="#customizing-the-navigation-pipeline">ナビゲーションパイプラインのカスタマイズ</a></h3>
 
@@ -692,23 +856,18 @@ router.configure(config => {
 下記はアプリケーションに認証を追加する例です:
 
 ```javascript
-import {Router, Redirect} from 'aurelia-router';
-import {inject} from 'aurelia-framework';
+import {Redirect} from 'aurelia-router';
 
-@inject(Router)
 export class App {
-  constructor(router) {
-    this.router = router;
-    this.router.configure(config => {
-      config.title = 'Aurelia';
-      config.addPipelineStep('authorize', AuthorizeStep); // ルートフィルタをauthorize拡張ポイントに追加する
-      config.map([
-        { route: ['welcome'],     moduleId: 'welcome',      nav: true, title:'Welcome' },
-        { route: 'flickr',        moduleId: 'flickr',       nav: true, auth: true },
-        { route: 'child-router',  moduleId: 'child-router', nav: true, title:'Child Router' },
-        { route: '',              redirect: 'welcome' }
-      ]);
-    });
+  configureRouter(config) {
+    config.title = 'Aurelia';
+    config.addPipelineStep('authorize', AuthorizeStep); // ルートフィルタをauthorize拡張ポイントに追加する
+    config.map([
+      { route: ['welcome'],     moduleId: 'welcome',      nav: true, title:'Welcome' },
+      { route: 'flickr',        moduleId: 'flickr',       nav: true, auth: true },
+      { route: 'child-router',  moduleId: 'child-router', nav: true, title:'Child Router' },
+      { route: '',              redirect: 'welcome' }
+    ]);
   }
 }
 
@@ -746,14 +905,18 @@ URLから `#` (ハッシュ) を取り除きたいと考えるなら、アプリ
 まずAureliaに `pushState` を使うことを伝えなければいけません。 `router` `config` の中で、次のように指定します:
 
 ``` javascript
-this.router.configure(config => {
-  config.title = 'First Impressions';
-  config.options.pushState = true; // <-- これだけ指定する必要がある
-  config.map([
-    { route: ['','welcome'],  moduleId: './welcome',      nav: true, title:'Welcome' },
-    { route: 'child-router',  moduleId: './child-router', nav: true, title:'Child Router' }
-  ]);
-});
+export class App {
+  configureRouter(config) {
+    config.title = 'Aurelia';
+    config.options.pushState = true; // <-- this is all you need here
+    config.map([
+      { route: ['welcome'],     moduleId: 'welcome',      nav: true, title:'Welcome' },
+      { route: 'flickr',        moduleId: 'flickr',       nav: true, auth: true },
+      { route: 'child-router',  moduleId: 'child-router', nav: true, title:'Child Router' },
+      { route: '',              redirect: 'welcome' }
+    ]);
+  }
+}
 ```
 
 [base タグ](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base) をHTMLドキュメントの先頭に加えたくなるかもしれません。これは重要なので、省略してはいけません。
@@ -837,20 +1000,13 @@ public class IndexModule : NancyModule {
 複数のルートに対して、同じビューモデルを使いたいケースもあるでしょう。デフォルトでは、Aureliaはこれらのルートを同一ビューモデルのエイリアスとみなすので、ビルドと付加プロセス、およびライフサイクルは一度のみ実行されます。これに満足できないこともあるでしょう。次の例を見てください:
 
 ```javascript
-import {inject} from 'aurelia-framework';
-import {Router} from 'aurelia-router';
-
-@inject(Router)
 export class App {
-  constructor(router) {
-    this.router = router;
-    this.router.configure(config => {
-      config.title = 'Aurelia';
-      config.map([
-        { route: 'product/a',         moduleId: './product'      nav: true },
-        { route: 'product/b',         moduleId: './product',     nav: true },
-      ]);
-    });
+  configureRouter(config) {
+    config.title = 'Aurelia';
+    config.map([
+      { route: 'product/a',         moduleId: './product'      nav: true },
+      { route: 'product/b',         moduleId: './product',     nav: true },
+    ]);
   }
 }
 ```
@@ -1374,9 +1530,9 @@ client.createRequest('some/cool/path')
 どのようにビューとビューモデルはリンクしているのでしょうか? module idに基づいたシンプルな規約になっています。id (パスの必須部分)が './foo/bar/baz' のようなビューモデルの場合、デフォルトではビューモデルが `./foo/bar/baz.js` で、ビューが `./foo/bar/baz.html` となります。この規約を変更したい場合を考えてみましょう。仮にすべてのビューモデルが `view-models` フォルダに配置され、それに対応するビューを `views` フォルダに置くようにする場合、どのようにすればいいでしょうか?これを実現するためには、規約に基づくビューストラテジーの振る舞いを変更する必要があります。次のようにします:
 
 ```javascript
-import {ConventionalView} from 'aurelia-framework';
+import {ConventionalViewStrategy} from 'aurelia-framework';
 
-ConventionalView.convertModuleIdToViewUrl = function(moduleId){
+ConventionalViewStrategy.convertModuleIdToViewUrl = function(moduleId){
   return moduleId.replace('view-models', 'views') + '.html';
 }
 ```
