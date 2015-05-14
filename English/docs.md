@@ -735,6 +735,24 @@ Now, depending on the _type_ of the item, the `compose` element will load a diff
 
 The `compose` element also has a `view` attribute which can be used in the same way as `view-model` if you don't wish to leverage the standard view/view-model convention. If you specify a `view` but no `view-model` then the view will be databound to the surrounding context.
 
+```markup
+<template repeat.for="item of items">
+    <compose view="my-view.html"></compose>
+</template>
+```
+
+If you would like to databind a particular object when using only `view` rather
+than a full fledged view model (perhaps as part of a repeat), you may do so by binding the `view-model` directly. Now you will be able to use properties
+of that object directly in your `view`:
+
+```markup
+<template>
+    <div repeat.for="item of items">
+      <compose view="my-view.html" view-model.bind="item">
+    </div>
+</template>
+```
+
 What if you want to determine the view dynamically based on data though? or runtime conditions? You can do that too by implementing a `getViewStrategy()` method on your view-model. It can return a relative path to the view or an instance of a `ViewStrategy` for custom view loading behavior. The nice part is that this method is executed after the `activate` callback, so you have access to the model data when determining the view.
 
 <h4 id="global-behavior"><a href="#global-behavior">global-behavior</a></h4>
