@@ -707,6 +707,14 @@ Speaking of Maps, here's how you would bind to an ES6 Map:
 </ul>
 ```
 
+If instead of iterating over a collection you would rather iterate a specified number of times, you can instead use the syntax "i of count" where "i" is the index of the iteration and "count" is a binding expression that evaluates to an integer.
+
+```markup 
+<ul>
+  <li repeat.for="i of rating">*</li>
+</ul>
+```
+
 > **Note:**: Like the `if` attribute, you can also use a `template` tag to group a collection of elements that don't have a parent element.
 
 Each item that is being repeated by the `repeat` attribute has several special contextual values available for binding:
