@@ -665,7 +665,7 @@ Todo lo que tienes que hacer es establecer la propiedad `config.moduleId` y esta
 
 ### Añadiendo pasos al procesado de rutas -pipeline-
 
-El procesado -pipeline- de rutas se compone de pasos separados que se ejecutan sucesivamente. Cada uno de estos pasos tiene la capacidad tanto de modificar lo que ocurre durante el enrutamiento, como de detenerlo. El procesado cuenta con algunos puntos para su ampliación por los que se nos permite añadir nuestros propios pasos. Están `` authorize` -autoriza- y `bindmodel` -enlazamodelo-. `authorize` ocurre antes que `bindmodel`. Estas extensiones se denominan filtros de rutas -route filters-.
+El procesado -pipeline- de rutas se compone de pasos separados que se ejecutan sucesivamente. Cada uno de estos pasos tiene la capacidad tanto de modificar lo que ocurre durante el enrutamiento, como de detenerlo. El procesado cuenta con algunos puntos para su ampliación por los que se nos permite añadir nuestros propios pasos. Están `` authorize` -autoriza- y `modelbind` -enlazamodelo-. `authorize` ocurre antes que `modelbind`. Estas extensiones se denominan filtros de rutas -route filters-.
 
 El ejemplo a continuación muestra como añadir una autorización a tu aplicación:
 
