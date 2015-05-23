@@ -2,7 +2,7 @@
 
 Hemos planeado para Aurelia un conjunto muy rico de documentos. Desafortunadamente aún no los hemos terminado. En cualquier caso, para este temprano periodo de vista previa, hemos compuesto este documento, que contiene ejemplos de las tareas más comunes que puedas necesitar. Si tienes preguntas, espero que te unas a nosotros en nuestro [canal en gitter](https://gitter.im/aurelia/discuss).
 
->**Nota:** ¿Estás buscando esta guía en otro idioma? Echa un vistazo a nuestro repositorio [documentation](https://github.com/aurelia/documentation).
+> **Nota:** ¿Estás buscando esta guía en otro idioma? Echa un vistazo a nuestro repositorio [documentation](https://github.com/aurelia/documentation).
 
 <h2 id="browser-support"><a href="#browser-support">Soporte a navegadores</a></h2>
 
@@ -13,11 +13,11 @@ Aurelia se diseñó para navegadores actualizados automática y permanentemente 
 <script src="jspm_packages/system.js"></script>
 <script src="config.js"></script>
 <script>
-  // Loads WeakMap polyfill needed by MutationObservers
+  // carga el polyfill WeakMap requerido por MutationObservers
   System.import('core-js').then( function() {
-    // Imports MutationObserver polyfill
+    // importa el polyfill MutationObserver
     System.import('mutationobservers').then( function() {
-      // Ensures start of Aurelia when all required IE9 dependencies are loaded
+      // asegura que se inicie Aurelia cuando todas las dependencias requeridas por IE9 estén cargadas
       System.import('aurelia-bootstrapper');
     })
   });
@@ -140,7 +140,23 @@ class Flickr
   @inject:[HttpClient]
 ``` 
 
-Sin embargo, las dependencias en el vector de inyección no tienen por que ser solo del tipo constructor. También pueden ser objetos del tipo `resolvers`. Por ejemplo, echa un vistazo a esto:
+Si estás usando TypeScript, puedes usar la opción de compilado `--emitDecoratorMEtadata` junto con el decorador `autoinject()` de Aurelia para capacitar al marco de trabajo a leer la información de tipos estándar de TS. Como resultado, no hay necesidad de duplicar los tipos. Así es como quedaría:
+
+```javascript
+import {autoinject} from 'aurelia-framework';
+import {HttpClient} from 'aurelia-http-client';
+
+@autoinject()
+export class CustomerDetail{
+    constructor(http:HttpClient){
+        this.http = http;
+    }
+}
+```
+
+> **Note:** Hay un detalle interesante acerca de como implementa Typescript esta opción de compilado. En realidad funciona con cualquier decorador. Así, si aparecen otros decoradores en tu clase TS, no hay ninguna necesidad de incluir el decorador `autoinject`. La información acerca del tipo será accesible para el marco de trabajo de inyección de dependencias de Aurelia.
+
+Cuando declaramos explicitamente las dependencias, es importante saber que no tienen que ser necesariamente tipos constructores. También pueden ser instancias de `resolvers`. Por ejemplo, echale un vistazo a esto:
 
 ```javascript
 import {Lazy, inject} from 'aurelia-framework';
@@ -191,6 +207,18 @@ class CustomerDetail
   @decorators:Decorators.transient().inject(HttpClient);
 ```
 
+<h3 id="parent-vm-reference"><a href="#parent-vm-reference">Modelos de vistas padre -Parent View Models-</a></h3>
+
+Por defecto el acceso a un modelo de vista está limitado a los objetos inyectados así como a los descendientes de la clase. A veces puede resultar conveniente referirse a objetos y métodos de un modelo de vista padre, lo que podemos conseguir guardándolo durante el método _bind_ del ciclo de vida de la vista:
+
+```javascript
+class ChildViewModel {
+  bind(bindingContext) {
+    this.$parent = bindingContext;
+  }
+}
+```
+
 <h2 id="templating"><a href="#templating">Uso de plantillas -templating-</a></h2>
 
 El motor de plantillas de Aurelia es responsable de cargar las vistas y sus recursos requeridos, compilando tu HTML para un rendimiento óptimo y mostrando la interfaz de usuario (UI) en pantalla. Para crear una vista, todo lo que tienes que hacer es escribir un archivo HTML que incluya un `HTMLTemplate`. Aquí tienes una vista sencilla:
@@ -211,7 +239,7 @@ Todo lo que esté dentro de una etiqueta `template` será manejado por Aurelia. 
 </template>
 ```
 
-De paso, esto te permite cargar dinámicamente hojas de estilo dependiendo de la vista e incluso componentes web -Web Components-.
+De paso, esto permite cargar dinámicamente hojas de estilo dependiendo de la vista e incluso componentes web -Web Components-.
 
 Cada vez que quieras importar un recurso específico de Aurelia, ya sea un _Custom Element_ -elemento a medida-, _Custom Attribute_ -atributo personalizado-, o _Value Converter_ -conversor de valores-, debes usar en su lugar un elemento `require` dentro de tu vista. Aquí tienes un ejemplo:
 
@@ -241,6 +269,28 @@ En este caso `nav-bar` es un _Custom Element_ -elemento a medida- de Aurelia que
 En tus vistas harás aprovechamiento frecuente de los diferentes tipos de recursos mencionados con anterioridad así como del enlazado de datos -databinding-.
 
 >**Nota:** Puede que te preocupe lo tedioso de tener que importar cosas en cada vista. Recuerda que durante la fase de configuración inicial -bootstrapping- puedes configurar Aurelia para que los recursos globales estén disponibles en todas las vistas. Usa solo `aurelia.globalizeResources(...resourcePaths)`.
+
+Aurelia suplementa -polyfills- los navegadores que no soportan las plantillas. Sin embargo, algunas características de las plantillas no pueden obtenerse usando polyfills y requieren una solución alternativa. En particular esto ocurre cuando añadimos elementos `<template>` dentro de elementos `<select>` y `<table>`. Lo siguiente no podría no podría visualizarse en un navegador que no soportará de forma nativa las plantillas:
+
+```markup
+  <table>
+    <template repeat.for="customer of customers">
+      <tr>
+        <td>${customer.fullName}</td>
+      </tr>
+    </template>
+  </table>
+```
+
+Para poder iterar sobre los elementos `<tr>`, añade simplemente el `repeat` en el propio elemento `<tr>`:
+
+```markup
+  <table>
+    <tr repeat.for="customer of customers">
+      <td>${customer.fullName}</td>
+    </tr>
+  </table>
+```
 
 <h3 id="databinding"><a href="#databinding">Enlazado de datos -databinding-</a></h3>
 
@@ -299,7 +349,7 @@ Todo esto va de una u otra manera en contra de los eventos de DOM. Ocasionalment
 <div touch.call="sayHello()">Say Hello</button>
 ```
 
-Ahora el atributo a medida -Custom Attribute- `touch` recibirá una función que podrá llamar para invocar tu código `sayHello()`.
+Ahora el atributo a medida -Custom Attribute- `touch` recibirá una función que podrá llamar para invocar tu código `sayHello()`. Dependiendo de la naturaleza del `implementor`, podrías ser capaz de recibir datos del `caller`. Esto funciona igual que con `trigger/delegate` proporcionando un objeto `$event`. 
 
 <h4 id="string-interpolation"><a href="#string-interpolation">Interpolación de cadenas</a></h4>
 
@@ -376,6 +426,66 @@ Esto también funciona con vectores de objetos:
 </select>
 ```
 
+<h4 id="radios"><a href="#radios">radios</a></h4>
+
+`checked.bind` sobre un HTMLInputElement tiene un comportamiento especial para permitir el enlazado de valores no-booleanos como cadenas u objetos.
+
+Un grupo típico de botones del tipo radio se muestra usando una combinación de `value.bind` y `repeat`, como a continuación:
+
+```markup
+<label repeat.for="color of colors">
+  <input type="radio" name="clrs" value.bind="color" checked.bind="$parent.favoriteColor" />
+  ${color}
+</label>
+```
+
+A veces puede ser que quieras trabajar con instancias de objetos en lugar con cadenas de texto. Aquí tienes el marcado para construir un grupo de botones tipo radio a partir de un supuesto vector de objetos `employees`:
+
+```markup
+<label repeat.for="employee of employees">
+  <input type="radio" name="emps" model.bind="employee" checked.bind="$parent.employeeOfTheMonth" />
+  ${employee.fullName}
+</label>
+```
+
+La diferencia fundamental entre este ejemplo y el anterior es que estamos guardando los valores de los `<input>` en una propiedad especial `model`, en lugar de en la propiedad `value` de dichos elementos que solo aceptan cadenas de texto.
+
+También puedes enlazar un grupo de estos a una propiedad booleana:
+
+```markup
+<label><input type="radio" name="tacos" model.bind="null" checked.bind="likesTacos" />Unanswered</label>
+<label><input type="radio" name="tacos" model.bind="true" checked.bind="likesTacos" />Yes</label>
+<label><input type="radio" name="tacos" model.bind="false" checked.bind="likesTacos" />No</label>
+```
+
+<h4 id="checkboxes"><a href="#checkboxes">checkboxes</a></h4>
+
+Para responder mejor a escenarios de multi-selección, Aurelia habilita el enlazado de la propiedad `checked` de un elemento `<input>` a un vector. Aquí puedes ver como enlazar un vector de cadenas de texto llamado `favoriteColors`:
+
+```markup
+<label repeat.for="color of colors">
+  <input type="checkbox" value.bind="color" checked.bind="$parent.favoriteColors" />
+  ${color}
+</label>
+```
+
+Esto funciona igualmente tanto con vectores como con objetos:
+
+```markup
+<label repeat.for="employee of employees">
+  <input type="checkbox" model.bind="employee" checked.bind="$parent.favoriteEmployees" />
+  ${employee.fullName}
+</label>
+```
+
+Por supuesto puedes enlazar cada `checkbox` a su propiedad booleana:
+
+```markup
+<li><label><input type="checkbox" checked.bind="wantsFudge" />Fudge</label></li>
+<li><label><input type="checkbox" checked.bind="wantsSprinkles" />Sprinkles</label></li>
+<li><label><input type="checkbox" checked.bind="wantsCherry" />Cherry</label></li>
+```
+
 <h4 id="innerhtml"><a href="#innerhtml">innerHTML</a></h4>
 
 Puedes enlazar con la propiedad `innerHTML` de un elemento usando el atributo `innerhtml`:
@@ -408,7 +518,7 @@ export class MySanitizeHtmlValueConverter {
 }
 ```
 
-> NOTA: Enlazar usando el atributo `innerhtml` simplemente establece la propiedad `innerHTML` del elemento. El marcado no pasa a través del sistema de plantillas de Aurelia. Enlazar expresiones y elementos require no se evaluarán. Una solución para este escenario está siendo seguido en [aurelia/templating#35](https://github.com/aurelia/templating/issues/35).
+> **Nota**: Enlazar usando el atributo `innerhtml` simplemente establece la propiedad `innerHTML` del elemento. El marcado no pasa a través del sistema de plantillas de Aurelia. Enlazar expresiones y elementos require no se evaluarán. Una solución para este escenario está siendo seguido en [aurelia/templating#35](https://github.com/aurelia/templating/issues/35).
 
 <h4 id="textcontent"><a href="#textcontent">textContent</a></h4>
 
@@ -450,13 +560,92 @@ export class Foo {
 Usa el alias del atributo `style`, `css`, cuando hagas interpolación de cadenas para asegurar que tu aplicación es compatible con Internet Explorer:
 
 ``` markup
-<!-- good: -->
+<!-- bien: -->
 <div css="width: ${width}px; height: ${height}px;"></div>
 
-<!-- incompatible with Internet Explorer: -->
+<!-- incompatible con Internet Explorer: -->
 <div style="width: ${width}px; height: ${height}px;"></div>
 ```
 
+<h4 id="adaptive-binding"><a href="#adaptive-binding">Enlazado adaptable -Adaptive Binding-</a></h4>
+
+Aurelia incorpora un sistema de enlazado adaptable, que escoge entre cierto número de estrategias a la hora de determinar como observar los cambios de la manera más eficiente. Para más información acerca de como funciona esto lee [esta entrada](http://blog.durandal.io/2015/04/03/aurelia-adaptive-binding/). En la mayoría de las situaciones no necesitarás ocuparte de estos detalles, pero en cualquier caso nos ayudará a ser consciente de escenarios que nos conduzcan a usos ineficientes del sistema de enlazado de datos.
+
+**Lo primero de lo que hay que ser conscientes es que las propiedades computadas (propiedades con funciones accesoras -getter functions-) se observan usando dirty-checking (N.T.: revisión cíclica y automática de todas las variables en todos los ámbitos -"comprobación bruta"-).** Otras estrategias más eficientes como `Object.observe` y la reescritura de propiedades no son compatibles con estos tipos de propiedades.
+
+En el entorno actual de navegadores el `dirty-checking` es un mal necesario. Muy pocos navegadores soportan `Object.observe` en el momento de escribir estas notas. El mecanismo de dirty-checking de Aurelia es similar al usado en [Polymer](https://www.polymer-project.org/). Es muy eficiente y utiliza la cola de micro-tareas de Aurelia para guardar las actualizaciones del DOM.
+
+Unos pocos enlaces a datos usando `dirty-checking` no provocará problemas de rendimiento de la aplicación. Pero un uso extenso del mismo podría. Afortunadamente hay una forma de evitar este mecanismo para comprobar propiedades computadas simples. Observa la propiedad 'fullName' en el ejemplo siguiente:
+
+```javascript
+export class Person {
+  firstName = 'John';
+  lastName = 'Doe';
+
+  @computedFrom('firstName', 'lastName')
+  get fullName(){
+    return `${this.firstName} ${this.lastName}`;
+  }
+}
+```
+
+Hemos usado el decorador `@computedFrom` para proporcionar una pista al sistema de enlazado de Aurelia. Este sabe así que solo tiene que comprobar si hay cambios en `fullName` cuando los hay en `firstName` o `lastName`.
+
+También es importante ser conscientes de como funciona el `dirty-checking`. Cuando una propiedad es "comprobada en bruto" `"dirty-checked"` El sistema de enlazado comprueba periodicamente si el valor actual de la propiedad coincide con el valor previamente observado de la misma. Por defecto esta comprobación se realiza cada 120 milisegundos. Esto significa que la función accesor de una propiedad podría ser llamada con bastante frecuencia lo que significa que debería ser tan eficiente como fuera posible. También deberías evitar devolver innecesariamente nuevas instancias de objetos o vectores. Considera la vista siguiente:
+
+```markup
+<template>
+  <label for="search">Search Issues:</label>
+  <input id="search" type="text" value.bind="searchText" />
+  <ul>
+    <li repeat.for="issue of filteredIssues">${issue.abstract}</li>
+  </ul>
+</template>
+```
+
+Una implementación simplona del modelo de vista:
+
+```javascript
+export class IssueSearch {
+  searchText = '';
+
+  constructor(allIssues) {
+    this.allIssues = allIssues;
+  }
+
+  // esto devuelve una nueva instancia del vector con cada llamada lo que resultará en su momento en un montón de actualizaciones del DOM
+  get filteredIssues() {
+    if (this.searchText === '')
+      return [];
+    return this.allIssues.filter(x => x.abstract.indexOf(this.searchText) !== -1);
+  }
+}
+```
+
+Implementación mejorada del modelo de vista:
+
+```javascript
+export class IssueSearch {
+  filteredIssues = [];
+  _searchText = '';
+
+  constructor(allIssues) {
+    this.allIssues = allIssues;
+  }
+
+  get searchText() {
+    return this._searchText;
+  }
+  set searchText(newValue) {
+    this._searchText = newValue;
+    if (newValue === '') {
+      this.filteredIssues = [];
+    } else {
+      this.filteredIssues = this.allIssues.filter(x => x.abstract.indexOf(this.searchText) !== -1);
+    }
+  }
+}
+```
 
 <h3 id="html-extensions"><a href="#html-extensions">Extensiones del HTML -HTML Extensions-</a></h3>
 
@@ -516,6 +705,14 @@ Hablando de mapas, así es como lo enlazarías con un mapa ES6:
 </ul>
 ```
 
+Si en lugar de iterar sobre una colección lo que quieres es hacerlo un determinado número de veces, puedes usar en su lugar la sintaxis "i of count" donde "i" es el índice de la iteración y "count" es una expresión de enlace que se evalúa a un entero.
+
+```markup 
+<ul>
+  <li repeat.for="i of rating">*</li>
+</ul>
+```
+
 > **Nota:**: Como el atributo `if`, también puedes usar una etiqueta `template` para agrupar una colección de elementos que no tienen elemento padre.
 
 Cada elemento que está siendo repetido por el atributo `repeat` cuenta con varios valores contextuales especiales disponibles para enlazar:
@@ -544,6 +741,22 @@ Ahora, dependiendo del _type_ del elemento, el elemento `compose` cargará un mo
 
 El elemento `compose` también tiene un atributo `view` que puede ser usado de la misma manera que `view-model` si no deseas aprovechar la convención estándar de vista/modelo. Si especificas una vista (view), pero no un modelo-vista (view-model), entonces la vista se enlazará al contexto que la envuelve. 
 
+```markup
+<template repeat.for="item of items">
+    <compose view="my-view.html"></compose>
+</template>
+```
+
+Si lo que quieres es enlazar a datos un objeto en particular cuando usas solo `view` en lugar de un modelo de vista completamente equipado (tal vez como parte de un `repeat`), puedes hacerlo enlazando directamente el `view-model`. Ahora podrás usar propiedades de ese objeto directamente en tu `view`:
+
+```markup
+<template>
+    <div repeat.for="item of items">
+      <compose view="my-view.html" view-model.bind="item">
+    </div>
+</template>
+```
+
 ¿Que pasa si quieres determinar la vista dinámicamente en base a los datos o a las condiciones en tiempo de ejecución? También puedes hacer esto implementando un método `getViewStrategy()` en tu modelo. Este puede retornar una ruta relativa a la vista o un objeto del tipo `ViewStrategy` para el comportamiento a medida para la carga de vistas. La parte bonita es que este método se ejecuta después de la retrollamada -callback- de `activate`, así que tienes acceso a los datos del modelo al determinar la vista.
 
 <h4 id="global-behavior"><a href="#global-behavior">global-behavior</a></h4>
@@ -564,7 +777,7 @@ Cuando el sistema de enlazado encuentra una orden de enlace que no reconoce, ent
 
 > **Nota:** `global-behavior` tiene una lista de gestores que tienes que configurar. Por defecto, solo está configurado para jQuery. Puedes desactivarlo todo, si quieres, pero resulta más fácil sacar partido de los complementos básicos jQuery sin necesidad de hacer algo por tu parte.
 
-## Gestión de rutas -routing-
+<h2 id="routing"><a href="#routing"> Gestión de rutas -routing-</a></h2>
 
 Te pueden pedir que crees muchos estilos diferentes de aplicaciones. Desde aplicaciones de navegación, a escritorios, a interfaces MDI -multiple documents interface-, Aurelia puede manejarlas todas. En muchos de estos casos una pieza clave de tu arquitectura es un sistema de gestión de rutas -router- del lado del cliente, capaz de traducir cambios en URLs en estados de la aplicación.
 
@@ -573,29 +786,22 @@ Si leíste la guía para empezar, sabrás que hay dos partes en la gestión de r
 Veamos un ejemplo de configuración.
 
 ```javascript
-import {inject} from 'aurelia-framework';
-import {Router} from 'aurelia-router';
-
-@inject(Router)
 export class App {
-  constructor(router) {
+  configureRouter(config, router){
     this.router = router;
-    this.router.configure(config => {
-      config.title = 'Aurelia';
-      config.map([
-        { route: ['', 'home'],               moduleId: './home/index' },
-        { route: 'users',                    moduleId: './users/index',                      nav: true },
-        { route: 'users/:id/detail',         moduleId: './users/detail' },
-        { route: 'files*path',               moduleId: './files/index',     href:'#files',   nav: true }
-      ]);
-    });
+
+    config.title = 'Aurelia';
+    config.map([
+      { route: ['', 'home'],               moduleId: './home/index' },
+      { route: 'users',                    moduleId: './users/index',                      nav: true },
+      { route: 'users/:id/detail',         moduleId: './users/detail' },
+      { route: 'files*path',               moduleId: './files/index',     href:'#files',   nav: true }
+    ]);
   }
 }
 ```
 
-Empezamos preguntando por un objeto del tipo `Router` para ser inyectado. Entonces asignamos este objeto a una propiedad `router` del modelo. _Tienes que llamar a esta propiedad **router**_. A continuación llamamos a la API `configure`. Le pasamos una función y esta nos pasa un objeto de configuración.
-
-Opcionalmente podemos crear una propiedad `title` para ser usada en la construcción del título del documento. Pero la parte más importante es configurar las rutas. El método `map` del sistema de gestión de rutas toma una estructura de datos JSON que representa tu tabla de rutas. Las dos propiedades más importantes son `route` (una cadena o un vector de cadenas), que define el patrón de rutas, y `moduleId`, que contiene la ruta *relativa* `moduleId` al modelo. También puedes poner una propiedad `title`, para ser usado al generar el título del documento, una propiedad `nav` indicadora de si la ruta debe incluirse o no debe ser incluida en el modelo de navegación (también puede ser un número indicador de orden) y una propiedad `href` que puedes usar para establecer un enlace en el modelo de navegación.
+Empezamos configurando el método `configureRouter`. Opcionalmente podemos asignar una propiedad `title` -título- para ser usada en la construcción del título del documento, pero la parte más importante es el establecimiento de las rutas. El método `map` del enrutador toma una simple estructura de datos JSON que contiene tu tabla de rutas. Las dos propiedades más importantes son `route` (una cadena de texto o un vector de cadenas de texto), que define el patrón de la ruta, y `moduleId`, que contiene la ruta *relativa* del módulo Id a tu modelo de vista. También puedes asignar una propiedad `title`, a usar cuando se vaya a generar el título del documento, una propiedad `nav` que indica si la ruta debe ser incluida o no el modelo de navegación (también puede ser un número que indicará el orden) y una propiedad `href` que puedes usar para enlazar con ella en el _modelo de navegación `navigation model`_.
 
 >**Nota:** Cualquier propiedad que dejes fuera será determinada convencionalmente por el marco de trabajo en base a lo que hayas proporcionado.
 
@@ -625,7 +831,7 @@ Todas las rutas con una propiedad `nav` verdadera se recogen en un vector `navig
 </template>
 ```
 
-### El ciclo de vida de activación de pantalla -the screen activation lifecycle-
+<h3 id="the-screen-activation-lifecycle"><a href="#the-screen-activation-lifecycle">El ciclo de vida de activación de pantalla -the screen activation lifecycle-</a></h3>
 
 Siempre que el sistema de enrutado procesa una navegación, este ejecuta un estricto ciclo de vida de los modelos desde y hacia los que está navegando. Hay cuatro estados en el ciclo de vida. Se puede acceder opcionalmente a cualquiera de ellos mediante la implementación del método adecuado en la clase de los modelos. Aquí hay una lista de retrollamadas al ciclo de vida:
 
@@ -638,7 +844,7 @@ El objeto `params` tendrá una propiedad por cada parámetro de la ruta que fue 
 
 > **Nota** Una _Navigation Command_ orden de navegación es cualquier objeto con un método `navigate(router)`. Cuando se encuentra uno, se cancelará la navegación y el control se transferirá a la orden de navegación. Hay una orden de navegación integrado: `Redirect`.
 
-### Enrutadores hijos -child routers-
+<h3 id="child-routers"><a href="#child-routers">Enrutadores hijos -child routers-</a></h3>
 
 Si no has leído la guía [Get Started](/get-started.html), te recomendamos que lo hagas ahora y que pongas especial atención en la sección titulada "Bonificación: usando enrutadores hijos.
 
@@ -646,47 +852,44 @@ Siempre que configures una ruta para mapear a un modelo, ese modelo puede en rea
 
 Un enrutador hijo es solo un enrutador como otro cualquiera. Así que todo lo expuesto anteriormente es de aplicación. Para añadir un enrutador hijo, simplemente solicita que sea inyectado un `Router` y configúralo con tus rutas hijas. El ciclo de vida de activación de pantalla explicado más arriba se aplica también a los enrutadores hijos. Cada fase del ciclo de vida es ejecutado contra la jerarquía de enrutadores completa antes de pasar a la siguiente fase. Los ganchos de activación se ejecutan de arriba abajo y los ganchos de desactivación se ejecutan de abajo arriba.
 
-### Enrutamiento convencional -conventional routing-
+<h3 id="conventional-routing"><a href="#conventional-routing">Enrutamiento convencional -conventional routing-</a></h3>
 
 Como todo en Aurelia, tenemos un fuerte soporte para convenciones. De esta manera, en realidad puedes optar por enrutar dinámicamente en lugar de preconfigurar todas tus rutas previamente. Aquí tienes como configurar el enrutador para hacer esto:
 
 ```javascript
-router.configure(config => {
-  config.mapUnknownRoutes(instruction => {
-    //check instruction.fragment
-    //set instruction.config.moduleId
-  });
-});
+export class App {
+  configureRouter(config){
+    config.mapUnknownRoutes(instruction => {
+      //check instruction.fragment
+      //set instruction.config.moduleId
+    });
+  }
+}
 ```
 
 Todo lo que tienes que hacer es establecer la propiedad `config.moduleId` y estarás listo. También puedes devolver una promesa desde `mapUnknownRoutes` para determinar el destino asíncronamente.
 
 >**Nota:** Aunque no necesariamente relacionado con el enrutamiento convencional, puedes necesitar a veces configurar tu enrutador asíncronamente. Por ejemplo, puedes necesitar llamar a un servicio web para obtener permisos de usuario antes de establecer las rutas. Para hacer esto, implementa una retrollamada en tu modelo de enrutador llamada `configureRouter`. En esta retrollamada puedes configurar tu enrutador y devolver opcionalmente una promesa -`Promise`- si fuera necesario.
 
-### Añadiendo pasos al procesado de rutas -pipeline-
+<h3 id="customizing-the-navigation-pipeline"><a href="#customizing-the-navigation-pipeline">Personalizando el procesamiento de rutas -customizing the navigation pipeline-</a></h3>
 
 El procesado -pipeline- de rutas se compone de pasos separados que se ejecutan sucesivamente. Cada uno de estos pasos tiene la capacidad tanto de modificar lo que ocurre durante el enrutamiento, como de detenerlo. El procesado cuenta con algunos puntos para su ampliación por los que se nos permite añadir nuestros propios pasos. Están `` authorize` -autoriza- y `modelbind` -enlazamodelo-. `authorize` ocurre antes que `modelbind`. Estas extensiones se denominan filtros de rutas -route filters-.
 
 El ejemplo a continuación muestra como añadir una autorización a tu aplicación:
 
 ```javascript
-import {Router, Redirect} from 'aurelia-router';
-import {inject} from 'aurelia-framework';
+import {Redirect} from 'aurelia-router';
 
-@inject(Router)
 export class App {
-  constructor(router) {
-    this.router = router;
-    this.router.configure(config => {
-      config.title = 'Aurelia';
-      config.addPipelineStep('authorize', AuthorizeStep); // Add a route filter to the authorize extensibility point.
-      config.map([
-        { route: ['welcome'],     moduleId: 'welcome',      nav: true, title:'Welcome' },
-        { route: 'flickr',        moduleId: 'flickr',       nav: true, auth: true },
-        { route: 'child-router',  moduleId: 'child-router', nav: true, title:'Child Router' },
-        { route: '',              redirect: 'welcome' }
-      ]);
-    });
+  configureRouter(config) {
+    config.title = 'Aurelia';
+    config.addPipelineStep('authorize', AuthorizeStep); // Add a route filter to the authorize extensibility point.
+    config.map([
+      { route: ['welcome'],     moduleId: 'welcome',      nav: true, title:'Welcome' },
+      { route: 'flickr',        moduleId: 'flickr',       nav: true, auth: true },
+      { route: 'child-router',  moduleId: 'child-router', nav: true, title:'Child Router' },
+      { route: '',              redirect: 'welcome' }
+    ]);
   }
 }
 
@@ -724,14 +927,18 @@ Si prefieres desprenderte de los `#` (almohadilla) en tus URLs, entonces vas a t
 Primero necesitas decirle a Aurelia en el `router` `config` que quieres usar `pushState` de esta manera:
 
 ``` javascript
-this.router.configure(config => {
-  config.title = 'First Impressions';
-  config.options.pushState = true; // <-- this is all you need here
-  config.map([
-    { route: ['','welcome'],  moduleId: './welcome',      nav: true, title:'Welcome' },
-    { route: 'child-router',  moduleId: './child-router', nav: true, title:'Child Router' }
-  ]);
-});
+export class App {
+  configureRouter(config) {
+    config.title = 'Aurelia';
+    config.options.pushState = true; // <-- this is all you need here
+    config.map([
+      { route: ['welcome'],     moduleId: 'welcome',      nav: true, title:'Welcome' },
+      { route: 'flickr',        moduleId: 'flickr',       nav: true, auth: true },
+      { route: 'child-router',  moduleId: 'child-router', nav: true, title:'Child Router' },
+      { route: '',              redirect: 'welcome' }
+    ]);
+  }
+}
 ```
 
 También querrás añadir una [etiqueta base](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base) en la cabeza (head) de tu documento HTML. Esta es importante, así que no la dejes fuera.
@@ -810,25 +1017,18 @@ public class IndexModule : NancyModule {
 
 Técnicas similares las puedes emplear en entornos con otros servidores - solo necesitas asegurarte de que cualquiera que sea el servidor que estás usando, este devuelve siempre el mismo `index.html` independientemente de la petición que reciba. Todos los marcos de trabajo del lado del servidor deberían ser capaces de esto. Aurelia encontrará la página que ha de devolver en base a los datos de enrutamiento.
 
-<h3 id="reusing-an-existing-vm"><a href="#reusing-an-existing-vm">Reusing an existing VM</a></h3>
+<h3 id="reusing-an-existing-vm"><a href="#reusing-an-existing-vm">Reutilizando un modelo de vista existente</a></h3>
 
 A veces puedes querer usar el mismo modelo-vista (VM, view-model) para varias rutas. Por defecto Aurelia verá esas rutas como alias del mismo modelo-vista para múltiples rutas y así solo realiza el proceso de construcción y añadido, así como un ciclo de vida completo. Puede que esto no sea exactamente lo que estás buscando. Mira el siguiente ejemplo de enrutador:
 
 ```javascript
-import {inject} from 'aurelia-framework';
-import {Router} from 'aurelia-router';
-
-@inject(Router)
 export class App {
-  constructor(router) {
-    this.router = router;
-    this.router.configure(config => {
-      config.title = 'Aurelia';
-      config.map([
-        { route: 'product/a',         moduleId: './product'      nav: true },
-        { route: 'product/b',         moduleId: './product',     nav: true },
-      ]);
-    });
+  configureRouter(config) {
+    config.title = 'Aurelia';
+    config.map([
+      { route: 'product/a',         moduleId: './product'      nav: true },
+      { route: 'product/b',         moduleId: './product',     nav: true },
+    ]);
   }
 }
 ```
@@ -1352,9 +1552,9 @@ La fluent API tiene los siguientes métodos enlazables: `asDelete()`, `asGet()`,
 ¿Como se enlazan vistas y modelos? Nuestra sencilla convención se basa en la identidad de módulo -module id-. Si cuentas con un modelo de identidad `./foo/bar/baz` (su ruta básicamente) esté será mapeado por defecto con `./foo/bar/baz.js` y `./foo/bar/baz.html`. Supón que quieres seguir otra convención diferente. ¿Que pasa si todos tus modelos están en una carpeta `view-models` y quieres que tus vista estén en una carpeta `views`? ¿Que tendrías que hacer? Para esto necesitas modificar el comportamiento de la estrategia convencional de vistas -Conventional View Strategy-. Así es como lo harías:
 
 ```javascript
-import {ConventionalView} from 'aurelia-framework';
+import {ConventionalViewStrategy} from 'aurelia-framework';
 
-ConventionalView.convertModuleIdToViewUrl = function(moduleId){
+ConventionalViewStrategy.convertModuleIdToViewUrl = function(moduleId){
   return moduleId.replace('view-models', 'views') + '.html';
 }
 ```
