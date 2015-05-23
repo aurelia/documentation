@@ -1,8 +1,8 @@
 # Para empezar
 
-**¡Bienvenido a Aurelia!** Este tutorial te guiará a través de la creación de una aplicación sencilla usando Aurelia y explicará brevemente sus conceptos principales. Damos por supuesto que te manejas con Javascript, HTML y CSS. Para obtener una rápida visión de conjunto, te recomendamos que vayas directamente a la sección titulada "Configurar la página HTML" de manera que puedas ver sin más como se usa Aurelia. Luego, cuando ya estés listo para montar realmente algo, vuelve aquí y lee acerca de "Configurar tu entorno" y de "Configurar la estructura y el montaje del proyecto". Para ver el resultado completo de este tutorial, échale por favor un vistazo a nuestro [proyecto de esqueleto de navegación](https://github.com/aurelia/skeleton-navigation/releases).
+**¡Bienvenido a Aurelia!** Este tutorial te guiará a través de la creación de una aplicación sencilla usando Aurelia y explicará brevemente sus conceptos principales. Damos por supuesto que te manejas con Javascript, HTML y CSS. Para obtener una rápida visión de conjunto, te recomendamos que vayas directamente a la sección titulada "Configuración de la página HTML" de manera que puedas ver sin más como se usa Aurelia. Luego, cuando ya estés listo para montar realmente algo, vuelve aquí y lee acerca de "Configurar tu entorno" y de "Configurar la estructura y montaje del proyecto". Para ver el resultado completo de este tutorial, échale por favor un vistazo a nuestro [proyecto de esqueleto de navegación](https://github.com/aurelia/skeleton-navigation/releases).
 
->**Nota:** ¿Buscas esta guía en otro idioma? Échale un vistazo a nuestro repositorio [documentation](https://github.com/aurelia/documentation).
+> **Nota:** ¿Buscas esta guía en otro idioma? Échale un vistazo a nuestro repositorio [documentation](https://github.com/aurelia/documentation).
 
 ## Configurar tu entorno
 
@@ -65,7 +65,7 @@ Si nos has seguido hasta aquí, ahora dispones de todas las librerías, configur
 <!doctype html>
 <html>
   <head>
-    <title>Aurelia</title>   
+    <title>Aurelia</title>
     <link rel="stylesheet" type="text/css" href="jspm_packages/npm/font-awesome@4.3.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="styles/styles.css">
   </head>
@@ -73,12 +73,12 @@ Si nos has seguido hasta aquí, ahora dispones de todas las librerías, configur
     <script src="jspm_packages/system.js"></script>
     <script src="config.js"></script>
     <script>
-      System.config({
-        "paths": {
-          "*": "dist/*.js";
-        }
-      });
-    </script>
+     System.config({
+       "paths": {
+         "*": "dist/*.js"
+       }
+     });
+   </script>
     <script>
       System.import('aurelia-bootstrapper');
     </script>
@@ -110,16 +110,16 @@ Crea en la carpeta _src_ los archivos _app.html_ y _app.js_. Estos son la vista 
 
 ### app.js
 ```javascript
-export class Welcome {
+export class Welcome{
   heading = 'Welcome to the Aurelia Navigation App!';
   firstName = 'John';
   lastName = 'Doe';
-  
-  get fullName() {
+
+  get fullName(){
     return `${this.firstName} ${this.lastName}`;
   }
 
-  welcome() {
+  welcome(){
     alert(`Welcome, ${this.fullName}!`);
   }
 }
@@ -174,7 +174,7 @@ Ahora puedes ir en el navegador a [http://localhost:9000/](http://localhost:9000
 
 > **Nota:** Si esto no funcionara, prueba a [actualizar](https://github.com/npm/npm/wiki/Troubleshooting#try-the-latest-stable-version-of-node) a la última versión de npm.
 
-> **Nota:** Aurelia posee un motor de enlace de datos único y potente que usa técnicas adaptativas para elegir el mejor modo de observar cambios en cada propiedad. Por ejemplo, si estás usando un navegador que soporta [Object.observe](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/observe), tanto _firstName_ como _lastName_ serán observados usando esa estrategia. Si no, se generarán accesores (getters) y asignadores (setters) que guarden los cambios en la cola de micro-tareas (Micro Task Queue), emulando correctamente el comportamiento de _Object.observe_. Ya que la propiedad computada _fullName_ no puede ser observada con ninguna de estas técnicas, usaremos [dirty-checking](http://blog.bguiz.com/post/57373805814/accessors-vs-dirty-checking-in-javascript-frameworks/). Usaremos la mejor técnica dependiendo de la situación e incluso pueden incorporarse también estrategias personalizadas con intención de "enseñar" al marco de trabajo a como     observar tipos especiales de patrones de modelo. Esto nos parece estupendo.
+> **Nota:** Aurelia posee un motor de enlace de datos único y potente que usa técnicas adaptativas para elegir el mejor modo de observar cambios en cada propiedad. Por ejemplo, si estás usando un navegador que soporta [Object.observe](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/observe), tanto _firstName_ como _lastName_ serán observados usando esa estrategia. Si no, se generarán accesores (getters) y asignadores (setters) que guarden los cambios en la cola de micro-tareas (Micro Task Queue), emulando correctamente el comportamiento de _Object.observe_. Ya que la propiedad computada _fullName_ no puede ser observada con ninguna de estas técnicas, usaremos dirty-checking. Usaremos la mejor técnica dependiendo de la situación e incluso pueden incorporarse también estrategias personalizadas con intención de "enseñar" al marco de trabajo a como     observar tipos especiales de patrones de modelo. Esto nos parece estupendo.
 
 > **Note:** El comando `.bind` usa el comportamiento por defecto de enlace para cualquier propiedad. El tipo de enlace por defecto es uni-direccional para todo excepto para controles de formulario, para los que es bi-direccional. Esto puede modificarse en cualquier momento mediante los comandos de enlace `.one-way`, `.two-way` y `.one-time`. Análogamente, podemos usar `.delegate` para la delegación de eventos, pero también podemos usar `.trigger` para asignarlo directamente al elemento objetivo.
 
@@ -185,41 +185,27 @@ Ya que se trata de una aplicación de navegación, probablemente deberíamos añ
 ### app.js
 
 ```javascript
-import {inject} from 'aurelia-framework';
-import {Router} from 'aurelia-router';
 import 'bootstrap';
 import 'bootstrap/css/bootstrap.css!';
 
-@inject(Router)
 export class App {
-  constructor(router) {
+  configureRouter(config, router){
+    config.title = 'Aurelia';
+    config.map([
+      { route: ['','welcome'],  moduleId: './welcome',      nav: true, title:'Welcome' }
+    ]);
+
     this.router = router;
-    this.router.configure(config => {
-      config.title = 'Aurelia';
-      config.map([
-        { route: ['','welcome'],  moduleId: './welcome',      nav: true, title:'Welcome' }
-      ]);
-    });
   }
 }
 ```
 
-Bien, aquí hay algunas cosas nuevas realmente interesantes. Queremos usar el enrutador, así que empezamos por importarlo al principio del archivo. Este es el poder de ES6/ES7 otra vez. A continuación creamos nuestra clase _App_ que contendrá nuestros datos y lógica para el diseño principal de la aplicación. Echa una ojeada a la función constructora. Esta está esperando algo para pasarle una instancia del enrutador cuando se crea la clase App. ¿De donde sale eso?
+Bien, aquí hay algunas cosas nuevas realmente interesantes. Queremos usar el enrutador, así que empezamos por crear nuestra clase _App_ e implementamos en ella la función de retrollamada `configureRouter`. Puedes asignar un título a usar cuando se genere el título del documento. A continuación mapeamos nuestras rutas. Cada ruta tiene las siguientes propiedades:
 
-Aurelia crea los componentes de la interfaz de usuario según resultan necesarios para visualizar la aplicación. Esto lo hace usando una contenedor para la [inyección de dependencias](https://es.wikipedia.org/wiki/Inyecci%C3%B3n_de_dependencias) capaz de proveer dependencias como esta del constructor. ¿Como sabe el inyector de dependencias (DI) que es lo que tiene que proporcionarnos? Todo lo que hemos de hacer es añadir un decorador (decorator) `inject` a tu clase que pasa una lista de tipos de los que hay que proporcionar objetos. Debería haber un elemento en el vector por cada parámetro del constructor. En el ejemplo anterior, necesitábamos un objeto del tipo enrutador, así que añadimos el tipo _Router_.
-
-> **Nota:** Si no te gusta usar un decorador (decorator) en este caso, también puedes añadir un método `inject` o propiedad estáticos a la clase que devuelva un vector (array) de tipos a inyectar. 
-
-Necesitamos crear el router como propiedad pública de la clase. La propiedad tiene que llamarse _router_. Esto es importante. No tengas aquí ocurrencias como llamarla _taco_ ni nada parecido, vale? Se trata de un enrutador así que llámalo _router_ y todos estaremos contentos. ¿Hemos mencionado que **es obligatorio llamarla** _router_?
-
-> **Nota:** Esperamos poder eliminar esta restricción en una próxima actualización.
-
-Muy bien. Toca configurar el enrutador. Es sencillo. Puedes incluir un título que se usará cuando se genere el título del documento. Luego incluimos las rutas. Cada ruta posee las siguientes propiedades:
-
-* `route`: Es un patrón el cual, al coincidir, llevará al enrutador a navegar a esta ruta. Puedes usar rutas estáticas como aquí, pero también puedes usar parámetro como este: `customer/:id`. También se da soporte a rutas comodín y a parámetros con cadenas de consulta. La ruta puede ser un único patrón de cadena o un vector de patrones.
-* `moduleId`: Esta es una ruta relativa al modelo actual que especifica la pareja vista/modelo que quieres mostrar para esta ruta.
-* `title`: Opcionalmente puedes proporcionar un título que se usará en la generación del título del documento.
-* `nav`: Si esta ruta debe ser incluida en el modelo de navegación (_navigation model_), porque quieres generar una interfaz de usuario (UI) con ella, este de ser _true_ (o un número que indicará el orden).
+* `route`: Este es un patrón que al proporcionarnos una coincidencia hará que el enrutador navegue hasta esta ruta. Puedes usar rutas estáticas como arriba, pero también puedes usar rutas con parámetros como este: `customer/:id`. También se pueden emplear comodines en las rutas y parámetros de la cadena de búsqueda. La ruta puede ser un patrón de cadena de texto única o puede ser un vector de patrones.
+* `moduleId`: This is a path relative to the current view-model which specifies the view/view-model pair you want to render for this route.
+* `title`: You can optionally provide a title to be used in generating the document's title.
+* `nav`: If this route should be included in the _navigation model_ because you want to generate a UI with it, set this to true (or a number indicating order).
 
 > **Note:** ¿Te diste cuenta de como usamos ES6 imports para cargar el Javascript y el CSS de inicio (bootstrap). 
 
@@ -276,22 +262,18 @@ Vamos a mostrar algunas imágenes de Flickr. Para ello, vamos a configurar nuest
 ### app.js (updated)
 
 ```javascript
-import {inject} from 'aurelia-framework';
-import {Router} from 'aurelia-router';
 import 'bootstrap';
 import 'bootstrap/css/bootstrap.css!';
 
-@inject(Router)
 export class App {
-  constructor(router) {
+  configureRouter(config, router){
+    config.title = 'Aurelia';
+    config.map([
+      { route: ['','welcome'],  moduleId: './welcome',      nav: true, title:'Welcome' },
+      { route: 'flickr',        moduleId: './flickr',       nav: true }
+    ]);
+
     this.router = router;
-    this.router.configure(config => {
-      config.title = 'Aurelia';
-      config.map([
-        { route: ['','welcome'],  moduleId: './welcome',      nav: true, title:'Welcome' },
-        { route: 'flickr',        moduleId: './flickr',       nav: true }
-      ]);
-    });
   }
 }
 ```
@@ -328,13 +310,31 @@ export class Flickr{
 
 Aquí hay un montón de cosas estupendas. Vamos a empezar por el principio. Estamos importando `HttpClient` de Aurelia. Esto nos permite realizar peticiones HTTP de manera muy sencilla. No está incluido en la configuración por defecto de Aurelia, así que necesitas instalar el paquete. Para hacerlo ejecuta este comando en la consola:
 
-
 ```shell
 jspm install aurelia-http-client
 ```
+
 Ahora espero que hayas visto la potencia del gestor y cargador de paquetes integrado. Simplemente instalas un paquete con jspm y luego los importas a tu código usando exactamente el mismo identificador. De esta manera puedes instalar cualquier cosa desde Github o NPM.
 
-Como antes, estamos usando la inyección de dependencias para contar con la instancia de `HttpClient` en el modelo. De todas maneras, no la usamos hasta el método _activate_. ¿Cual es la significación de eso que dices? A eso iba ahora...
+Ahora echa un vistazo a ese decorador de ES7 `inject`. ¿Que es lo que hace? Bien, Aurelia crea los componentes de la interfaz de usuario (UI) a demanda para visualizar tu aplicación. Esto lo hace usando un contenedor de [inyección de dependencias](http://en.wikipedia.org/wiki/Dependency_injection) capaz de proveer dependencias del constructor como HttpClient. ¿Como sabe el sistema de inyección de dependencias (DI) que es lo que tiene que proporcionar? Todo lo que tienes que hacer es añadir decorador `inject` a tu clase que pasa una lista de tipos de los que hay que proporcionar objetos. Debe haber un argumento por cada parámetro del constructor. En el ejemplo de arriba, necesitabamos un objeto HttpClient, así que añadimos el tipo `HttpClient` en el decorador `inject` y luego añadimos un parámetro correspondiente en el constructor.
+
+> **Nota:** Si no quieres usar un decorador en este caso, también puedes añadir un método estático o propiedad a la clase que devuelve un vector de tipos a inyectar.
+
+Si estás usando TypeScript >= 1.5, puedes incluir el decorador `autoinject()` a tu clase y dejar fuera los tipos en la llamada al decorador, pero usándolos en la cabecera del constructor. Así es como se vería:
+
+```javascript
+import {autoinject} from 'aurelia-framework';
+import {HttpClient} from 'aurelia-http-client';
+
+@autoinject()
+export class Flickr{
+  ...
+
+  constructor(public http:Flickr){}
+
+  ...
+}
+```
 
 El enrutador de Aurelia inicia un ciclo de vida en los modelos siempre que las rutas cambian. A este nos referimos como "Screen Activation Lifecycle", ciclo de vida para activación de pantalla. Los modelos pueden acceder opcionalmente a varias partes del ciclo de vida para controlar el flujo para entrar y salir de la ruta. Cuando tu ruta está lista para estar activa, el enrutador llama a `activate`, si está presente. En el código anterior, usamos este gancho (acceso) para llamar a la API de Flickr y obtener de vuelta algunas fotos. Observa que devolvemos el resultado de la petición http desde nuestro método `activate`. Todas las APIs de `HttpClient` devuelven un objeto de tipo `Promise`. El enrutador lo detectará y esperará para completar la navegación hasta que este se resuelva. Así, de esta manera, puedes forzar opcionalmente al enrutador a retrasar el despliegue de la página hasta que se haya rellenado con los datos.
 
@@ -471,26 +471,22 @@ Además de crear elementos a medida, también puedes crear atributos aislados qu
 
 Primero, actualicemos nuestro _app.js_ con la nueva configuración. Aquí está como debe quedar:
 
-### app.js (actualizado... otra vez)
+### app.js (updated...again)
 
-``javascript
-import {inject} from 'aurelia-framework';
-import {Router} from 'aurelia-router';
+```javascript
 import 'bootstrap';
 import 'bootstrap/css/bootstrap.css!';
 
-@inject(Router)
 export class App {
-  constructor(router) {
+  configureRouter(config, router){
+    config.title = 'Aurelia';
+    config.map([
+      { route: ['','welcome'],  moduleId: './welcome',      nav: true, title:'Welcome' },
+      { route: 'flickr',        moduleId: './flickr',       nav: true },
+      { route: 'child-router',  moduleId: './child-router', nav: true, title:'Child Router' }
+    ]);
+
     this.router = router;
-    this.router.configure(config => {
-      config.title = 'Aurelia';
-      config.map([
-        { route: ['','welcome'],  moduleId: './welcome',      nav: true, title:'Welcome' },
-        { route: 'flickr',        moduleId: './flickr',       nav: true },
-        { route: 'child-router',  moduleId: './child-router', nav: true, title:'Child Router' }
-      ]);
-    });
   }
 }
 ```
@@ -499,23 +495,18 @@ Nada nuevo en esto. La parte interesante es lo que está dentro de _child-router
 
 ### child-router.js
 
-``javascript
-import {inject} from 'aurelia-framework';
-import {Router} from 'aurelia-router';
-
-@inject(Router)
+```javascript
 export class ChildRouter{
   heading = 'Child Router';
 
-  constructor(router){
+  configureRouter(config, router){
+    config.map([
+      { route: ['','welcome'],  moduleId: './welcome',      nav: true, title:'Welcome' },
+      { route: 'flickr',        moduleId: './flickr',       nav: true },
+      { route: 'child-router',  moduleId: './child-router', nav: true, title:'Child Router' }
+    ]);
+
     this.router = router;
-    router.configure(config => {
-      config.map([
-        { route: ['','welcome'],  moduleId: './welcome',      nav: true, title:'Welcome' },
-        { route: 'flickr',        moduleId: './flickr',       nav: true },
-        { route: 'child-router',  moduleId: './child-router', nav: true, title:'Child Router' }
-      ]);
-    });
   }
 }
 ```
@@ -549,7 +540,7 @@ Para terminar, aquí está la vista:
 Lanza la aplicación y contempla la magia... y ruega para que el universo no explote.
 
 ## Conclusión
+
 Con su gran atención a la experiencia de desarrollador, Aurelia te puede capacitar no solo para crear aplicaciones sorprendentes, sino también para disfrutar en ese proceso. Lo hemos diseñado con reglas simples en mente de manera que no necesitas perder tiempo con toneladas de configuración o en escribir código modelo solo para satisfacer un marco de trabajo complejo o restrictivo. Nunca chocarás con Aurelia contra barrera alguna. Ha sido cuidadosamente diseñado para que admita complementos y personalizaciones.  
 
-Gracias por tomarte el tiempo de leer nuestra guía. Esperamos que explores la documentación y que construyas algo sorprendente. Estaremos atentos para ver todo
-lo que hagas.
+Gracias por tomarte el tiempo de leer nuestra guía. Esperamos que explores la documentación y que construyas algo sorprendente. Estaremos atentos para ver todo lo que hagas.
