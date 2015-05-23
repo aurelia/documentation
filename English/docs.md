@@ -209,9 +209,7 @@ class CustomerDetail
 
 <h3 id="parent-vm-reference"><a href="#parent-vm-reference">Parent View Models</a></h3>
 
-By default a View-model's access is limited to injected objects as well as children of the
-class. Sometimes it may be desirable to refer to objects and methods on a parent View-model,
-which can be achieved by storing the parent during the _bind_ method of the view lifecycle:
+By default a View-model's access is limited to injected objects as well as children of the class. Sometimes it may be desirable to refer to objects and methods on a parent View-model, which can be achieved by storing the parent during the _bind_ method of the view lifecycle:
 
 ```javascript
 class ChildViewModel {
@@ -749,9 +747,7 @@ The `compose` element also has a `view` attribute which can be used in the same 
 </template>
 ```
 
-If you would like to databind a particular object when using only `view` rather
-than a full fledged view model (perhaps as part of a repeat), you may do so by binding the `view-model` directly. Now you will be able to use properties
-of that object directly in your `view`:
+If you would like to databind a particular object when using only `view` rather than a full fledged view model (perhaps as part of a repeat), you may do so by binding the `view-model` directly. Now you will be able to use properties of that object directly in your `view`:
 
 ```markup
 <template>
