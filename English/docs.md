@@ -1070,6 +1070,40 @@ export class YourViewModel {
 
 > **Note:** Keep in mind that by forcing refreshes, Aurelia has to rebuild the complete VM. As for performance reasons a simple observer on the `router.currentInstruction` might be sufficient for scenarios where you'd simply like to exchange some data.
 
+<h3 id="rendering-multiple-view-ports"><a href="#rendering-multiple-view-ports">Rendering multiple ViewPorts</a></h3>
+Sometimes you need to render content in more than one area of the page. Aurelia's router lets you specify multiple `router-view`s to be activated by a single route. First, add named `router-view` elements to your view:
+
+```markup
+<template>
+  <div class="page-host">
+    <router-view name="left"></router-view>
+  </div>
+  <div class="page-host">
+    <router-view name="right"></router-view>
+  </div>
+</template>
+```
+
+Then in your route config, specify which modules should be activated for each named `router-view`.
+
+```javascript
+configureRouter(config){
+  config.map([{
+    route: 'edit',
+      viewPorts: {
+        left: {
+          moduleId: './editor'
+        },
+        right: {
+          moduleId: './preview'
+        }
+      }
+    }]);
+}
+```
+
+If you don't name a `router-view`, it will be available under the name `'default'`.
+
 <h3 id="generating-route-urls"><a href="#generating-route-urls">Generating route URLs</a></h3>
 
 If you need a to create a URL that matches an existing route, the router can generate one for you.
