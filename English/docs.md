@@ -1287,7 +1287,7 @@ export class SayHello {
   @bindable to;
 
   speak(){
-    alert('Hello ${this.to}!');
+    alert(`Hello ${this.to}!`);
   }
 }
 ```
@@ -1302,7 +1302,7 @@ export class SayHelloCustomElement {
   @bindable to;
 
   speak(){
-    alert('Hello ${this.to}!');
+    alert(`Hello ${this.to}!`);
   }
 }
 ```
