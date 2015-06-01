@@ -82,3 +82,19 @@ Aurelia possède un simple système de logging que le framework utilise lui-mêm
 
 Vous pouvez facilement créer votre propre appender afin de récupérer les logs. Pour cela, il vous faut créer une classe qui respecte l'interface des `appender`. Vous pouvez vous inspirer du [code source de l'appender pour la console](https://github.com/aurelia/logging-console/blob/master/src/index.js).
 
+<h3 id="plugins"><a href="#plugins">Plugins</a></h3>
+
+Un _plugin_ est simplement un module avec une fonction `configure`exportée.
+Durant l'initialisation, Aurelia va charger tous les modules et appeller leurs fonctions `configure`, puis leur envoyer l'instance d'Aurelia. Les plugins peuvent optionnelement retourner une promesse (`Promise`) depuis leur fonction `configure` afin d'effectuer des tâches asynchrones. Quand vous écrivez un plugin, soyez sûr de mettre à disposition toutes les meta-données, avec également une View Strategy pour vos éléments personnalisés.
+
+Afin de configurer votre plugin depuis l'application vous pouvez spécifier une fonction ou un objet comme second paramètre à la fonction `configure`. Votre plugin pourra alors l'utiliser afin de changer sa configuration par défaut. Le développeur qui utilisera votre plugin pourra alors le paramétrer comme cela :
+
+```javascript
+aurelia.use.plugin('./path/to/plugin', config => { /* configuration work */ });
+```
+
+> **Note:** Ne vous fiez pas aux coventions de nommage dans les plugins. Vous ne savez pas si le développeur à changer les conventions d'Aurelia. Les  plugins tierds devraient être explicites afin d'assurer qu'ils fonctionnent correctement dans des contextes différents.
+
+<h4 id="promises"><a href="#promises">Promises</a></h4>
+
+Par défaut, Aurelia utilise les promesses (`Promises`) native à ES6 ou un polyfill. Toutefois, vous pouvez remplacer ceci avec l'excellente librairie [Bluebird](https://github.com/petkaantonov/bluebird). Il vous faut simplement l'inclure dans votre page avant les autres scripts. Il va alors remplacer le système de promesse par le siens qui est plus rapide et possède un meilleur support pour le debugging. Addientionnelent, quand vous l'utiliser avec le convertisseur Babel, vous pouvez utiliser [coroutines](http://babeljs.io/docs/usage/transformers/other/bluebird-coroutines/) pour améliorer votre code asyncrhone.
