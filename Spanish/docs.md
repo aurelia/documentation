@@ -835,12 +835,12 @@ Todas las rutas con una propiedad `nav` verdadera se recogen en un vector `navig
 
 Siempre que el sistema de enrutado procesa una navegación, este ejecuta un estricto ciclo de vida de los modelos desde y hacia los que está navegando. Hay cuatro estados en el ciclo de vida. Se puede acceder opcionalmente a cualquiera de ellos mediante la implementación del método adecuado en la clase de los modelos. Aquí hay una lista de retrollamadas al ciclo de vida:
 
-* `canActivate(params, queryString, routeConfig)` - Implementa este gancho si quieres controlar si se puede navegar o no a tu modelo. Devuelve un valor booleano, una promesa de valor booleano o una orden de navegación.
-* `activate(params, queryString, routeConfig)` - Implementa este gancho si quieres ejecutar lógica a la medida justo antes de que se presente tu modelo. Puedes devolver opcionalmente una promesa para decirle al sistema de enrutado que espere el enlazado y añada la vista después de que termines tu trabajo.
+* `canActivate(params, config, navigationInstruction)` - Implementa este gancho si quieres controlar si se puede navegar o no a tu modelo. Devuelve un valor booleano, una promesa de valor booleano o una orden de navegación.
+* `activate(params, config, navigationInstruction)` - Implementa este gancho si quieres ejecutar lógica a la medida justo antes de que se presente tu modelo. Puedes devolver opcionalmente una promesa para decirle al sistema de enrutado que espere el enlazado y añada la vista después de que termines tu trabajo.
 * `canDeactivate()` - Implementa este gancho si quieres controlar si el sistema de enrutado puede irse (_can navigate away_) de tu modelo cuando nos movemos a una nueva ruta. Devuelve un valor booleano, una promesa de un valor booleano o una orden de navegación.
 * `deactivate()` - Implementa este gancho si deseas ejecutar lógica a medida cuando se navega abandonando tu modelo. Puedes optar por devolver una promesa para decirle al enrutador que espere hasta que termines tu trabajo.
 
-El objeto `params` tendrá una propiedad por cada parámetro de la ruta que fue interpretada, `queryString` tendrá una propiedad por cada valor de cadena de consulta y `routeConfig` será el objeto original de configuración de rutas que tu montaste.  
+El objeto `params` tendrá una propiedad por cada parámetro de la ruta que fue interpretada. Cualquier parámetro de cadena de consulta también se fusionarán en el objeto `params`. El objeto `config` será el objeto original de configuración de rutas que tu montaste.  
 
 > **Nota** Una _Navigation Command_ orden de navegación es cualquier objeto con un método `navigate(router)`. Cuando se encuentra uno, se cancelará la navegación y el control se transferirá a la orden de navegación. Hay una orden de navegación integrado: `Redirect`.
 
