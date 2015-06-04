@@ -320,17 +320,17 @@ Ahora echa un vistazo a ese decorador de ES7 `inject`. ¿Que es lo que hace? Bie
 
 > **Nota:** Si no quieres usar un decorador en este caso, también puedes añadir un método estático o propiedad a la clase que devuelve un vector de tipos a inyectar.
 
-Si estás usando TypeScript >= 1.5, puedes incluir el decorador `autoinject()` a tu clase y dejar fuera los tipos en la llamada al decorador, pero usándolos en la cabecera del constructor. Así es como se vería:
+Si estás usando TypeScript >= 1.5, puedes incluir el decorador `@autoinject` a tu clase y dejar fuera los tipos en la llamada al decorador, pero usándolos en la cabecera del constructor. Así es como se vería:
 
 ```javascript
 import {autoinject} from 'aurelia-framework';
 import {HttpClient} from 'aurelia-http-client';
 
-@autoinject()
+@autoinject
 export class Flickr{
   ...
 
-  constructor(public http:Flickr){}
+  constructor(public http:HttpClient){}
 
   ...
 }
