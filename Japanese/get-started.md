@@ -330,7 +330,7 @@ import {HttpClient} from 'aurelia-http-client';
 export class Flickr{
   ...
 
-  constructor(public http:Flickr){}
+  constructor(public http:HttpClient){}
 
   ...
 }
