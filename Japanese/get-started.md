@@ -320,17 +320,17 @@ jspm install aurelia-http-client
 
 > **注:** もしデコレータを使いたくない場合は、static `inject` メソッドもしくはプロパティをクラスに追加し、injectする型の配列を返すことで代用できます。
 
-あなたがTypeScript 1.5以上を利用しているなら、`autoinject()` デコレータを使って、デコレータに型を渡す代わりに、コンストラクタ引数に型を明示することができます。これを使う場合のコードを以下に示します:
+あなたがTypeScript 1.5以上を利用しているなら、`@autoinject` デコレータを使って、デコレータに型を渡す代わりに、コンストラクタ引数に型を明示することができます。これを使う場合のコードを以下に示します:
 
 ```javascript
 import {autoinject} from 'aurelia-framework';
 import {HttpClient} from 'aurelia-http-client';
 
-@autoinject()
+@autoinject
 export class Flickr{
   ...
 
-  constructor(public http:Flickr){}
+  constructor(public http:HttpClient){}
 
   ...
 }
