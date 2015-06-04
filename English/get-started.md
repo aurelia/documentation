@@ -320,17 +320,17 @@ Now, take a look at that ES7 `inject` decorator? What does that do? Well, Aureli
 
 > **Note:** If you don't like using a decorator in this case, you can also add a static `inject` method or property to the class that returns an array of types to inject.
 
-If you are using TypeScript >= 1.5, you can add the `autoinject()` decorator to your class and leave out the Types in the decorator call, but just use them on the constructor's signature. Here's what that would look like:
+If you are using TypeScript >= 1.5, you can add the `@autoinject` decorator to your class and leave out the Types in the decorator call, but just use them on the constructor's signature. Here's what that would look like:
 
 ```javascript
 import {autoinject} from 'aurelia-framework';
 import {HttpClient} from 'aurelia-http-client';
 
-@autoinject()
+@autoinject
 export class Flickr{
   ...
 
-  constructor(public http:Flickr){}
+  constructor(public http:HttpClient){}
 
   ...
 }
