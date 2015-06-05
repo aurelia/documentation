@@ -140,15 +140,15 @@ class Flickr
   @inject:[HttpClient]
 ``` 
 
-Si estás usando TypeScript, puedes usar la opción de compilado `--emitDecoratorMEtadata` junto con el decorador `autoinject()` de Aurelia para capacitar al marco de trabajo a leer la información de tipos estándar de TS. Como resultado, no hay necesidad de duplicar los tipos. Así es como quedaría:
+Si estás usando TypeScript, puedes usar la opción de compilado `--emitDecoratorMEtadata` junto con el decorador `@autoinject` de Aurelia para capacitar al marco de trabajo a leer la información de tipos estándar de TS. Como resultado, no hay necesidad de duplicar los tipos. Así es como quedaría:
 
 ```javascript
 import {autoinject} from 'aurelia-framework';
 import {HttpClient} from 'aurelia-http-client';
 
-@autoinject()
-export class CustomerDetail{
-    constructor(http:HttpClient){
+@autoinject
+export class CustomerDetail {
+    constructor(public http:HttpClient) {
         this.http = http;
     }
 }
