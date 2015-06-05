@@ -140,15 +140,15 @@ class Flickr
   @inject:[HttpClient]
 ```
 
-TypeScriptを利用しているなら、`--emitDecoratorMetadata` コンパイラオプションと、 `@autoinject()` デコレータを利用して、フレームワークにTSの型情報を読み込ませることが可能です。それにより、型を型を繰り返し書く必要がありません。次のようになります:
+TypeScriptを利用しているなら、`--emitDecoratorMetadata` コンパイラオプションと、 `@autoinject` デコレータを利用して、フレームワークにTSの型情報を読み込ませることが可能です。それにより、型を型を繰り返し書く必要がありません。次のようになります:
 
 ```javascript
 import {autoinject} from 'aurelia-framework';
 import {HttpClient} from 'aurelia-http-client';
 
-@autoinject()
-export class CustomerDetail{
-    constructor(http:HttpClient){
+@autoinject
+export class CustomerDetail {
+    constructor(public http:HttpClient) {
         this.http = http;
     }
 }
