@@ -378,7 +378,7 @@ Aureliaのルータは、ルートが変更されるたびにビュー·モデ�
 
 ```markup
 <template>
-  <import from='./nav-bar'></import>
+  <require from='./nav-bar'></require>
 
   <nav-bar router.bind="router"></nav-bar>
 
