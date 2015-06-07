@@ -194,7 +194,7 @@ export class CustomerDetail{
 }
 ```
 
-この例では、DIコンテナが `CustomerDetail` のインスタンスを要求されるたびに、コンテナはシングルトンではなく、新しいインスタンスを生成して返します。 `singleton` や `transient` はフレームワークが提供する、すぐに使えるレジストレーションです。また、独自のレジストレーションを作成することも可能です。`register(container, key, fn)` メソッドを実装したクラスを作成し、そのインスタンスを `registration` デコレータで指定します。 
+この例では、DIコンテナが `CustomerDetail` のインスタンスを要求されるたびに、コンテナはシングルトンではなく、新しいインスタンスを生成して返します。 `singleton` や `transient` はフレームワークが提供する、すぐに使えるレジストレーションです。また、独自のレジストレーションを作成することも可能です。`register(container, key, fn)` メソッドを実装したクラスを作成し、そのインスタンスを `registration` デコレータで指定します。
 
 デコレータを使えない、もしくは使いたくないんだけど、という方も心配しないでください。フォールバックの仕組みを用意しています。スタティックな `decorators` プロパティもしくはメソッドを用意し、チェイン可能な `Decorators` ヘルパを使うだけです。このヘルパには我々が提供するすべてのデコレータを取得するメソッドを持っていますから、どんな言語でも利用することができます。上記の例をCoffeeScriptで書いてみます:
 
@@ -348,7 +348,7 @@ _これは何を意味するのでしょうか?_
 これら全てはDOMイベントに対して、様々な方法で動作を行うものでした。後で手動で呼び出せるように、直接関数を参照するような、カスタム属性やカスタムエレメントを使うこともあるでしょう。関数リファレンスを渡すためには、 `.call` バインディングを使います。(それをあとで _呼び出す_ からです):
 
 ```markup
-<div touch.call="sayHello()">Say Hello</button>
+<button touch.call="sayHello()">Say Hello</button>
 ```
 
 これで、カスタム属性 `touch` は、 `sayHello()` を実行する関数を手に入れました。必要があれば、呼び出し元からデータを受け取ることも可能です。これは、triggerやdelegateに `$event` オブジェクトを渡すこと同じ働きをします。
@@ -1521,7 +1521,7 @@ client.createRequest('some/cool/path')
   .send();
 ```
 
-流れるようなAPIには、続けて書くことができる下記のメソッドがあります: `asDelete()`,`asGet()`,`asHead()`,`asOptions()`,`asPatch()`,`asPost()`,`asPut()`,`asJsonp()`,`withUrl()`,`withBaseUrl()`,`withContent()`,`withParams()`,`withResponseType()`,`withTimeout()`,`withHeader()`,`withCredentials()`,`withReviver()`,`withReplacer()`,`withProgressCallback()`,`withCallbackParameterName()`. 
+流れるようなAPIには、続けて書くことができる下記のメソッドがあります: `asDelete()`,`asGet()`,`asHead()`,`asOptions()`,`asPatch()`,`asPost()`,`asPut()`,`asJsonp()`,`withUrl()`,`withBaseUrl()`,`withContent()`,`withParams()`,`withResponseType()`,`withTimeout()`,`withHeader()`,`withCredentials()`,`withReviver()`,`withReplacer()`,`withProgressCallback()`,`withCallbackParameterName()`.
 
 <h2 id="customization"><a href="#customization">カスタマイズ</a></h2>
 

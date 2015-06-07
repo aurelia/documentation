@@ -24,7 +24,7 @@ Aurelia se diseñó para navegadores actualizados automática y permanentemente 
 </script>
 ```
 
-> **Nota:** Aurelia en si mismo no necesita de WeakMap, pero este es usado por el polyfill MutationObserver. 
+> **Nota:** Aurelia en si mismo no necesita de WeakMap, pero este es usado por el polyfill MutationObserver.
 
 
 <h2 id="startup-and-configuration"><a href="#startup-and-configuration">Arranque y configuración</a></h2>
@@ -138,7 +138,7 @@ HttpClient = require('aurelia-http-client').HttpClient;
 class Flickr
   constructor: (@http) ->
   @inject:[HttpClient]
-``` 
+```
 
 Si estás usando TypeScript, puedes usar la opción de compilado `--emitDecoratorMEtadata` junto con el decorador `@autoinject` de Aurelia para capacitar al marco de trabajo a leer la información de tipos estándar de TS. Como resultado, no hay necesidad de duplicar los tipos. Así es como quedaría:
 
@@ -196,7 +196,7 @@ export class CustomerDetail{
 
 Ahora, cada vez que se le solicita al contenedor de inyección de dependencias un objeto del tipo `CustomerDetail`, el contenedor devolverá un nuevo objeto, en lugar de uno único -singleton-. Los registros `Singleton` y `Transient` vienen con el paquete, pero puedes crear los tuyos propios escribiendo una clase que herede de `Registration`.
 
-No te preocupes si no sabes o no quieres usar decoradores. Disponemos de un mecanismo alternativo. Incluye simplemente una propiedad o método estáticos `decorators` y luego usa nuestro auxiliar -helper- `Decorators` encadenable. El auxiliar dispone de métodos para todos nuestros decoradores, de manera que te resultará fácil de usar en cualquier lenguaje. Así es como se podría escribir el ejemplo anterior en CoffeeScript 
+No te preocupes si no sabes o no quieres usar decoradores. Disponemos de un mecanismo alternativo. Incluye simplemente una propiedad o método estáticos `decorators` y luego usa nuestro auxiliar -helper- `Decorators` encadenable. El auxiliar dispone de métodos para todos nuestros decoradores, de manera que te resultará fácil de usar en cualquier lenguaje. Así es como se podría escribir el ejemplo anterior en CoffeeScript
 
 ```coffeescript
 HttpClient = require('aurelia-http-client').HttpClient;
@@ -346,10 +346,10 @@ La propiedad `$event` se puede pasar como un argumento en una llamada a una func
 Todo esto va de una u otra manera en contra de los eventos de DOM. Ocasionalmente puedes encontrarte con un atributo -Custom Attribute- o elemento a medida -Custom Element- de Aurelia que necesite directamente una referencia a tu función de forma que pueda ser invocada a mano posteriormente. Para pasar una referencia de función, usa el enlazador `.`call` (puesto que el atributo la _llamará -call-_ más tarde):
 
 ```markup
-<div touch.call="sayHello()">Say Hello</button>
+<button touch.call="sayHello()">Say Hello</button>
 ```
 
-Ahora el atributo a medida -Custom Attribute- `touch` recibirá una función que podrá llamar para invocar tu código `sayHello()`. Dependiendo de la naturaleza del `implementor`, podrías ser capaz de recibir datos del `caller`. Esto funciona igual que con `trigger/delegate` proporcionando un objeto `$event`. 
+Ahora el atributo a medida -Custom Attribute- `touch` recibirá una función que podrá llamar para invocar tu código `sayHello()`. Dependiendo de la naturaleza del `implementor`, podrías ser capaz de recibir datos del `caller`. Esto funciona igual que con `trigger/delegate` proporcionando un objeto `$event`.
 
 <h4 id="string-interpolation"><a href="#string-interpolation">Interpolación de cadenas</a></h4>
 
@@ -707,7 +707,7 @@ Hablando de mapas, así es como lo enlazarías con un mapa ES6:
 
 Si en lugar de iterar sobre una colección lo que quieres es hacerlo un determinado número de veces, puedes usar en su lugar la sintaxis "i of count" donde "i" es el índice de la iteración y "count" es una expresión de enlace que se evalúa a un entero.
 
-```markup 
+```markup
 <ul>
   <li repeat.for="i of rating">*</li>
 </ul>
@@ -739,7 +739,7 @@ El elemento a medida `compose` te capacita para mostrar dinámicamente interfaz 
 
 Ahora, dependiendo del _type_ del elemento, el elemento `compose` cargará un modelo (y vista) diferente y mostrado en el DOM. Si el modelo tiene un método `activate`, el elemento `compose` lo llamará y le`pasará el `model` como parámetro. El método `activate` puede devolver incluso una `Promise` -promesa- que hace que el proceso de composición espere hasta que alguna tarea asíncrona concluya antes de ejecutar realmente los enlaces de datos y el despliegue en el DOM.
 
-El elemento `compose` también tiene un atributo `view` que puede ser usado de la misma manera que `view-model` si no deseas aprovechar la convención estándar de vista/modelo. Si especificas una vista (view), pero no un modelo-vista (view-model), entonces la vista se enlazará al contexto que la envuelve. 
+El elemento `compose` también tiene un atributo `view` que puede ser usado de la misma manera que `view-model` si no deseas aprovechar la convención estándar de vista/modelo. Si especificas una vista (view), pero no un modelo-vista (view-model), entonces la vista se enlazará al contexto que la envuelve.
 
 ```markup
 <template repeat.for="item of items">
@@ -1122,12 +1122,12 @@ export class Show {
 
 Lo primero a destacar es que los atributos a medida son clases y siguen los mismos patrones que hemos visto anteriormente. Observa que los decoradores -decorators- juegan un importante papel en la definición de un atributo. Aquí tienes lo que hacen:
 
-* `@customAttribute('show')` - Indica que esta clase es un atributo a medida de manera que el compilador HTML sepa como se integra esta clase. Este atributo será reconocido por el compilador cada vez que encuentre un atributo con el nombre `show`. 
+* `@customAttribute('show')` - Indica que esta clase es un atributo a medida de manera que el compilador HTML sepa como se integra esta clase. Este atributo será reconocido por el compilador cada vez que encuentre un atributo con el nombre `show`.
 * `inject` - Esto forma parte del sistema de inyección de dependencias; lo mismo que hemos visto antes. Los atributos a medida pueden recibir inyectado en sus constructores el elemento sobre el que están definido. Eso es lo que ocurre aquí. Todo lo que tienes que hacer es usar el tipo `Element` del navegador para indicarlo.
 
 Hay algunas otras cosas que tienen lugar.
 
-* Los atributos en HTML tienen un valor. Por lo tanto, tu clase de elemento a medida tendrá una propiedad que se mantendrá sincronizada con el HTML. Si implementas un método `valueChanged` -valor modificado-, este será invocado cada vez que el valor del atributo cambie. Su primer argumento será el nuevo valor y el segundo será el antiguo. 
+* Los atributos en HTML tienen un valor. Por lo tanto, tu clase de elemento a medida tendrá una propiedad que se mantendrá sincronizada con el HTML. Si implementas un método `valueChanged` -valor modificado-, este será invocado cada vez que el valor del atributo cambie. Su primer argumento será el nuevo valor y el segundo será el antiguo.
 
 Bien. Hablemos de convenciones.
 
@@ -1248,7 +1248,7 @@ Antes de adentrarnos en los aspectos únicos, déjame recordarte la parte de ell
 
 Bien, y que distinto? Echemos un vistazo al constructor. Tenemos dos elementos únicos inyectados: `BoundViewFactory` y `ViewSlot`.
 
-`BoundViewFactory` es capaz de generar objetos a partir de las plantillas HTML a las que está vinculada el atributo. No hay necesidad de preocuparse por la compilación, etc. Todo eso ya se ha tenido en cuenta. ¿Por que se llama `BoundViewFactory` -factoría de vista vinculada-? Bien, ya se refiere al contexto antecesor de enlazado. Por lo tanto, en un sentido está vinculado. Así que si llamas a su método `create` este generará una nueva vista -View- a partir de la plantilla que será enlazada a dicho contexto. Esto es lo que buscamos con un atributo `if`. Esto no es lo que quieres con un atributo `repeat`. En este caso, cada vez que llamas a `create` quieres generar una nueva vista vinculada a cada uno de los elementos del vector. Para conseguir esto, simplemente pasa el objeto que deseas vincular a la vista en el método `create`.   
+`BoundViewFactory` es capaz de generar objetos a partir de las plantillas HTML a las que está vinculada el atributo. No hay necesidad de preocuparse por la compilación, etc. Todo eso ya se ha tenido en cuenta. ¿Por que se llama `BoundViewFactory` -factoría de vista vinculada-? Bien, ya se refiere al contexto antecesor de enlazado. Por lo tanto, en un sentido está vinculado. Así que si llamas a su método `create` este generará una nueva vista -View- a partir de la plantilla que será enlazada a dicho contexto. Esto es lo que buscamos con un atributo `if`. Esto no es lo que quieres con un atributo `repeat`. En este caso, cada vez que llamas a `create` quieres generar una nueva vista vinculada a cada uno de los elementos del vector. Para conseguir esto, simplemente pasa el objeto que deseas vincular a la vista en el método `create`.
 
 `ViewSlot` representa el hueco o localización en el DOM desde la que se extrajo la plantilla. Normalmente se trata de la localización en la que deseas añadir los objetos del tipo View.
 

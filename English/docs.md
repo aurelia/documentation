@@ -346,7 +346,7 @@ The `$event` property can be passed as an argument to a delegate/trigger functio
 All of this works against DOM events in some way or another. Occasionally you may have an Aurelia Custom Attribute or Element that wants a reference to your function directly so that it can invoke it manually at a later time. To pass a function reference, use the `.call` binding (since the attribute will _call_ it later):
 
 ```markup
-<div touch.call="sayHello()">Say Hello</button>
+<button touch.call="sayHello()">Say Hello</button>
 ```
 
 Now the Custom Attribute `touch` will get a function that it can call to invoke your `sayHello()` code. Depending on the nature of the implementor, you may be able to receive data from the caller. This works the same as with trigger/delegate by providing an `$event` object.
@@ -707,7 +707,7 @@ Speaking of Maps, here's how you would bind to an ES6 Map:
 
 If instead of iterating over a collection you would rather iterate a specified number of times, you can instead use the syntax "i of count" where "i" is the index of the iteration and "count" is a binding expression that evaluates to an integer.
 
-```markup 
+```markup
 <ul>
   <li repeat.for="i of rating">*</li>
 </ul>
