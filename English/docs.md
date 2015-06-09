@@ -44,6 +44,7 @@ export function configure(aurelia) {
   aurelia.use
     .defaultBindingLanguage()
     .defaultResources()
+    .history()
     .router()
     .eventAggregator()
     .plugin('./path/to/plugin');
@@ -377,12 +378,19 @@ In addition to commands and interpolation, the binding language recognizes the u
 <input type="text" ref="name"> ${name.value}
 ```
 
-You can also use the special `.view-model` binding in conjunction with `ref` to get the view-model instance that backs an Aurelia Custom Element. By using this technique, you can connect different components to each other like so:
+You can also use `ref` as a binding command to get the view-model instance that backs an Aurelia Custom Element or Custom Attribute. By using this technique, you can connect different components to each other:
 
 ```markup
-<i-produce-a-value ref.view-model="producer"></i-produce-a-value>
+<i-produce-a-value view-model.ref="producer"></i-produce-a-value>
 <i-consume-a-value input.bind="producer.output"></i-consume-a-value>
 ```
+
+`view-model.ref="producer"` creates an alias to the view-model for the `i-produce-a-value` custom element which you can then use elsewhere to pass to another custom element or use properties of the VM. Thus in the second line of the code above, `i-consume-a-value` has a property called `input` that has been bound to the `output` property of the VM of the `i-produce-a-value element`. There are four ways to use `ref` to reference elements and view-models:
+
+* `attribute-name.ref="someIdentifier"`- create a reference to a custom attribute's class instance
+* `view-model.ref="someIdentifier"` - create a reference to a custom element's class instance
+* `element.ref="someIdentifier"` - create a reference to the current element itself
+* `ref="someIdentifier"` - same as `element.ref`
 
 <h4 id="select-elements"><a href="#select-elements">select elements</a></h4>
 
