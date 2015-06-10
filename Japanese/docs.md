@@ -1039,6 +1039,59 @@ export class YourViewModel {
 
 > **注:** リフレッシュを強制することで、Aureliaはビューモデルを再構成することに注意してください。 性能の観点からすると、データをやりとりするだけなら、 `router.currentInstruction` のシンプルなオブザーバーで十分です。
 
+<h3 id="rendering-multiple-view-ports"><a href="#rendering-multiple-view-ports">複数のビューポートを描画する</a></h3>
+時々、一つのページの中の複数の領域を描画(生成)したいことがあるでしょう。Aureliaのルーターは一つのルートから複数の`router-view`を指定してアクティベートすることができます。まず、ビューの`router-view`に`name`属性で名前をつけましょう。
+
+```markup
+<template>
+  <div class="page-host">
+    <router-view name="left"></router-view>
+  </div>
+  <div class="page-host">
+    <router-view name="right"></router-view>
+  </div>
+</template>
+```
+
+次に、ルートの構成でそれぞれ名前をつけた`router-view`にどのモジュールが対応するかを指定します。
+
+```javascript
+configureRouter(config){
+  config.map([{
+    route: 'edit',
+      viewPorts: {
+        left: {
+          moduleId: './editor'
+        },
+        right: {
+          moduleId: './preview'
+        }
+      }
+    }]);
+}
+```
+
+もし、`router-view`に名前をつけなかった場合は、 `'default'`という名前で扱うことができます。
+
+<h3 id="generating-route-urls"><a href="#generating-route-urls">ルートのURLを生成する</a></h3>
+
+もし、既に存在するルートにマッチするURLを生成したい場合は、ルーターはそのようなURLを生成することができます。
+If you need a to create a URL that matches an existing route, the router can generate one for you.
+
+```javascript
+router.generate('userDetail', { id: 123 });
+```
+
+最初の引数がルートの名前で、それはルートの構成で指定されています。２つ目の引数はルートのテンプレートを満たすようなルートのパラメータを表すオブジェクトです。そのオブジェクトの中でルートのパラメータにマッチしないプロパティは自動的にクエリの文字列に追加されます。
+
+生成されたURLにナビゲートしたい時は、 `router.navigateToRoute('userDetail', { id: 123 })`を使います。
+
+もし、単にビューの中のアンカーを生成したい時は、`route-href`カスタム属性を使うことができます。
+
+```markup
+<a route-href="route: userDetail; params.bind: { id: user.id }">${user.name}</a>
+```
+
 <h2 id="extending-html"><a href="#extending-html">HTMLを拡張する</a></h2>
 
 Aureliaには強力かつ拡張可能なHTMLテンプレートコンパイラがあります。コンパイラそのものは、拡張と相互作用するアルゴリズムです。すぐに使えるように、Aureliaは二つの拡張を用意しています: _カスタムエレメント_ と _カスタム属性_ です。
@@ -1062,7 +1115,7 @@ Aureliaには強力かつ拡張可能なHTMLテンプレートコンパイラが
 
 <h3 id="custom-attributes"><a href="#custom-attributes">カスタム属性</a></h3>
 
-カスタム属性はは、既存のHTMLエレメントに機能や振る舞いを"付加"します。カスタム属性の代表的な利用例は:
+カスタム属性は、既存のHTMLエレメントに機能や振る舞いを"付加"します。カスタム属性の代表的な利用例は:
 
 * jQueryや、それに類するプラグインをラップする ( `global-behavior` では十分でないときに)。
 * 共通のスタイル、クラス、属性バインディングのショートカットを作成する。
