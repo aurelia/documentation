@@ -9,14 +9,13 @@ We've got a very rich set of docs planned for Aurelia. Unfortunately, we haven't
 Aurelia was originally designed for Evergreen Browsers. This includes Chrome, Firefox, IE11 and Safari 8. However, we have identified how to support IE9 and above. To make this work, you need to add an additional polyfill for MutationObservers. This can be achieved by a jspm install of `github:polymer/mutationobservers`. Then wrap the call to `aurelia-bootstrapper` as follows:
 
 ```markup
-<script src="jspm_packages/github/polymer/mutationobservers@0.4.2/MutationObserver.js"></script>
 <script src="jspm_packages/system.js"></script>
 <script src="config.js"></script>
 <script>
   // Loads WeakMap polyfill needed by MutationObservers
   System.import('core-js').then( function() {
     // Imports MutationObserver polyfill
-    System.import('mutationobservers').then( function() {
+    System.import('polymer/mutationobservers').then( function() {
       // Ensures start of Aurelia when all required IE9 dependencies are loaded
       System.import('aurelia-bootstrapper');
     })
