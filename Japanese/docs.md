@@ -1076,7 +1076,7 @@ configureRouter(config){
 <h3 id="generating-route-urls"><a href="#generating-route-urls">ルートのURLを生成する</a></h3>
 
 もし、既に存在するルートにマッチするURLを生成したい場合は、ルーターはそのようなURLを生成することができます。
-If you need a to create a URL that matches an existing route, the router can generate one for you.
+
 
 ```javascript
 router.generate('userDetail', { id: 123 });
