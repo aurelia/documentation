@@ -44,6 +44,7 @@ export function configure(aurelia) {
   aurelia.use
     .defaultBindingLanguage()
     .defaultResources()
+    .history()
     .router()
     .eventAggregator()
     .plugin('./path/to/plugin');
@@ -211,8 +212,6 @@ class CustomerDetail
 
 デフォルトでは、ビューモデルがアクセスできる範囲は、インジェクトされたオブジェクト、および自分自身の子供に限定されます。親ビューモデルのもつオブジェクトやメソッドにアクセスしたい場合、ビューライフサイクルの _bind_ メソッド中で親ビューモデルへのリファレンスを保持することで、アクセスが可能になります。
 
-
-
 ```javascript
 class ChildViewModel {
   bind(bindingContext) {
@@ -379,12 +378,18 @@ _これは何を意味するのでしょうか?_
 <input type="text" ref="name"> ${name.value}
 ```
 
-特別な `.view-model` バインディングを `ref` と組み合わせて使うことで、Aureliaカスタムエレメントの後ろのビューモデルのインスタンスを取得することができます。このテクニックを使うことで、異なるコンポーネントを相互に接続することができます。次の例をみてください:
+`ref` をバインディングコマンドとして使い、カスタムエレメントやカスタム属性の背後のビューモデルを取得できます。 このテクニックを使うことで、異なるコンポーネントを相互に接続することができます。次の例をみてください:
 
 ```markup
-<i-produce-a-value ref.view-model="producer"></i-produce-a-value>
-<i-consume-a-value input.bind="producer.output"></i-consume-a-value>
+<producer producer.ref="producerVM"></producer>
+<consumer input.bind="producerVM.output"></consumer>
 ```
+
+`producer.ref="producerVM"` は `producer` カスタムエレメントのビューモデルへの別名を作成し、他のカスタムエレメントに渡したり、ビューモデルのプロパティを利用したりすることができます。これを使い、上記の例の2行目では、`consumer` 要素の `input` プロパティに `producer` ビューモデルの `output` プロパティを結びつけています。 エレメントやビューモデルを参照する `ref` の使い方はいくつかあります:
+
+* `attribute-name.ref="someIdentifier"`- カスタム属性のクラスインスタンスへの参照を作成する
+* `element-name.ref="someIdentifier"`- カスタムエレメントのクラスインスタンスへの参照を作成する
+* `ref="someIdentifier"` - DOM中のHTMLエレメントへの参照を作成する
 
 <h4 id="select-elements"><a href="#select-elements">セレクトエレメント</a></h4>
 
@@ -707,6 +712,14 @@ export class IssueSearch {
 </ul>
 ```
 
+コレクションに対して繰り返すのではなく、ある回数繰り返して実施する場合は、 "i of count" という文法を使います。ここで"i"は繰り返し時にインデックスが入る変数、"count"は整数を返すバインディング式です。
+
+```markup
+<ul>
+  <li repeat.for="i of rating">*</li>
+</ul>
+```
+
 > **注:**: `if` 属性同様、 `template` タグを使って、親要素のない複数のエレメントをまとめることができます。
 
 `repeat` 属性で繰り返される要素では、バインディング内で特殊なコンテキスト変数が利用できます:
@@ -734,6 +747,22 @@ export class IssueSearch {
 これで、要素の _type_ に応じて、 `compose` 要素は異なるビューモデル(とビュー)をロードし、DOMにレンダリングします。もしビューモデルに `activate` メソッドがあれば、 `compose` エレメントはそれを呼び出し、 `model` を引数として渡します。 `activate` メソッドは `Promise` を返して、実際にデータバインドやDOMへのレンダリングが始まる前に、なんらかの非同期処理を走らせてからcompose処理を行うようにすることができます。
 
 もしあなたが標準のビュー/ビューモデルの規約とは異なるビューを使いたい場合、 `compose` 要素に `view-model` と同じように、 `view` 属性を指定することもできます。 `view` を指定して、`view-model` を指定しない場合は、このエレメントを囲っているコンテキストにバインドされます。
+
+```markup
+<template repeat.for="item of items">
+    <compose view="my-view.html"></compose>
+</template>
+```
+
+`view` を使う際に、完全なビューモデルではなく、特定のオブジェクトを使いたいとき(たぶん、repeatの中などでしょう)は、 `view-model` に直接バインドすればよいです。これで、 `view` の中で直接オブジェクトのプロパティを利用することができます:
+
+```markup
+<template>
+    <div repeat.for="item of items">
+      <compose view="my-view.html" view-model.bind="item">
+    </div>
+</template>
+```
 
 データに応じてビューを切り替えたい場合はどうすればよいでしょうか?または、実行時に判断してビューを切り替えたい場合は?そのような場合は、ビューモデルに `getViewStrategy()` メソッドを実装します。そこでビューへの相対パスか、独自のビューのロード時処理を実装した、 `ViewStrategy` を返します。素晴らしい点は、このメソッドは `activate` の後に実行されるので、ビューを決定する際にモデルのデータを参照することができることです。
 
@@ -770,20 +799,20 @@ export class App {
 
     config.title = 'Aurelia';
     config.map([
-      { route: ['', 'home'],               moduleId: './home/index' },
-      { route: 'users',                    moduleId: './users/index',                      nav: true },
-      { route: 'users/:id/detail',         moduleId: './users/detail' },
-      { route: 'files*path',               moduleId: './files/index',     href:'#files',   nav: true }
+      { route: ['', 'home'],       name: 'home',       moduleId: './home/index' },
+      { route: 'users',            name: 'users',      moduleId: './users/index',                      nav: true },
+      { route: 'users/:id/detail', name: 'userDetail', moduleId: './users/detail' },
+      { route: 'files*path',       name: 'files',      moduleId: './files/index',     href:'#files',   nav: true }
     ]);
   }
 }
 ```
 
-まず、 `configureRouter` メソッドを実装します。 ドキュメントのタイトルに使う `title` プロパティを設定することもできます。ただ、一番重要なのはルートの設定の部分です。ルーターの `map` メソッドは、あなたのルート情報を表す、シンプルなJSONデータを引数にとります。最も重要なプロパティは二つで、ルートのパターンを定義する `route` (文字列、もしくは文字列の配列) と、ビューモデルの相対パスを持つ `moduleId` です。他にも、ドキュメントのタイトルを設定する `title` プロパティ、ナビゲーションモデルに含めるかどうかを指定する(この指定は順番を意味する数字でも良い) `nav` プロパティ、 _ナビゲーションモデル_ とバインドする `href` プロパティを設定することもできます。
+まず、 `configureRouter` メソッドを実装します。 ドキュメントのタイトルに使う `title` プロパティを設定することもできます。ただ、一番重要なのはルートの設定の部分です。ルーターの `map` メソッドは、あなたのルート情報を表す、シンプルなJSONデータを引数にとります。最も重要なプロパティは二つで、ルートのパターンを定義する `route` (文字列、もしくは文字列の配列) と、ビューモデルの相対パスを持つ `moduleId` です。他にも、後でルートへのリンクを生成する `name` プロパティ、ドキュメントのタイトルを設定する `title` プロパティ、ナビゲーションモデルに含めるかどうかを指定する(この指定は順番を意味する数字でも良い) `nav` プロパティ、 _ナビゲーションモデル_ とバインドする `href` プロパティを設定することもできます。
 
 >**注:** 指定しなかったプロパティは、与えられた情報を踏まえて、フレームワークが規約にもとづいて決めます。
 
-ルートの指定の仕方にはどのうなものがあるのでしょうか?
+ルートの指定の仕方にはどのようなものがあるのでしょうか?
 
 * 固定ルート
     - 例 'home' - 文字列に完全に一致。
@@ -813,12 +842,21 @@ export class App {
 
 ルーターが画面遷移を処理する際には、遷移元と遷移先のビューモデルに対して、厳格なライフサイクルを適用します。ライフサイクルには4つのステージがあります。ビューモデルのクラスに適切なメソッドを定義することで、任意のステージに対する処理を記述できます。以下にライフサイクルコールバックの一覧を示します:
 
-* `canActivate(params, config, navigationInstruction)` - もしビューモデルに対して _遷移可能か_ どうかを判断させたいときは、このフックを実装します。返値は真偽値、真偽値を返すPromise、またはナビゲーションコマンドです。
-* `activate(params, config, navigationInstruction)` - ビューモデルが描画する直前に処理を実行したい場合は、このフックを実装します。Promiseを返して、ルーターにビューとの接続とデータバインドを処理が終わるまで待たせることもできます。
+* `canActivate(params, routeConfig, navigationInstruction)` - もしビューモデルに対して _遷移可能か_ どうかを判断させたいときは、このフックを実装します。返値は真偽値、真偽値を返すPromise、またはナビゲーションコマンドです。
+* `activate(params, routeConfig, navigationInstruction)` - ビューモデルが描画する直前に処理を実行したい場合は、このフックを実装します。Promiseを返して、ルーターにビューとの接続とデータバインドを処理が終わるまで待たせることもできます。
 * `canDeactivate()` - ビューモデルから_遷移して良いか_を制御したい場合は、このフックを実装します。返値は真偽値、真偽値を返すPromise、またはナビゲーションコマンドです。
 * `deactivate()` - ビューモデルで、他の画面への遷移時に処理を行いたい場合は、このフックを実装します。Promiseを返して、ルーターを処理が終わるまで待たせることもできます。
 
-`params` オブジェクトは個々のルートのパラメーターを持ち、 `config` はルート設定オブジェクトそのものです。
+`params` オブジェクトは解析されたルートのパラメーター、およびクエリ文字列のプロパティを持ちます。 `routeConfig` はルート設定オブジェクトそのものです。 `routeConfig` には `navModel` プロパティがあり、ビューモデルのデータを利用してドキュメントのタイトルが変更できます。例を示します:
+
+```javascript
+activate(params, routeConfig) {
+  this.userService.getUser(params.id)
+    .then(user => {
+      routeConfig.navModel.setTitle(user.name);
+    });
+}
+```
 
 > **注:** _ナビゲーションコマンド_ は `navigate(router)` メソッドを持つ、任意のオブジェクトです。ナビゲーションコマンドを見つけると、現在の遷移はキャンセルされ、ナビゲーションコマンドに制御は移譲されます。すぐに使えるナビゲーションコマンドは、 `Redirect` です。
 
@@ -863,9 +901,9 @@ export class App {
     config.title = 'Aurelia';
     config.addPipelineStep('authorize', AuthorizeStep); // ルートフィルタをauthorize拡張ポイントに追加する
     config.map([
-      { route: ['welcome'],     moduleId: 'welcome',      nav: true, title:'Welcome' },
-      { route: 'flickr',        moduleId: 'flickr',       nav: true, auth: true },
-      { route: 'child-router',  moduleId: 'child-router', nav: true, title:'Child Router' },
+      { route: ['welcome'],    name: 'welcome',       moduleId: 'welcome',      nav: true, title:'Welcome' },
+      { route: 'flickr',       name: 'flickr',        moduleId: 'flickr',       nav: true, auth: true },
+      { route: 'child-router', name: 'childRouter',   moduleId: 'child-router',  nav: true, title:'Child Router' },
       { route: '',              redirect: 'welcome' }
     ]);
   }
@@ -910,10 +948,10 @@ export class App {
     config.title = 'Aurelia';
     config.options.pushState = true; // <-- this is all you need here
     config.map([
-      { route: ['welcome'],     moduleId: 'welcome',      nav: true, title:'Welcome' },
-      { route: 'flickr',        moduleId: 'flickr',       nav: true, auth: true },
-      { route: 'child-router',  moduleId: 'child-router', nav: true, title:'Child Router' },
-      { route: '',              redirect: 'welcome' }
+      { route: ['welcome'],    name: 'welcome',     moduleId: 'welcome',      nav: true, title:'Welcome' },
+      { route: 'flickr',       name: 'flickr',      moduleId: 'flickr',       nav: true, auth: true },
+      { route: 'child-router', name: 'childRouter', moduleId: 'child-router', nav: true, title:'Child Router' },
+      { route: '',             redirect: 'welcome' }
     ]);
   }
 }
@@ -1004,8 +1042,8 @@ export class App {
   configureRouter(config) {
     config.title = 'Aurelia';
     config.map([
-      { route: 'product/a',         moduleId: './product'      nav: true },
-      { route: 'product/b',         moduleId: './product',     nav: true },
+      { route: 'product/a',    moduleId: './product',     nav: true },
+      { route: 'product/b',    moduleId: './product',     nav: true },
     ]);
   }
 }
@@ -1076,7 +1114,6 @@ configureRouter(config){
 <h3 id="generating-route-urls"><a href="#generating-route-urls">ルートのURLを生成する</a></h3>
 
 もし、既に存在するルートにマッチするURLを生成したい場合は、ルーターはそのようなURLを生成することができます。
-
 
 ```javascript
 router.generate('userDetail', { id: 123 });
@@ -1318,7 +1355,7 @@ export class SayHello {
   @bindable to;
 
   speak(){
-    alert('Hello ${this.to}!');
+    alert(`Hello ${this.to}!`);
   }
 }
 ```
@@ -1333,7 +1370,7 @@ export class SayHelloCustomElement {
   @bindable to;
 
   speak(){
-    alert('Hello ${this.to}!');
+    alert(`Hello ${this.to}!`);
   }
 }
 ```
