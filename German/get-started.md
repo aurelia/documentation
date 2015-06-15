@@ -387,9 +387,9 @@ export class ChildRouter{
 }
 ```
 
-Was!? Das ist ja die gleiche Konfiguration wie in der `App`? Was? Warum? Hmmm...Du solltest so etwas niemals machen...aber es ist ziemlich cool. Das, meine Freunde,ist ein rekursiver Routre und wir machen das, weil wir es können.
+Was!? Das ist ja die gleiche Konfiguration wie in der `App`? Was? Warum? Hmmm... Normalerweise solltest Du so etwas niemals machen, aber ... es ist ziemlich cool. Das, meine Freunde, ist ein rekursiver Router und wir machen das, weil wir es können.
 
-Der Vollständigkeit halber, hier ist die View:
+Der Vollständigkeit halber, ist hier die View:
 
 ### child-router.html
 
