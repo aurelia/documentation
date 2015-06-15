@@ -21,7 +21,7 @@ Nun ist [jspm](http://jspm.io/) an der Reihe (das ist unser client seitiger Pake
   npm install -g jspm
   ```
 
-> **Hinweis:** jspm unterstützt wie Bower und Yeoman [git](http://git-scm.com/). JSPM installiert direkt von GitHub, allerdings schränkt GitHub die Anzahl anonymer Anfragen ein. Um Probleme zu vermeiden, empfehlen wir Dir dringenst, dass Du jspm mit Deinen GitHub Zugangsdaten konfigurierst. Dazu musst Du nur `jspm registry config github` ausführen und die englisch sprachigen Anweisungen befolgen. Falls Du jspm nocht verwenden magst - kein Problem: Alle Aurelia Pakete sind auch via [Bower](http://bower.io/) verfügbar.
+> **Hinweis:** `jspm` unterstützt wie Bower und Yeoman [git](http://git-scm.com/). JSPM installiert direkt von GitHub, allerdings schränkt GitHub die Anzahl anonymer Anfragen ein. Um Probleme zu vermeiden, empfehlen wir Dir dringenst, dass Du jspm mit Deinen GitHub Zugangsdaten konfigurierst. Dazu musst Du nur `jspm registry config github` ausführen und die englisch sprachigen Anweisungen befolgen. Falls Du jspm nocht verwenden magst - kein Problem: Alle Aurelia Pakete sind auch via [Bower](http://bower.io/) verfügbar.
 
 ## Aufsetzen der Projekt Struktur und der Build-Prozess
 
@@ -53,7 +53,7 @@ OK, wir beginnen mit einigen Kommandos:
   jspm install -y
   ```
 
-Für unseres von Grund auf neu erstelltes Javascript Projekt haben wir uns an einen modernen Node.js Enwicklungsprozess gehalten, es gab bislang nichts Aurelia spezifisches. Vielleicht bist Du damit bereits vertraut, und wenn nicht - HERZLICH WILLKOMMEN in der neuen spannenden Welt!
+Für unseres von Grund auf neu erstelltes Javascript Projekt haben wir uns an einen modernen Node.js Enwicklungsprozess gehalten, es gab bislang nichts Aurelia Spezifisches. Vielleicht bist Du damit bereits vertraut, und wenn nicht - HERZLICH WILLKOMMEN in der neuen spannenden Welt!
 
 
 > **Hinweis:** Bootstrap und Font-Awesome sind **keine** Abhängigkeiten von Aurelia. Sie werden in diesem Tutorial nur deshalb verwendet, um mit geringem Aufwand ein modernes Aussehen zu erzielen.
@@ -61,7 +61,7 @@ Für unseres von Grund auf neu erstelltes Javascript Projekt haben wir uns an ei
 
 ## Aufsetzen der HTML Seite
 
-Nun solltest Du alle notwendigen Bibliotheken, Konfigurationsdateien und Build werkzeugeinstalliert haben, um faszinierende Javascript Anwendungen mit Aurelia zu implementieren. Als Nächstes muss die _index.html_ Datei im Wurzelverzeichnis des Projektes erstellt werden. Dieses Beispiel-File dient als Vorlage unserer neuen Aurelia basierten Anwendung.
+Nun solltest Du alle notwendigen Bibliotheken, Konfigurationsdateien und Build Werkzeuge installiert haben, um in die faszinierende Welt der Javascript Anwendungen mit Aurelia eintauchen zu können. Als Nächstes muss die _index.html_ Datei im Wurzelverzeichnis des Projektes erstellt werden. Diese Beispiel Datei dient als Vorlage unserer neuen Aurelia basierten Anwendung.
 
 ### index.html
 ```markup
@@ -89,11 +89,11 @@ Nun solltest Du alle notwendigen Bibliotheken, Konfigurationsdateien und Build w
 </html>
 ```
 
-So, das ist es! Das ist die einzige "richtige" HTML Seite unserer Anwendung. Der _head_ Abschnitt ist recht simpel: Wir verlinken auf die font-awesome und unsere eigenen Stylesheets. Der _body_ ist das eigentliche Interessante.
+So, das war's schon! Das ist die einzige "richtige" HTML Seite unserer Anwendung. Der _head_ Abschnitt ist recht simpel: Wir verlinken auf die font-awesome und unsere eigenen Stylesheets. Der _body_ ist das eigentliche Interessante.
 
 > **Hinweis:** Im Link muss auf den lokalen Ordner für font-awesome verwiesen werden. Möglicherweise hat sich seit Erstellung dieses Tutorials die Version erhöht und der generierten Ordner stimmt nun nicht mehr mit dem Link überein.
 
-Beginnen wir mit den `script` Tags. Zuerst binden wir _system.js_ ein, unseren ES6 basierten Modullader. Damit werden die Aurelia Bibliotheken sowie der Anwendungscode geladen. In _config.js_ ist die Konfiguration des Modulladers zu finden. Diese wird automatisch beim Ausführen des jspm Kommando erzeugt. Wir empfehlen den Client seitige Paketmanager jspm, weil dieser durch die Integration mit einem ES6 konformen Modulladers für die Aurelia Entwicklung bestens geeignet ist. Genau darunter müssen wir in `System.config` den Ausgabeort für den kompilierten JavaScript Code definieren.
+Beginnen wir mit den `script` Tags. Zuerst binden wir _system.js_ ein, unseren ES6 basierten Modullader. Damit werden die Aurelia Bibliotheken sowie der Anwendungscode geladen. In _config.js_ ist die Konfiguration des Modulladers zu finden. Diese wird automatisch beim Ausführen des `jspm` Kommando erzeugt. Wir empfehlen den Client seitigen Paketmanager `jspm`, weil dieser durch die Integration mit einem ES6 konformen Modullader für die Aurelia Entwicklung bestens geeignet ist. Genau darunter müssen wir in `System.config` den Ausgabeort für den kompilierten JavaScript Code definieren.
 
 >**Hinweis:** Aurelia ist nicht an jspm oder SystemJS gebunden. Wir unterstützen auch APIs im require Stil wie RequireJS und Dojo. Du kannst auch einen eigenen Modullader implementieren und die Packageverwaltung so handhaben, wie Du es gern hättest. Wie auch immer, wir halten jspm/SystemJS als die aktuell beste ES6 orientierte Lösung, und daher ist dies der von uns empfohlene Weg.
 
@@ -162,23 +162,23 @@ OK. Nun haben wir das _View-Model_ mit einigen Basisdaten und etwas Verhaltenslo
 
 Alle Views werden in ein `template` Tag eingeschlossen. Diese View ist ein einfaches Eingabeformular, welches mit bootstrap verschönert wurde. Interessant sind die _input_ Eingabefelder. Siehst Du `value.bind="firstName"`? Das verknüpft den Wert (_value_) des Eingabefeldes mit der _firstName_ Eigenschaft unseres View-Model. Jedes Mal, wenn sich die Eigenschaft im Model ändert, wird das Eingabefeld mit dem neuen Wert aktualisiert. Immer, wenn sich der Wert im Eingabefeld ändert, setzt Aurelia den neuen Wert ins View-Model. Wir nennen dies Zwei-Wege Verknüfung _two-way binding_ - so einfach ist das!
 
-Es gibt noch weitere interessante Dinge in diesem Beispiel: In der letzten _form group_ siehst Du eine weitere bislang nicht spezifizierte Syntax im HTML: `${fullName}`. Das ist eine String Interpolation - eine Einwegverknüfung (one-way binding) vom _View-Model_ zur _View_, welche die Daten aus dem View-Model automatisch als String ins Dokument einfügt. Zum Schluss sehen wir und das _form_ Element selbst an: Mit  `submit.delegate="welcome()"` wird ein Ereignis an eine Methode gebunden (event binding). Durch Weiterleitung des Ereignisses (event delegation) bewirkt das _submit_ Ereignis ein Ausführen der _welcome_ Methode immer dann, wenn das Formular versendet wird.
+Es gibt noch weitere interessante Dinge in diesem Beispiel: In der letzten _form group_ siehst Du eine weitere bislang nicht spezifizierte Syntax im HTML: `${fullName}`. Das ist eine String Interpolation - eine Einwegverknüfung (_one-way binding_) vom _View-Model_ zur _View_, welche die Daten aus dem View-Model automatisch als String ins Dokument einfügt. Zum Schluss sehen wir und das _form_ Element selbst an: Mit  `submit.delegate="welcome()"` wird ein Ereignis an eine Methode gebunden (event binding). Durch Weiterleitung des Ereignisses (event delegation) bewirkt das _submit_ Ereignis ein Ausführen der _welcome_ Methode immer dann, wenn das Formular versendet wird.
 
-> **Hinweis:** Falls Du noch nie etwas über _event delegation_ gehört hast: Es ist eine Technik um Browsereignisse effizienter zu verarbeiten, indem auf Dokumentenebenede ein einziger _event handler_ exisitiert, welcher sich um alle Ereignisse eines bestimmeten Types kümmert, anstatt jedem Knoten im DOM einen eigenen  _event handler_ zu zuweisen.
+> **Hinweis:** Falls Du noch nie etwas über _event delegation_ gehört hast: Das ist eine Technik, um Browsereignisse effizienter zu verarbeiten, indem auf Dokumentenebenede ein einziger _event handler_ exisitiert, welcher sich um alle Ereignisse eines bestimmeten Types kümmert, anstatt jedem Knoten im DOM einen eigenen  _event handler_ zuzuweisen.
 
-OK,  Mit dem folgenden Kommando können wir nun die Anwendung zusammen bauen und den Server starten:
+OK, mit dem folgenden Kommando können wir nun die Anwendung zusammenbauen und den Server starten:
 
 ```shell
 gulp watch
 ```
 
-Gib im Browser [http://localhost:9000/](http://localhost:9000/) ein und schau Dir unsere Anwendung an. Fülle die Eingabefelder des Formulars aus - siehst Du, wie sich der _Full Name_ entsprechend ändert?! Hinter den Button verbirgt sich die Willkommensnachricht.
+Gib in den Browser [http://localhost:9000/](http://localhost:9000/) ein und schau Dir unsere Anwendung an. Fülle die Eingabefelder des Formulars aus - siehst Du, wie sich der _Full Name_ entsprechend ändert?! Hinter den Button verbirgt sich die Willkommensnachricht.
 
-> **Hinweis:** Wenn es nicht funktioniert, versuche das [Update](https://github.com/npm/npm/wiki/Troubleshooting#try-the-latest-stable-version-of-node) auf die aktuelle Version von npm auszuführen.
+> **Hinweis:** Wenn es nicht funktioniert, versuche das [Update](https://github.com/npm/npm/wiki/Troubleshooting#try-the-latest-stable-version-of-node) auf die aktuelle Version von `npm` auszuführen.
 
 > **Hinweis:** Aurelia's einzigartiger und mächtiger databinding Mechanismus verwendet adaptive Techniken, um herauszufinden, welcher Weg der Beste zur Überwachung von Änderungen ist. Wenn Du z.B. einen Browser mit [Object.observe](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/observe) Unterstützung verwendest, werden _firstName_ und _lastName_ mit dieser Strategie überwacht. Falls nicht, werden Getter und Setter generiert, welche die Änderungen in eine Warteschlange (Micro Task Queue) einsteuern, welche dann das Object.observe Verhalten korrekt emuliert. Wenn die berechntete Eigenschaft _fullName_ mit solchen Techniken nicht überwacht werden kann, verwenden wir _dirty checking_, welches periodische Checks / Aktualisierungen vornimmt. Zur Optimierung können optional Abhängigkeiten (in unserem Fall zu Vor- und Nachnamen) deklariert werden. Es wird immer die beste Technik verwendet, Du kannst sogar eigene Überwachungsstrategien implementieren und dem Framework "beibringen". Das ist ziemlich cool.
 
-> **Hinweis:** Das `.bind` Kommando verwendet das default binding Verhalten für jede Eigenschaft. Per default ist two-way binding (Model <--> View) nur für Formular Eingabekomponenten vorgesehen, alles Andere ist one-way (Model zur View). Du kannst dieses Verhalten immer überschreiben, und zwar indem dies explizit spezifierte wird `.one-way`, `.two-way` and `.one-time`. Ebenso ist `.delegate` Standard für _event delegation_, Du kannst dies  aber mit `.trigger` überschreiben, um direkt das Ziel Element anzusprechen.
+> **Hinweis:** Das `.bind` Kommando verwendet das default binding Verhalten für jede Eigenschaft. Per default ist _two-way binding_ (Model <--> View) nur für Formular Eingabekomponenten vorgesehen, alles Andere ist _one-way_ (Model zur View). Du kannst dieses Verhalten immer überschreiben, und zwar indem dies explizit spezifiert wird `.one-way`, `.two-way` and `.one-time`. Ebenso ist `.delegate` Standard für _event delegation_, Du kannst dies  aber mit `.trigger` überschreiben, um direkt das Ziel Element anzusprechen.
 
 ## Hinzufügen der Navigation
 
@@ -318,7 +318,7 @@ Hier gibt's jede Menge coole Dinge: Zuerst importieren wir Aurelia's `HttpClient
 jspm install aurelia-http-client
 ```
 
-Jetzt hoffe ich, dass Du den Sinn des integrierten Paketmanagers und Modulladers erkennst. Du installierst einfach ein Paket mit jspm und importierst es mit exact dem gleichen Bezeichner. Damit kannst Du alles von GitHub und NPM einbinden.
+Jetzt hoffe ich, dass Du den Sinn des integrierten Paketmanagers und Modulladers erkennst. Du installierst einfach ein Paket mit jspm und importierst es mit exact dem gleichen Bezeichner. Damit kannst Du alles von `GitHub` und `npm` einbinden.
 
 Siehst Du den ES7 `inject` Decorator? Was ist das? Aurelia erzeugt UI Komponenten nach Bedarf, und zwar direkt beim Rendern der Anwendung. Dies geschieht durch eine [Dependency Injection (DI)](http://en.wikipedia.org/wiki/Dependency_injection) Container, welcher im Constructor die Eigenschaften wie den http Client entsprechend injiziert. Aber woher weiss das DI System, was es injizieren muss? Dazu existiert der ES7 `inject` Decorator, dem eine Liste an Klassen übergeben wird, sodass er Instanzen zunächst erzeugen und dann dem Constructor übergeben kann. Für jeden Constructor Parameter muss ein Argument im inject Decorator vorhanden sein. Im Beispiel oben benötigen wir eine HttpClient Instanz, deshalb spezifizierten wir `HttpClient` als Argument des `inject` decorators und fügen dann den entsprechenden Parameter im Constructor hinzu.
 
@@ -418,6 +418,6 @@ Starte die die Anwendung und bewundere die Magie ... und bete, dass das Universu
 
 ## Schluss
 
-Mit dem starken Bezug auf die Bedürfnisse von Entwicklern bietet Die Aurelia nicht nur einen neuen Ansatz zum Schreiben moderner Anwendungen sondern auch Freunde beim Entwickeln. Aurelia's Design basiert auf einigen wenigen, simple Konventionen, sodass Du keine Zeit mit Boilerplate Code und sich wiederholenden oder ähnlichen Konfigurationen verplemperst. Trotzdem ist es nicht restriktiv und behindert Dich in Deinem Tun. Es ist wurde von Beginn an mit Rücksicht auf Anpassbarkeit und Erweiterbarkeit genommen.
+Mit dem starken Bezug auf die Bedürfnisse von Entwicklern bietet Dir Aurelia nicht nur einen neuen Ansatz zum Schreiben moderner Anwendungen sondern auch Freunde beim Entwickeln. Aurelia's Design basiert auf einigen wenigen, simplen Konventionen, sodass Du keine Zeit mit Boilerplate Code und sich wiederholenden oder ähnlichen Konfigurationen verplemperst. Trotzdem ist es nicht restriktiv und behindert Dich auch nicht in Deinem Tun. Es wurde von Beginn an mit Rücksicht auf Anpassbarkeit und Erweiterbarkeit entworfen.
 
 Danke, dass Du Dir die Zeit genommen hast, diese Anleitung bis zu Ende zu lesen. Wir hoffen, Du bist nun motviert, die Dokumentation anzugehen und etwas Grossartiges entstehen zu lassen. Wir freuen uns zu sehen, was Du bauen wirst.
