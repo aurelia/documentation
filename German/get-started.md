@@ -4,6 +4,7 @@
 
 > **Hinweis:** Suchst Du diese Anleitung in einer anderen Sprache? Schau in unserem [Dokumentations-Repository](https://github.com/aurelia/documentation).
 
+
 ## Konfiguration der Systemumgebung
 
 Wir beginnen mit dem Installieren unserer Tools für moderne Javascript Anwendungen, welche allesamt auf  [Node.js](http://nodejs.org/) basieren. Alles, was wir benötigen, wird mittels Node's Paketmanager ([npm](https://docs.npmjs.com/getting-started/what-is-npm)) installiert. Fall Node.js bereits auf Deinem System ist - perfekt! Ansonsten besuche [die offizielle Webseite](http://nodejs.org/) und installiere es. Um etwaigen Problemen von vorn herein aus dem Weg zu gehen, stelle bitte sicher, dass Du die [allerneuste stabile Version](https://github.com/npm/npm/wiki/Troubleshooting#try-the-latest-stable-version-of-node) auf Deinem System hast.
@@ -94,17 +95,18 @@ So, das ist es! Das ist die einzige "richtige" HTML Seite unserer Anwendung. Der
 
 Beginnen wir mit den _script_ Tags. Zuerst binden wir _system.js_ ein, unseren ES6 basierten Modullader. Damit werden die Aurelia Bibliotheken sowie der Anwendungscode geladen. In _config.js_ ist die Konfiguration des Modulladers zu finden. Diese wird automatisch beim Ausführen des jspm Kommando erzeugt. Wir empfehlen den Client seitige Paketmanager jspm, weil dieser durch die Integration Client seitigen Paketmanagements mit einen ES6 konformer Modulladers für die Aurelia Entwicklung bestens geeignet ist. Genau darunter müssen wir in `System.config` den Ausgabeort für den kompilierten JavaScript Code definieren.
 
->**Hinweis:** Aurelia ist nicht an jspm oder SystemJS gebunden. Wir unterstützen auch APIs im require Stil wie RequireJS und Dojo. Du kannst auch einen eigenen Lader implementieren und die Packageverwaltung so handhaben, wie Du es gern hättest. Wie auch immer, wir halten jspm/SystemJS als die aktuell beste ES6 orientierte Lösung, und daher ist dies der von uns empfohlene Weg.
+>**Hinweis:** Aurelia ist nicht an jspm oder SystemJS gebunden. Wir unterstützen auch APIs im require Stil wie RequireJS und Dojo. Du kannst auch einen eigenen Modullader implementieren und die Packageverwaltung so handhaben, wie Du es gern hättest. Wie auch immer, wir halten jspm/SystemJS als die aktuell beste ES6 orientierte Lösung, und daher ist dies der von uns empfohlene Weg.
 
 Nach Modullader und dessen Konfiguration binden wir mit einem `System.import` Aufruf das `aurelia-bootstrapper` Modul (das Startprogramm) ein. Dieses inspiziert das HTML document nach _aurelia-app_ Attributen, und findet dies in unserem Fall im _body_. Der Bootstrapper lädt daraufhin das _app_ View-Model und die desses View, welche  entsprechend der Aurelia Konvention in _app.js_ und _app.html_ zu finden sind, und erstellt daraus eine Aurelia Anwendung im DOM.
 
 Moment....Wir haben ja noch gar kein _app_ View-Model und auch keine View. Was nun!?
 
+
 ## Erstellung unseres ersten "Screen"
 
-In Aurelia, UI Elemente werden aus einer _View_ und einem _View-Model_ Paar erstellt. Die _View_ ist in HTML geschrieben und wir in den DOM gerendert. Das _View-Model_ ist Javascript Code und enthält sowohl Daten als auch  das Verhalten der _View_. Aurelia's mächtiges _databinding_ verbindet diese beiden Teile und ermöglicht so, dass Änderungen in den Daten automatisch in der _View_ aktualisiert werden und umgekehrt genauso. Diese "Separation of Concerns" (zu deutsch Trennung der Veranwortlichkeiten) ist in vielerlei Hinwicht perfekt: für eine Zusammenarbeit zwischen Entwicklern und Designern, für Wartung, Flexibiltät in der Architektur, und sogar für die Quellcodeverwaltung.
+In Aurelia, UI Komponenten werden aus einer _View_ und einem _View-Model_ Paar erstellt. Die _View_ ist in HTML geschrieben und wir in den DOM gerendert. Das _View-Model_ ist Javascript Code und enthält sowohl Daten als auch  das Verhalten der _View_. Aurelia's mächtiges _Data binding_ verbindet diese beiden Teile und ermöglicht so, dass Änderungen in den Daten automatisch in der _View_ aktualisiert werden und umgekehrt genauso. Diese "Separation of Concerns" (zu deutsch Trennung der Veranwortlichkeiten) ist in vielerlei Hinsicht nützlich: für eine Zusammenarbeit zwischen Entwicklern und Designern, für Wartung, Flexibiltät in der Architektur, und sogar für die Quellcodeverwaltung.
 
-Sehen wir uns, wie's funktioniert...
+Sehen wir uns an, wie's funktioniert...
 
 Erstelle dazu im _src_ Ordner eine _app.html_ sowie eine _app.js_ Datei. Das ist die app View und das View Model, welches vom Bootstrapper geladen wird. Beginnen wir mit dem  _View Model_. Wir erstellten eine einfache Klasse, welche einen _firstName_ und _lastName_ hält sowie eine berechnete Eigenschaft _fullName_ und eine Methode  "welcome" als Grussformel. So sieht sie aus:
 
@@ -245,15 +247,15 @@ OK, hier gibt es wieder einige interessante Dinge. Im `configureRouter` callback
 Ensprechend der Konvention werden die Daten der `App` Klasse an die View in _app.html_ gebunden. Ein grosser Teil des Markups behandelt das Aufsetzen der Hauptnavigation. Du hast bereits das einfache Binding und String Interpolation kennen gelernt, darum konzentrieren wir uns nun auf etwas Neues: Sieh Die das navbar-nav `ul` element an. Dessen `li` demonstriert, wie man einen repeater Ausdrücke `repeat.for="row of router.navigation"` angibt. Für jeden Eintrag des `router.navigation` arrays wird ein `li` generiert. Die lokale Laufvariable ist _row_ und man sieht sehr schön, wie es im `li` und dessen untergeordneten Elementes Verwendung findet.
 
 > **Hinweis:** Die Eigenschaft `navigation` des Router ist ein array mit alle Routen, welche mit `nav:true` konfiguriert wurden. Aurelia handhabt die `repeat.for` Syntax entsprechend des neuen ES6 Standards `for..of` loop. So, you can think of looping over the array of navigable routes and generating UI for each.
-Man kann es sich also so vorstellen, dass in einer Schleife für jede navigierbare Route eine UI generiert wird.
+Man kann es sich also so vorstellen, dass in einer Schleife für jede navigierbare Route eine UI Komponente generiert wird.
 
 Am `li` kann man auch sehen, wie String Interpolation genutzt wird, um dynamisch Klassen hinzuzufügen / zu entfernen. Weiter unten in der View gibt es ein zweites `ul`, dessen `li` binding durch den Ausdruck `if.bind="router.isNavigating"` spezifiziert ist: Durch die Bedingung wird das `li` dynamisch hinzugefügt / entfernt. Gewöhnlicherweise aktualisiert der Router seine `isNavigating` Eigenschaft immer dann, wenn er....navigiert.
 
 Das letzte Puzzleteil, was wir uns anschauen wollen, ist die `router-view` am Ende der View. Diese repräsentiert den Ort im DOM, an dem die aktuelle Seite gerendert wird.
 
-  OK, nun können wir fortfahren und den Entwickungs Server mit `gulp watch` erneut starten. Öffne den Browser Du solltest nun eine Hauptnavigation mit einem einzigen ausgewählten Tab sehen, der unsere "welcome" Route repräsentiert. Die _welcome_ View sollte wie gehabt funktionieren. Öffne die Entwicklungstools des Browsersund sieh die den DOM an. Der Inhalt der _welcome_ View sollte innerhalb des `router-view` Elements liegen .
+OK, nun können wir fortfahren und den Entwickungs Server mit `gulp watch` erneut starten. Öffne den Browser und Du solltest nun eine Hauptnavigation mit einem einzigen ausgewählten Tab sehen, der unsere "welcome" Route repräsentiert. Die _welcome_ View sollte wie gehabt funktionieren. Öffne die Entwicklungstools des Browsers und sieh die den DOM an. Der Inhalt der _welcome_ View sollte innerhalb des `router-view` Elements liegen .
 
-> **Hinweis:** Falls Du den gulp watch Task lufen lässt, wird die Seite nach jeglichen Änderungen am Quellcode aktualisiert. Das passiert aufgrund von `browser-sync`, welches wir als Teil der default Gulp Konfiguration angegeben haben.
+> **Hinweis:** Falls Du den gulp watch Task laufen lässt, wird die Seite nach jeglichen Änderungen am Quellcode aktualisiert. Das passiert aufgrund von `browser-sync`, welches Teil unserer default Gulp Konfiguration ist.
 
 ## Hinzufügen einer zweiten Seite
 
@@ -310,13 +312,13 @@ export class Flickr{
 }
 ```
 
-Hier gibt's jede Menge coole Dinge: Zuerst importieren wir Aurelia's `HttpClient`. Damit können wir ganz einfach HTTP Anfragen erzeugen. Da dies kein Bestandteil der Aurelia default-Konfiguration ist, müssen wir das Paket mit folgendem Kommando installieren::
+Hier gibt's jede Menge coole Dinge: Zuerst importieren wir Aurelia's `HttpClient`. Damit können wir ganz einfach HTTP Anfragen senden und auswerten. Da dies kein Bestandteil der Aurelia default-Konfiguration ist, müssen wir das Paket mit folgendem Kommando installieren:
 
 ```shell
 jspm install aurelia-http-client
 ```
 
-Jetzt hoffe ich, dass Du den Sinn des integrierten Paketmanagers und Laders erkennst. Du installierst einfach ein Paket mit jspm und importierst es mit exact dem gleichen Identifikator in den Code. Damit kannst Du alles von GitHub oder NPM einbinden.
+Jetzt hoffe ich, dass Du den Sinn des integrierten Paketmanagers und Modulladers erkennst. Du installierst einfach ein Paket mit jspm und importierst es mit exact dem gleichen Bezeichner. Damit kannst Du alles von GitHub und NPM einbinden.
 
 Siehst Du den ES7 `inject` Decorator? Was ist das? Aurelia erzeugt UI Komponenten nach Bedarf, und zwar direkt beim Rendern der Anwendung. Dies geschieht durch eine [Dependency Injection (DI)](http://en.wikipedia.org/wiki/Dependency_injection) Container, welcher im Constructor die Eigenschaften wie den http Client entsprechend injiziert. Aber woher weiss das DI System, was es injizieren muss? Dazu existiert der ES7 `inject` Decorator, dem eine Liste an Klassen übergeben wird, sodass er Instanzen zunächst erzeugen und dann dem Constructor übergeben kann. Für jeden Constructor Parameter muss ein Argument im inject Decorator vorhanden sein. Im Beispiel oben benötigen wir eine HttpClient Instanz, deshalb spezifizierten wir `HttpClient` als Argument des `inject` decorators und fügen dann den entsprechenden Parameter im Constructor hinzu.
 
