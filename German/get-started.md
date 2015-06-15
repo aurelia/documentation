@@ -339,3 +339,85 @@ export class Flickr{
   ...
 }
 ```
+
+
+## Bonus: Unternavigation mittels Child Router
+
+Hast Du immer noch nicht genug bekommen? Wir haben ein besonderes Bonbon für Dich: Wir fügen eine neue Seite hinzu ... welche ihren eigenen Router mitbringt. Wir nennen dies Child Router oder sub navitation oder Unternavigation. Ein Child router bringt seine eigene Konfiguration seiner Routen mit, und navigiert relativ zu seiner übergeordnetem Router (Parent Router). Mach Dich auf den kompletten Wahnsinn gefasst....
+
+Zuerst aktualsieren wir unsere _app.js_ mit der neuen Konfiguration:
+
+### app.js (updated...again)
+
+```javascript
+import 'bootstrap';
+import 'bootstrap/css/bootstrap.css!';
+
+export class App {
+  configureRouter(config, router){
+    config.title = 'Aurelia';
+    config.map([
+      { route: ['','welcome'], name: 'welcome',      moduleId: './welcome',      nav: true, title:'Welcome' },
+      { route: 'flickr',       name: 'flickr',       moduleId: './flickr',       nav: true },
+      { route: 'child-router', name: 'childRouter',  moduleId: './child-router', nav: true, title:'Child Router' }
+    ]);
+
+    this.router = router;
+  }
+}
+```
+
+Hier gibt's nichts Neues. Die interessanten Dinge passieren im  _child-router.js_...
+
+### child-router.js
+
+```javascript
+export class ChildRouter{
+  heading = 'Child Router';
+
+  configureRouter(config, router){
+    config.map([
+      { route: ['','welcome'], name: 'welcome',     moduleId: './welcome',      nav: true, title:'Welcome' },
+      { route: 'flickr',       name: 'flickr',      moduleId: './flickr',       nav: true },
+      { route: 'child-router', name: 'childRouter', moduleId: './child-router', nav: true, title:'Child Router' }
+    ]);
+
+    this.router = router;
+  }
+}
+```
+
+Was!? Das ist ja die gleiche Konfiguration wie in der `App`? Was? Warum? Hmmm...Du solltest so etwas niemals machen...aber es ist ziemlich cool. Das, meine Freunde,ist ein rekursiver Routre und wir machen das, weil wir es können.
+
+Der Vollständigkeit halber, hier ist die View:
+
+### child-router.html
+
+```javascript
+<template>
+  <section>
+    <h2>${heading}</h2>
+    <div>
+      <div class="col-md-2">
+        <ul class="well nav nav-pills nav-stacked">
+          <li repeat.for="row of router.navigation" class="${row.isActive ? 'active' : ''}">
+            <a href.bind="row.href">${row.title}</a>
+          </li>
+        </ul>
+      </div>
+      <div class="col-md-10" style="padding: 0">
+        <router-view></router-view>
+      </div>
+    </div>
+  </section>
+</template>
+```
+
+Starte die die Anwendung und bewundere die Magie ... und bete, dass das Universum nicht explodiert.
+
+
+## Schluss
+
+Mit dem starken Bezug auf die Bedürfnisse von Entwicklern bietet Die Aurelia nicht nur einen neuen Ansatz zum Schreiben moderner Anwendungen sondern auch Freunde beim Entwickeln. Aurelia's Design basiert auf einigen wenigen, simple Konventionen, sodass Du keine Zeit mit Boilerplate Code und sich wiederholenden oder ähnlichen Konfigurationen verplemperst. Trotzdem ist es nicht restriktiv und behindert Dich in Deinem Tun. Es ist wurde von Beginn an mit Rücksicht auf Anpassbarkeit und Erweiterbarkeit genommen.
+
+Danke, dass Du Dir die Zeit genommen hast, diese Anleitung bis zu Ende zu lesen. Wir hoffen, Du bist nun motviert, die Dokumentation anzugehen und etwas Grossartiges entstehen zu lassen. Wir freuen uns zu sehen, was Du bauen wirst.
