@@ -1,15 +1,15 @@
 # Erste Schritte
 
-**Herzlich Willkommen bei Aurelia!** In dieser Anleitung werden anhand einer kleinen Beispielanwendung die grundlegenden Ideen und Konzepte von Aurelia kurz vorgestellt. Wir gehen davon aus, dass Du bereits mit  JavaScript, HTML und CSS vertraut bist. Für einen kurzen Überblick kannst Du die folgenden Abschnitte überspringen und zu "Einrichten der HTML-Seite" springen. Wenn Du dann in der Lage bist, ein Projekt zu erstellen, fahre mit "Konfiguration der Systemumgebung" und "Aufsetzen der Projekt Struktur und der Build-Prozess". Das Ergebnis des Tutorials findest Du in unserem Projekt [Navigationsgerüst](https://github.com/aurelia/skeleton-navigation/releases).
+**Herzlich Willkommen bei Aurelia!** In dieser Anleitung werden anhand einer kleinen Beispielanwendung die grundlegenden Ideen und Konzepte von Aurelia kurz vorgestellt. Wir gehen davon aus, dass Du bereits mit  JavaScript, HTML und CSS vertraut bist. Für einen kurzen Überblick kannst Du die folgenden Abschnitte überspringen und zu "Einrichten der HTML-Seite" springen. Wenn Du dann in der Lage bist, ein Projekt zu erstellen, fahre mit "Konfiguration der Systemumgebung" und "Aufsetzen der Projekt Struktur und der Build-Prozess" fort. Das Ergebnis des Tutorials findest Du in unserem Projekt [Navigationsgerüst](https://github.com/aurelia/skeleton-navigation/releases).
 
-> **Hinweis:** Suchst Du diese Anleitung in einer anderen Sprache? Schau in unserem [Dokumentations-Repository](https://github.com/aurelia/documentation).
+> **Hinweis:** Suchst Du diese Anleitung in einer anderen Sprache? Schau in unserem [Dokumentations-Repository](https://github.com/aurelia/documentation) nach.
 
 
 ## Konfiguration der Systemumgebung
 
 Wir beginnen mit dem Installieren unserer Tools für moderne Javascript Anwendungen, welche allesamt auf  [Node.js](http://nodejs.org/) basieren. Alles, was wir benötigen, wird mittels Node's Paketmanager ([npm](https://docs.npmjs.com/getting-started/what-is-npm)) installiert. Fall Node.js bereits auf Deinem System ist - perfekt! Ansonsten besuche [die offizielle Webseite](http://nodejs.org/) und installiere es. Um etwaigen Problemen von vorn herein aus dem Weg zu gehen, stelle bitte sicher, dass Du die [allerneuste stabile Version](https://github.com/npm/npm/wiki/Troubleshooting#try-the-latest-stable-version-of-node) auf Deinem System hast.
 
-Zuerst installieren wir das Build Automatisierungstool [Gulp](http://gulpjs.com/). Falls Du es noch nicht installiert hast, verwende den `npm` Manager, um es global verfügbar zu machen. (Du solltest mittels `sudo` als root ausführen):
+Zuerst installieren wir das Build Automatisierungstool [Gulp](http://gulpjs.com/). Falls Du es noch nicht installiert hast, verwende den `npm` Manager, um es global verfügbar zu machen. (Du solltest es mittels `sudo` als root ausführen):
 
   ```shell
   npm install -g gulp
@@ -21,11 +21,11 @@ Nun ist [jspm](http://jspm.io/) an der Reihe (das ist unser client seitiger Pake
   npm install -g jspm
   ```
 
-> **Hinweis:** `jspm` unterstützt wie Bower und Yeoman [git](http://git-scm.com/). JSPM installiert direkt von GitHub, allerdings schränkt GitHub die Anzahl anonymer Anfragen ein. Um Probleme zu vermeiden, empfehlen wir Dir dringenst, dass Du jspm mit Deinen GitHub Zugangsdaten konfigurierst. Dazu musst Du nur `jspm registry config github` ausführen und die englisch sprachigen Anweisungen befolgen. Falls Du jspm nocht verwenden magst - kein Problem: Alle Aurelia Pakete sind auch via [Bower](http://bower.io/) verfügbar.
+> **Hinweis:** `jspm` unterstützt wie Bower und Yeoman [git](http://git-scm.com/). `jspm` installiert direkt von GitHub, allerdings schränkt GitHub die Anzahl anonymer Anfragen ein. Um Probleme zu vermeiden, empfehlen wir Dir dringenst, dass Du jspm mit Deinen GitHub Zugangsdaten konfigurierst. Dazu musst Du nur `jspm registry config github` ausführen und die englisch sprachigen Anweisungen befolgen. Falls Du jspm nocht verwenden magst - kein Problem: Alle Aurelia Pakete sind auch via [Bower](http://bower.io/) verfügbar.
 
-## Aufsetzen der Projekt Struktur und der Build-Prozess
+## Aufsetzen der Projekt Struktur und des Build-Prozesses
 
-Wenn alle Werkzeuge installiert sind, können wir mit dem Aufsetzen unserer Beispielanwendungung beginnen. Dazu laden wir zunächst das [Navigationsgerüst herunter](https://github.com/aurelia/skeleton-navigation/releases). Entpsacke es und bennene den Ordner um in _navigation-app_.
+Wenn alle Werkzeuge installiert sind, können wir mit dem Aufsetzen unserer Beispielanwendungung beginnen. Dazu laden wir zunächst das [Navigationsgerüst herunter](https://github.com/aurelia/skeleton-navigation/releases). Entpacke es und bennene den Ordner um in _navigation-app_.
 
 > **Hinweis:** Um das Navigationsgerüst zu "generieren", kannst Du alternativ [Yeoman](http://yeoman.io) folgendermassen verwenden:
 >
@@ -52,9 +52,7 @@ OK, wir beginnen mit einigen Kommandos:
   ```shell
   jspm install -y
   ```
-
-Für unseres von Grund auf neu erstelltes Javascript Projekt haben wir uns an einen modernen Node.js Enwicklungsprozess gehalten, es gab bislang nichts Aurelia Spezifisches. Vielleicht bist Du damit bereits vertraut, und wenn nicht - HERZLICH WILLKOMMEN in der neuen spannenden Welt!
-
+Für unseres von Grund auf neu erstelltes Javascript Projekt haben wir uns an einen modernen Node.js Enwicklungsprozess gehalten, es gab bislang nichts Aurelia Spezifisches. Vielleicht bist Du mit dem Umgang dieser Werkzeuge bereits vertraut, und wenn nicht - HERZLICH WILLKOMMEN!
 
 > **Hinweis:** Bootstrap und Font-Awesome sind **keine** Abhängigkeiten von Aurelia. Sie werden in diesem Tutorial nur deshalb verwendet, um mit geringem Aufwand ein modernes Aussehen zu erzielen.
 
@@ -88,12 +86,11 @@ Nun solltest Du alle notwendigen Bibliotheken, Konfigurationsdateien und Build W
   </body>
 </html>
 ```
-
 So, das war's schon! Das ist die einzige "richtige" HTML Seite unserer Anwendung. Der _head_ Abschnitt ist recht simpel: Wir verlinken auf die font-awesome und unsere eigenen Stylesheets. Der _body_ ist das eigentliche Interessante.
 
-> **Hinweis:** Im Link muss auf den lokalen Ordner für font-awesome verwiesen werden. Möglicherweise hat sich seit Erstellung dieses Tutorials die Version erhöht und der generierten Ordner stimmt nun nicht mehr mit dem Link überein.
+> **Hinweis:** Im Link muss auf den lokalen Ordner für font-awesome verwiesen werden. Möglicherweise hat sich seit Erstellung dieses Tutorials die Version erhöht und der generierte Ordner stimmt nicht mehr mit dem Link überein.
 
-Beginnen wir mit den `script` Tags. Zuerst binden wir _system.js_ ein, unseren ES6 basierten Modullader. Damit werden die Aurelia Bibliotheken sowie der Anwendungscode geladen. In _config.js_ ist die Konfiguration des Modulladers zu finden. Diese wird automatisch beim Ausführen des `jspm` Kommandos erzeugt. Wir empfehlen den Client seitigen Paketmanager `jspm`, weil dieser durch die Integration mit einem ES6 konformen Modullader für die Aurelia Entwicklung bestens geeignet ist. Genau darunter müssen wir in `System.config` den Ausgabeort für den kompilierten JavaScript Code definieren.
+Beginnen wir mit den `script` Tags. Zuerst binden wir _system.js_ ein, unseren ES6 basierten Modullader. Damit werden die Aurelia Bibliotheken sowie der Anwendungscode geladen. In _config.js_ ist die Konfiguration des Modulladers zu finden. Diese wird automatisch beim Ausführen des `jspm` Kommandos erzeugt. Wir empfehlen den Client seitigen Paketmanager `jspm`, weil dieser durch die Integration mit dem SystemJS Modullader für die Aurelia Entwicklung bestens geeignet ist. Genau darunter müssen wir in `System.config` den Ausgabeort für den kompilierten JavaScript Code definieren.
 
 >**Hinweis:** Aurelia ist nicht an jspm oder SystemJS gebunden. Wir unterstützen auch APIs im require Stil wie RequireJS und Dojo. Du kannst auch einen eigenen Modullader implementieren und die Packageverwaltung so handhaben, wie Du es gern hättest. Wie auch immer, wir halten jspm/SystemJS als die aktuell beste ES6 orientierte Lösung, und daher ist dies der von uns empfohlene Weg.
 
@@ -104,7 +101,7 @@ Moment....Wir haben ja noch gar kein _app_ View-Model und auch keine View. Was n
 
 ## Erstellung unseres ersten "Screen"
 
-In Aurelia werden UI Komponenten aus einer _View_ und einem _View-Model_ Paar erstellt. Die _View_ ist in HTML geschrieben und wird in den DOM gerendert. Das _View-Model_ ist Javascript Code und enthält sowohl Daten als auch die Verhaltenslogik der _View_. Aurelia's mächtiges _Data binding_ verknüpft diese beiden Teile und ermöglicht so, dass Änderungen in den Daten automatisch in der _View_ aktualisiert werden und umgekehrt genauso. Diese "Separation of Concerns" (zu deutsch Trennung der Veranwortlichkeiten) ist in vielerlei Hinsicht nützlich: für eine Zusammenarbeit zwischen Entwicklern und Designern, für Wartung, Flexibiltät in der Architektur, und sogar für die Quellcodeverwaltung.
+In Aurelia werden UI Komponenten aus einer _View_ und einem _View-Model_ Paar erstellt. Die _View_ ist in HTML geschrieben und wird in den DOM gerendert. Das _View-Model_ ist Javascript Code und enthält sowohl Daten als auch die Verhaltenslogik der _View_. Aurelia's mächtiges _Data binding_ verknüpft diese beiden Teile und ermöglicht so, dass Datenänderungen automatisch in der _View_ aktualisiert werden und umgekehrt genauso. Diese "Separation of Concerns" (zu deutsch Trennung der Veranwortlichkeiten) ist in vielerlei Hinsicht nützlich: für eine Zusammenarbeit zwischen Entwicklern und Designern, für Wartung, Flexibiltät in der Architektur, und sogar für die Quellcodeverwaltung.
 
 Sehen wir uns an, wie's funktioniert...
 
@@ -172,7 +169,7 @@ OK, mit dem folgenden Kommando können wir nun die Anwendung zusammenbauen und d
 gulp watch
 ```
 
-Gib in den Browser [http://localhost:9000/](http://localhost:9000/) ein und schau Dir unsere Anwendung an. Fülle die Eingabefelder des Formulars aus - siehst Du, wie sich der _Full Name_ entsprechend ändert?! Hinter den Button verbirgt sich die Willkommensnachricht.
+Gib in den Browser [http://localhost:9000/](http://localhost:9000/) ein und schau Dir unsere Anwendung an. Fülle die Eingabefelder des Formulars aus - siehst Du, wie sich der _Full Name_ entsprechend ändert?! Hinter dem Button verbirgt sich die Willkommensnachricht.
 
 > **Hinweis:** Wenn es nicht funktioniert, versuche das [Update](https://github.com/npm/npm/wiki/Troubleshooting#try-the-latest-stable-version-of-node) auf die aktuelle Version von `npm` auszuführen.
 
@@ -182,7 +179,7 @@ Gib in den Browser [http://localhost:9000/](http://localhost:9000/) ein und scha
 
 ## Hinzufügen der Navigation
 
-Unser Beispiel soll ja ein Navigationsgrüst sein, und somit sollte es _screens_ beinhalten, zwischen denen man client seitig navigieren kann. OK, dazu benennen wir _app.js_ und _app.html_ zu _welcome.js_ respektive _welcome.html_ um. Das wird die erste Seite unserer Anwendung. Nun erstellen wir ein neues _app.js_ und _app.html_ welche als "Layout" und "Master" Seite fungieren. Die View soll die Benutzerschnittstelle unserer Navigation und einen Platzhalter für die jeweils aktuelle Seite enthalten,  das View-Model enthält eine Instanz des Routers, welcher mit unseren Routen konfiguriert ist. Beginnen wir mit dem View-Model, sodass Du sehen kannst, wie der Router aufgesetzt wird:
+Unser Beispiel soll ja ein Navigationsgrüst sein, und somit sollte es _Screens_ beinhalten, zwischen denen man Client seitig navigieren kann. OK, dazu benennen wir _app.js_ und _app.html_ zu _welcome.js_ respektive _welcome.html_ um. Das wird die erste Seite unserer Anwendung. Nun erstellen wir ein neues _app.js_ und _app.html_ welche als "Layout" und "Master" Seite fungieren. Die View soll die Benutzerschnittstelle unserer Navigation und einen Platzhalter für die jeweils aktuelle Seite enthalten,  das View-Model enthält eine Instanz des Routers, welcher mit unseren Routen konfiguriert ist. Beginnen wir mit dem View-Model, sodass Du sehen kannst, wie der Router aufgesetzt wird:
 
 ### app.js
 
@@ -204,9 +201,9 @@ export class App {
 
 OK, hier gibt es wieder einige interessante Dinge. Im `configureRouter` callback siehst Duzunächst den _title_, welcher als Titel des Dokumentes gesetzt wird. Dann werden die Routen zugeordnet. Jede Routehat die folgenden Eigenschaften:
 
-* `route`: Dieses beinhaltet ein Muster (regexp patten). Passt es, so wird der Router auf die entsprechende Seite navigieren. Routen können wie im Beispiel gezeigt statisch definiert sein, Du kannst aber auch parametrisierte Routen spezifizieren: `customer/:id`. Wildcards werden ebenso unterstützt wie query strings. Die Route kann entweder durch ein Muster (single string pattern) oder aber eine Vielzahl an Mustern festgelegt sein.
+* `route`: Dieses beinhaltet ein Muster (regexp patten). Passt es, so wird der Router auf die entsprechende Seite navigieren. Routen können wie im Beispiel gezeigt statisch definiert sein, Du kannst aber auch parametrisierte Routen spezifizieren: `customer/:id`. Wildcards werden ebenso unterstützt wie _query strings_. Die Route kann entweder durch ein Muster (_single string pattern_) oder aber eine Vielzahl an Mustern festgelegt sein.
 * `name`: Das ist der Name, welcher innerhalb der Anwendung zur Generierung der URLs verwendet wird.
-* `moduleId`: Das ist der relative Pfad zum aktuellen View-Model, welcher das View/View-Model Paar angibt, welches der Route entspricht.
+* `moduleId`: Das ist der relative Pfad zum aktuellen View/View-Model Paar.
 * `title`: Optional kann der Titel des Dokumentes angegeben werden.
 * `nav`: Falls Du UI Komponenten generieren willst, muss die Route ins _navigation model_ eingefügt werden. Dann ist dieser Parameter auf _true_ zu setzen (bzw. eine Zahl, die die Reihenfolge widerspiegelt).
 
@@ -244,10 +241,9 @@ OK, hier gibt es wieder einige interessante Dinge. Im `configureRouter` callback
   </div>
 </template>
 ```
-Ensprechend der Konvention werden die Daten der `App` Klasse an die View in _app.html_ gebunden. Ein grosser Teil des Markups behandelt das Aufsetzen der Hauptnavigation. Du hast bereits das einfache Binding und String Interpolation kennen gelernt, darum konzentrieren wir uns nun auf etwas Neues: Sieh Die das navbar-nav `ul` element an. Dessen `li` demonstriert, wie man einen repeater Ausdrücke `repeat.for="row of router.navigation"` angibt. Für jeden Eintrag des `router.navigation` arrays wird ein `li` generiert. Die lokale Laufvariable ist _row_ und man sieht sehr schön, wie es im `li` und dessen untergeordneten Elementes Verwendung findet.
+Ensprechend der Konvention werden die Daten der `App` Klasse an die View in _app.html_ gebunden. Ein grosser Teil des Markups behandelt das Aufsetzen der Hauptnavigation. Du hast bereits das einfache Binding und String Interpolation kennen gelernt, darum konzentrieren wir uns nun auf etwas Neues: Sieh Die das navbar-nav `ul` element an. Dessen `li` demonstriert, wie man repeater Ausdrücke `repeat.for="row of router.navigation"` verwendet. Für jeden Eintrag des `router.navigation` arrays wird ein `li` generiert. Die lokale Laufvariable ist _row_ und man sieht sehr schön, wie es im `li` und dessen untergeordneten Elementes Verwendung findet.
 
-> **Hinweis:** Die Eigenschaft `navigation` des Router ist ein array mit alle Routen, welche mit `nav:true` konfiguriert wurden. Aurelia handhabt die `repeat.for` Syntax entsprechend des neuen ES6 Standards `for..of` loop. So, you can think of looping over the array of navigable routes and generating UI for each.
-Man kann es sich also so vorstellen, dass in einer Schleife für jede navigierbare Route eine UI Komponente generiert wird.
+> **Hinweis:** Die Eigenschaft `navigation` des Router ist ein array mit alle Routen, welche mit `nav:true` konfiguriert wurden. Aurelia handhabt die `repeat.for` Syntax entsprechend des neuen ES6 Standards `for..of` loop. Man kann es sich also so vorstellen, dass in einer Schleife für jede navigierbare Route eine UI Komponente generiert wird.
 
 Am `li` kann man auch sehen, wie String Interpolation genutzt wird, um dynamisch Klassen hinzuzufügen / zu entfernen. Weiter unten in der View gibt es ein zweites `ul`, dessen `li` binding durch den Ausdruck `if.bind="router.isNavigating"` spezifiziert ist: Durch die Bedingung wird das `li` dynamisch hinzugefügt / entfernt. Gewöhnlicherweise aktualisiert der Router seine `isNavigating` Eigenschaft immer dann, wenn er....navigiert.
 
@@ -282,7 +278,7 @@ export class App {
 }
 ```
 
-Wie Du Dir denken wird, brauchen wir eine _flickr.js_ und _flickr.html_ Datei. Hier ist der Quellcode:
+Wie Du Dir denken wirst, brauchen wir eine _flickr.js_ und _flickr.html_ Datei. Hier ist der Quellcode:
 
 ### flickr.js
 
