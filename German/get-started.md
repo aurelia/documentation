@@ -86,7 +86,7 @@ Nun solltest Du alle notwendigen Bibliotheken, Konfigurationsdateien und Build W
   </body>
 </html>
 ```
-So, das war's schon! Das ist die einzige "richtige" HTML Seite unserer Anwendung. Der _head_ Abschnitt ist recht simpel: Wir verlinken auf die font-awesome und unsere eigenen Stylesheets. Der _body_ ist das eigentliche Interessante.
+So, das war's schon! Das ist die einzige "richtige" HTML Seite unserer Anwendung. Der _head_ Abschnitt ist recht simpel: Wir verlinken auf font-awesome und unsere eigenen Stylesheets. Der _body_ ist das eigentliche Interessante.
 
 > **Hinweis:** Im Link muss auf den lokalen Ordner für font-awesome verwiesen werden. Möglicherweise hat sich seit Erstellung dieses Tutorials die Version erhöht und der generierte Ordner stimmt nicht mehr mit dem Link überein.
 
