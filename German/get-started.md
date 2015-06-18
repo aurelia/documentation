@@ -94,7 +94,7 @@ Beginnen wir mit den `script` Tags. Zuerst binden wir _system.js_ ein, unseren E
 
 >**Hinweis:** Aurelia ist nicht an jspm oder SystemJS gebunden. Wir unterstützen auch APIs im require Stil wie RequireJS und Dojo. Du kannst auch einen eigenen Modullader implementieren und die Packageverwaltung so handhaben, wie Du es gern hättest. Wie auch immer, wir halten jspm/SystemJS als die aktuell beste ES6 orientierte Lösung, und daher ist dies der von uns empfohlene Weg.
 
-Nach Modullader und dessen Konfiguration binden wir mit einem `System.import` Aufruf das `aurelia-bootstrapper` Modul (das Startprogramm) ein. Dieses inspiziert das HTML document nach _aurelia-app_ Attributen, und findet dies in unserem Fall im _body_. Der Bootstrapper lädt daraufhin das _app_ View-Model und die desses View, welche  entsprechend der Aurelia Konvention in _app.js_ und _app.html_ zu finden sind, und erstellt daraus eine Aurelia Anwendung im DOM.
+Nach Modullader und dessen Konfiguration binden wir mit einem `System.import` Aufruf das `aurelia-bootstrapper` Modul (das Startprogramm) ein. Dieses inspiziert das HTML document nach _aurelia-app_ Attributen, und findet dies in unserem Fall im _body_. Der Bootstrapper lädt daraufhin das _app_ View-Model und dessen View, welche  entsprechend der Aurelia Konvention in _app.js_ und _app.html_ zu finden sind, und erstellt daraus eine Aurelia Anwendung im DOM.
 
 Moment....Wir haben ja noch gar kein _app_ View-Model und auch keine View. Was nun!?
 
@@ -105,7 +105,7 @@ In Aurelia werden UI Komponenten aus einer _View_ und einem _View-Model_ Paar er
 
 Sehen wir uns an, wie's funktioniert...
 
-Erstelle dazu im _src_ Ordner eine _app.html_ sowie eine _app.js_ Datei. Das ist die app View und das View Model, welches vom Bootstrapper geladen wird. Beginnen wir mit dem  _View Model_. Wir erstellten eine einfache Klasse, welche einen _firstName_ und _lastName_ hält sowie eine berechnete Eigenschaft _fullName_ und eine Methode  "welcome" als Grussformel. So sieht sie aus:
+Erstelle dazu im _src_ Ordner eine _app.html_ sowie eine _app.js_ Datei. Das ist die app _View_ und das _View-Model_, welches vom Bootstrapper geladen wird. Beginnen wir mit dem  _View-Model_. Wir erstellten eine einfache Klasse, welche einen _firstName_ und _lastName_ hält sowie eine berechnete Eigenschaft _fullName_ und eine Methode  "welcome" als Grussformel. So sieht sie aus:
 
 ### app.js
 ```javascript
@@ -126,7 +126,7 @@ export class Welcome{
 
 Was...ist das etwa Javascript?
 
-Ja. Ja und Ja, es ist Javascript. Tatsächlich ist es ECMAScript 7 (ES7), die folgende der nächsten Version von  Javascript, welche viele neue und spannende Features enthalten wird. Glücklicherweise wurde unser automatisierter Build (Gulp) mit [Babel](https://babeljs.io/) konfiguriert. Babel ist ein Transpiler, der Features aus kommenden Javascript Versionen zurückportiert und somit ermöglicht, dass moderner Code auch in heute aktuellen Browsern ablaufen kann. So kannst Du auch heute schon Module, Klassen, Lambdas, String Interpolation und vieles mehr verwenden. Genial! Aber wie genau muss man nun das _View Model_ erstellen? Wir erstellen einfach eine Klasse und exportieren diese ins Framework.
+Ja. Ja und Ja, es ist Javascript. Tatsächlich ist es ECMAScript 7 (ES7), die folgende der nächsten Version von  Javascript, welche viele neue und spannende Features enthalten wird. Glücklicherweise wurde unser automatisierter Build (Gulp) mit [Babel](https://babeljs.io/) konfiguriert. Babel ist ein Transpiler, der Features aus kommenden Javascript Versionen zurückportiert und somit ermöglicht, dass moderner Code auch in heute aktuellen Browsern ablaufen kann. So kannst Du auch heute schon Module, Klassen, Lambdas, String Interpolation und vieles mehr verwenden. Genial! Aber wie genau muss man nun das _View-Model_ erstellen? Wir erstellen einfach eine Klasse und exportieren diese ins Framework.
 
 > **Hinweis:** Du musst nicht Babel oder ES7 Features verwenden, um eine Aurelia Anwendung zu erstellen. Du kannst auch Sprachen wie TypeScript / CoffeeScript oder einfach heute aktuelles ES5 Javascript benutzen. Du musst Dich einzig an die Standardmuster für's Erstellen von Klassen halten und alles ist perfekt. Trotzdem halten wir ES7 für genial und hoffen, Du siehst es genauso. Um mehr über die neueste Version von Javascript und deren geniale Features wie Module und Klassen zu erfahren, empfehlen wir [Babel Learning Guide](http://babeljs.io/docs/learn-es2015/).
 
@@ -159,7 +159,7 @@ OK. Nun haben wir das _View-Model_ mit einigen Basisdaten und etwas Verhaltenslo
 
 Alle Views werden in ein `template` Tag eingeschlossen. Diese View ist ein einfaches Eingabeformular, welches mit Bootstrap verschönert wurde. Interessant sind die _input_ Eingabefelder. Siehst Du `value.bind="firstName"`? Das verknüpft den Wert (_value_) des Eingabefeldes mit der _firstName_ Eigenschaft unseres View-Models. Jedes Mal, wenn sich die Eigenschaft im Model ändert, wird das Eingabefeld mit dem neuen Wert aktualisiert. Immer, wenn sich der Wert im Eingabefeld ändert, setzt Aurelia den neuen Wert ins View-Model. Wir nennen dies Zwei-Wege Verknüfung (_two-way binding_) - so einfach ist das!
 
-Es gibt noch weitere interessante Dinge in diesem Beispiel: In der letzten _form group_ siehst Du eine weitere bislang nicht spezifizierte Syntax im HTML: `${fullName}`. Das ist eine String Interpolation - eine Einwegverknüfung (_one-way binding_) vom _View-Model_ zur _View_, welche die Daten aus dem View-Model automatisch als String ins Dokument einfügt. Zum Schluss sehen wir und das _form_ Element selbst an: Mit  `submit.delegate="welcome()"` wird ein Ereignis an eine Methode gebunden (event binding). Durch Weiterleitung des Ereignisses (event delegation) bewirkt das _submit_ Ereignis ein Ausführen der _welcome_ Methode immer dann, wenn das Formular versendet wird.
+Es gibt noch weitere interessante Dinge in diesem Beispiel: In der letzten _form group_ siehst Du eine weitere bislang nicht spezifizierte Syntax im HTML: `${fullName}`. Das ist eine String Interpolation - eine Einwegverknüfung (_one-way binding_) vom _View-Model_ zur _View_, welche die Daten aus dem _View-Model_ automatisch als String ins Dokument einfügt. Zum Schluss sehen wir und das _form_ Element selbst an: Mit  `submit.delegate="welcome()"` wird ein Ereignis an eine Methode gebunden (event binding). Durch Weiterleitung des Ereignisses (event delegation) bewirkt das _submit_ Ereignis ein Ausführen der _welcome_ Methode immer dann, wenn das Formular versendet wird.
 
 > **Hinweis:** Falls Du noch nie etwas über _event delegation_ gehört hast: Das ist eine Technik, um Browsereignisse effizienter zu verarbeiten, indem auf Dokumentenebenede ein einziger _event handler_ exisitiert, welcher sich um alle Ereignisse eines bestimmeten Types kümmert, anstatt jedem Knoten im DOM einen eigenen  _event handler_ zuzuweisen.
 
