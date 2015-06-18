@@ -15,7 +15,7 @@ Zuerst installieren wir das Build Automatisierungstool [Gulp](http://gulpjs.com/
   npm install -g gulp
   ```
 
-Nun ist [jspm](http://jspm.io/) an der Reihe (das ist unser client seitiger Paketmanager). Du kannst ihn folgendermassen einrichten:
+Nun ist [jspm](http://jspm.io/) an der Reihe (das ist unser clientseitiger Paketmanager). Du kannst ihn folgendermassen einrichten:
 
   ```shell
   npm install -g jspm
@@ -90,7 +90,7 @@ So, das war's schon! Das ist die einzige "richtige" HTML Seite unserer Anwendung
 
 > **Hinweis:** Im Link muss auf den lokalen Ordner für font-awesome verwiesen werden. Möglicherweise hat sich seit Erstellung dieses Tutorials die Version erhöht und der generierte Ordner stimmt nicht mehr mit dem Link überein.
 
-Beginnen wir mit den `script` Tags. Zuerst binden wir _system.js_ ein, unseren ES6 basierten Modullader. Damit werden die Aurelia Bibliotheken sowie der Anwendungscode geladen. In _config.js_ ist die Konfiguration des Modulladers zu finden. Diese wird automatisch beim Ausführen des `jspm` Kommandos erzeugt. Wir empfehlen den Client seitigen Paketmanager `jspm`, weil dieser durch die Integration mit dem SystemJS Modullader für die Aurelia Entwicklung bestens geeignet ist. Genau darunter müssen wir in `System.config` den Ausgabeort für den kompilierten JavaScript Code definieren.
+Beginnen wir mit den `script` Tags. Zuerst binden wir _system.js_ ein, unseren ES6 basierten Modullader. Damit werden die Aurelia Bibliotheken sowie der Anwendungscode geladen. In _config.js_ ist die Konfiguration des Modulladers zu finden. Diese wird automatisch beim Ausführen des `jspm` Kommandos erzeugt. Wir empfehlen den clientseitigen Paketmanager `jspm`, weil dieser durch die Integration mit dem SystemJS Modullader für die Aurelia Entwicklung bestens geeignet ist. Genau darunter müssen wir in `System.config` den Ausgabeort für den kompilierten JavaScript Code definieren.
 
 >**Hinweis:** Aurelia ist nicht an jspm oder SystemJS gebunden. Wir unterstützen auch APIs im require Stil wie RequireJS und Dojo. Du kannst auch einen eigenen Modullader implementieren und die Packageverwaltung so handhaben, wie Du es gern hättest. Wie auch immer, wir halten jspm/SystemJS als die aktuell beste ES6 orientierte Lösung, und daher ist dies der von uns empfohlene Weg.
 
@@ -99,9 +99,9 @@ Nach Modullader und dessen Konfiguration binden wir mit einem `System.import` Au
 Moment....Wir haben ja noch gar kein _app_ View-Model und auch keine View. Was nun!?
 
 
-## Erstellung unseres ersten "Screen"
+## Erstellung unseres ersten Seite
 
-In Aurelia werden UI Komponenten aus einer _View_ und einem _View-Model_ Paar erstellt. Die _View_ ist in HTML geschrieben und wird in den DOM gerendert. Das _View-Model_ ist Javascript Code und enthält sowohl Daten als auch die Verhaltenslogik der _View_. Aurelia's mächtiges _Data binding_ verknüpft diese beiden Teile und ermöglicht so, dass Datenänderungen automatisch in der _View_ aktualisiert werden und umgekehrt genauso. Diese "Separation of Concerns" (zu deutsch Trennung der Veranwortlichkeiten) ist in vielerlei Hinsicht nützlich: für eine Zusammenarbeit zwischen Entwicklern und Designern, für Wartung, Flexibiltät in der Architektur, und sogar für die Quellcodeverwaltung.
+In Aurelia werden UI Komponenten aus einer _View_ und einem _View-Model_ Paar erstellt. Die _View_ ist in HTML geschrieben und wird in den DOM gerendert. Das _View-Model_ ist Javascript Code und enthält sowohl Daten als auch die Verhaltenslogik der _View_. Aurelia's mächtiges _Data Binding_ verknüpft diese beiden Teile und ermöglicht so, dass Datenänderungen automatisch in der _View_ aktualisiert werden und umgekehrt genauso. Diese "Separation of Concerns" (zu deutsch Trennung der Veranwortlichkeiten) ist in vielerlei Hinsicht nützlich: für eine Zusammenarbeit zwischen Entwicklern und Designern, für Wartung, Flexibiltät in der Architektur, und sogar für die Quellcodeverwaltung.
 
 Sehen wir uns an, wie's funktioniert...
 
@@ -157,9 +157,9 @@ OK. Nun haben wir das _View-Model_ mit einigen Basisdaten und etwas Verhaltenslo
 </template>
 ```
 
-Alle Views werden in ein `template` Tag eingeschlossen. Diese View ist ein einfaches Eingabeformular, welches mit Bootstrap verschönert wurde. Interessant sind die _input_ Eingabefelder. Siehst Du `value.bind="firstName"`? Das verknüpft den Wert (_value_) des Eingabefeldes mit der _firstName_ Eigenschaft unseres View-Models. Jedes Mal, wenn sich die Eigenschaft im Model ändert, wird das Eingabefeld mit dem neuen Wert aktualisiert. Immer, wenn sich der Wert im Eingabefeld ändert, setzt Aurelia den neuen Wert ins View-Model. Wir nennen dies Zwei-Wege Verknüfung (_two-way binding_) - so einfach ist das!
+Alle Views werden in ein `template` Tag eingeschlossen. Diese View ist ein einfaches Eingabeformular, welches mit Bootstrap verschönert wurde. Interessant sind die _input_ Eingabefelder. Siehst Du `value.bind="firstName"`? Das verknüpft den Wert (_value_) des Eingabefeldes mit der _firstName_ Eigenschaft unseres View-Models. Jedes Mal, wenn sich die Eigenschaft im Model ändert, wird das Eingabefeld mit dem neuen Wert aktualisiert. Immer, wenn sich der Wert im Eingabefeld ändert, setzt Aurelia den neuen Wert ins View-Model. Wir nennen dies 2-Wege Verknüpfung (engl. _two-way binding_) - so einfach ist das!
 
-Es gibt noch weitere interessante Dinge in diesem Beispiel: In der letzten _form group_ siehst Du eine weitere bislang nicht spezifizierte Syntax im HTML: `${fullName}`. Das ist eine String Interpolation - eine Einwegverknüfung (_one-way binding_) vom _View-Model_ zur _View_, welche die Daten aus dem _View-Model_ automatisch als String ins Dokument einfügt. Zum Schluss sehen wir und das _form_ Element selbst an: Mit  `submit.delegate="welcome()"` wird ein Ereignis an eine Methode gebunden (event binding). Durch Weiterleitung des Ereignisses (event delegation) bewirkt das _submit_ Ereignis ein Ausführen der _welcome_ Methode immer dann, wenn das Formular versendet wird.
+Es gibt noch weitere interessante Dinge in diesem Beispiel: In der letzten _form group_ siehst Du eine weitere bislang nicht spezifizierte Syntax im HTML: `${fullName}`. Das ist eine String Interpolation - eine Einwegverknüfung (engl. _one-way binding_) vom _View-Model_ zur _View_, welche die Daten aus dem _View-Model_ automatisch als String ins Dokument einfügt. Zum Schluss sehen wir und das _form_ Element selbst an: Mit  `submit.delegate="welcome()"` wird ein Ereignis an eine Methode gebunden (engl. _event binding_). Durch Weiterleitung des Ereignisses (engl. _event delegation_) bewirkt das _submit_ Ereignis ein Ausführen der _welcome_ Methode immer dann, wenn das Formular versendet wird.
 
 > **Hinweis:** Falls Du noch nie etwas über _event delegation_ gehört hast: Das ist eine Technik, um Browsereignisse effizienter zu verarbeiten, indem auf Dokumentenebenede ein einziger _event handler_ exisitiert, welcher sich um alle Ereignisse eines bestimmeten Types kümmert, anstatt jedem Knoten im DOM einen eigenen  _event handler_ zuzuweisen.
 
@@ -173,13 +173,13 @@ Gib in den Browser [http://localhost:9000/](http://localhost:9000/) ein und scha
 
 > **Hinweis:** Wenn es nicht funktioniert, versuche das [Update](https://github.com/npm/npm/wiki/Troubleshooting#try-the-latest-stable-version-of-node) auf die aktuelle Version von `npm` auszuführen.
 
-> **Hinweis:** Aurelia's einzigartiger und mächtiger _databinding_ Mechanismus verwendet adaptive Techniken, um herauszufinden, welcher Weg der Beste zur Überwachung von Änderungen ist. Wenn Du z.B. einen Browser mit [Object.observe](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/observe) Unterstützung verwendest, werden _firstName_ und _lastName_ mit dieser Strategie überwacht. Falls nicht, werden Getter und Setter generiert, welche die Änderungen in eine Warteschlange (Micro Task Queue) einsteuern, welche dann das Object.observe Verhalten korrekt emuliert. Wenn die berechntete Eigenschaft _fullName_ mit solchen Techniken nicht überwacht werden kann, verwenden wir _dirty checking_, welches periodische Checks / Aktualisierungen vornimmt. Zur Optimierung können optional Abhängigkeiten (in unserem Fall zu Vor- und Nachnamen) deklariert werden. Es wird immer die beste Technik verwendet, Du kannst sogar eigene Überwachungsstrategien implementieren und dem Framework "beibringen". Das ist ziemlich cool.
+> **Hinweis:** Aurelia's einzigartiger und mächtiger _Data Binding_ Mechanismus verwendet adaptive Techniken, um herauszufinden, welcher Weg der Beste zur Überwachung von Änderungen ist. Wenn Du z.B. einen Browser mit [Object.observe](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/observe) Unterstützung verwendest, werden _firstName_ und _lastName_ mit dieser Strategie überwacht. Falls nicht, werden Getter und Setter generiert, welche die Änderungen in eine Warteschlange (Micro Task Queue) einsteuern, welche dann das Object.observe Verhalten korrekt emuliert. Wenn die berechntete Eigenschaft _fullName_ mit solchen Techniken nicht überwacht werden kann, verwenden wir _dirty checking_, welches periodische Checks / Aktualisierungen vornimmt. Zur Optimierung können optional Abhängigkeiten (in unserem Fall zu Vor- und Nachnamen) deklariert werden. Es wird immer die beste Technik verwendet, Du kannst sogar eigene Überwachungsstrategien implementieren und dem Framework "beibringen". Das ist ziemlich cool.
 
-> **Hinweis:** Das `.bind` Kommando verwendet das default binding Verhalten für jede Eigenschaft. Per default ist _two-way binding_ (Model <--> View) nur für Formular Eingabekomponenten vorgesehen, alles Andere ist _one-way_ (Model zur View). Du kannst dieses Verhalten immer überschreiben, und zwar indem dies explizit spezifiert wird `.one-way`, `.two-way` and `.one-time`. Ebenso ist `.delegate` Standard für _event delegation_, Du kannst dies  aber mit `.trigger` überschreiben, um direkt das Ziel Element anzusprechen.
+> **Hinweis:** Das `.bind` Kommando verwendet das default Binding Verhalten für jede Eigenschaft. Per default ist _two-way binding_ (Model <--> View) nur für Formular Eingabekomponenten vorgesehen, alles Andere ist _one-way_ (Model zur View). Du kannst dieses Verhalten immer überschreiben, und zwar indem dies explizit spezifiert wird `.one-way`, `.two-way` and `.one-time`. Ebenso ist `.delegate` Standard für _event delegation_, Du kannst dies  aber mit `.trigger` überschreiben, um direkt das Ziel Element anzusprechen.
 
 ## Hinzufügen der Navigation
 
-Unser Beispiel soll ja ein Navigationsgrüst sein, und somit sollte es _Screens_ beinhalten, zwischen denen man Client seitig navigieren kann. OK, dazu benennen wir _app.js_ und _app.html_ zu _welcome.js_ respektive _welcome.html_ um. Das wird die erste Seite unserer Anwendung. Nun erstellen wir ein neues _app.js_ und _app.html_ welche als "Layout" und "Master" Seite fungieren. Die View soll die Benutzerschnittstelle unserer Navigation und einen Platzhalter für die jeweils aktuelle Seite enthalten,  das View-Model enthält eine Instanz des Routers, welcher mit unseren Routen konfiguriert ist. Beginnen wir mit dem View-Model, sodass Du sehen kannst, wie der Router aufgesetzt wird:
+Unser Beispiel soll ja ein Navigationsgrüst sein, und somit sollte unsere Anwendung mehrere Seiten umfassen, zu denen clientseitig navigiert werden kann. OK, dazu benennen wir _app.js_ und _app.html_ zu _welcome.js_ respektive _welcome.html_ um. Das wird die erste Seite unserer Anwendung. Nun erstellen wir ein neues _app.js_ und _app.html_ welche als "Layout" und "Master" Seite fungieren. Die _View_ soll die Benutzerschnittstelle unserer Navigation und einen Platzhalter für die jeweils aktuelle Seite enthalten,  das _View-Model_ enthält eine Instanz des Routers, welcher mit unseren Routen konfiguriert ist. Beginnen wir mit dem View-Model, sodass Du sehen kannst, wie der Router aufgesetzt wird:
 
 ### app.js
 
@@ -199,7 +199,7 @@ export class App {
 }
 ```
 
-OK, hier gibt es wieder einige interessante Dinge. Im `configureRouter` callback siehst Du zunächst den _title_, welcher als Titel des Dokumentes gesetzt wird. Dann werden die Routen zugeordnet. Jede Route hat die folgenden Eigenschaften:
+OK, hier gibt es wieder einige interessante Dinge. Im `configureRouter` Callback siehst Du zunächst den _title_, welcher als Titel des Dokumentes gesetzt wird. Dann werden die Routen zugeordnet. Jede Route hat die folgenden Eigenschaften:
 
 * `route`: Dieses beinhaltet ein Muster (regexp pattern). Passt es, so wird der Router auf die entsprechende Seite navigieren. Routen können - wie im Beispiel gezeigt - statisch definiert sein, Du kannst aber auch parametrisierte Routen spezifizieren: `customer/:id`. Wildcards werden ebenso unterstützt wie _query strings_. Die Route kann entweder durch ein Muster (_single string pattern_) oder aber eine Vielzahl an Mustern festgelegt sein.
 * `name`: Das ist der Name, welcher innerhalb der Anwendung zur Generierung der URLs verwendet wird.
@@ -241,7 +241,7 @@ OK, hier gibt es wieder einige interessante Dinge. Im `configureRouter` callback
   </div>
 </template>
 ```
-Ensprechend der Konvention werden die Daten der `App` Klasse an die View in _app.html_ gebunden. Ein grosser Teil des Markups behandelt das Aufsetzen der Hauptnavigation. Du hast bereits das einfache Binding und String Interpolation kennen gelernt, darum konzentrieren wir uns nun auf etwas Neues: Sieh Die das navbar-nav `ul` Element an. Dessen `li` demonstriert, wie man repeater Ausdrücke `repeat.for="row of router.navigation"` verwendet. Für jeden Eintrag des `router.navigation` Arrays wird ein `li` generiert. Die lokale Laufvariable ist _row_ und man sieht sehr schön, wie es im `li` und dessen untergeordneten Elementes Verwendung findet.
+Ensprechend der Konvention werden die Daten der `App` Klasse an die View in _app.html_ gebunden. Ein grosser Teil des Markups behandelt das Aufsetzen der Hauptnavigation. Du hast bereits das einfache _Binding_ und _String Interpolation_ kennen gelernt, darum konzentrieren wir uns nun auf etwas Neues: Sieh Die das navbar-nav `ul` Element an. Dessen `li` demonstriert, wie man repeater Ausdrücke verwendet: `repeat.for="row of router.navigation"`. Für jeden Eintrag des `router.navigation` Arrays wird ein `li` generiert. Die lokale Laufvariable ist _row_ und man sieht sehr schön, wie es im `li` und dessen untergeordneten Elementes Verwendung findet.
 
 > **Hinweis:** Die Eigenschaft `navigation` des Router ist ein Array mit allen Routen, welche mit `nav:true` konfiguriert wurden. Aurelia handhabt die `repeat.for` Syntax entsprechend des neuen ES6 Standards `for..of` loop. Man kann es sich also so vorstellen, dass in einer Schleife für jede navigierbare Route eine UI Komponente generiert wird.
 
@@ -316,7 +316,7 @@ jspm install aurelia-http-client
 
 Jetzt hoffe ich, dass Du den Sinn des integrierten Paketmanagers und Modulladers erkennst. Du installierst einfach ein Paket mit jspm und importierst es mit exakt dem gleichen Bezeichner. Damit kannst Du alles von `GitHub` und `npm` einbinden.
 
-Siehst Du den ES7 `inject` Decorator? Was ist das? Aurelia erzeugt UI Komponenten nach Bedarf, und zwar direkt beim Rendern der Anwendung. Dies geschieht durch eine [Dependency Injection (DI)](http://en.wikipedia.org/wiki/Dependency_injection) Container, welcher im Constructor die Eigenschaften wie den _http Client_ entsprechend injiziert. Aber woher weiss das DI System, was es injizieren muss? Dazu existiert der ES7 `inject` Decorator, dem eine Liste an Klassen übergeben wird, sodass er Instanzen zunächst erzeugen und dann dem Constructor übergeben kann. Für jeden Constructor Parameter muss ein Argument im inject Decorator vorhanden sein. Im Beispiel oben benötigen wir eine _HttpClient_ Instanz, deshalb spezifizierten wir `HttpClient` als Argument des `inject` Decorators und fügen dann den entsprechenden Parameter im Constructor hinzu.
+Siehst Du den ES7 `inject` Decorator? Was ist das? Aurelia erzeugt UI Komponenten nach Bedarf, und zwar direkt beim Rendern der Anwendung. Dies geschieht durch eine [Dependency Injection (DI)](https://de.wikipedia.org/wiki/Dependency_Injection) Container, welcher im Constructor die Eigenschaften wie den _http Client_ entsprechend injiziert. Aber woher weiss das DI System, was es injizieren muss? Dazu existiert der ES7 `inject` Decorator, dem eine Liste an Klassen übergeben wird, sodass er Instanzen zunächst erzeugen und dann dem Constructor übergeben kann. Für jeden Constructor Parameter muss ein Argument im inject Decorator vorhanden sein. Im Beispiel oben benötigen wir eine _HttpClient_ Instanz, deshalb spezifizierten wir `HttpClient` als Argument des `inject` Decorators und fügen dann den entsprechenden Parameter im Constructor hinzu.
 
 > **Hinweis:** Falls Du keinen decorator verwenden magst, kannst Du auch eine static `inject` Methode verwenden, oder aber einfach eine Property `inject` zur Klasse hinzufügen, welche ein array an Typen beinhaltet, welche injeziert werden sollen.
 
