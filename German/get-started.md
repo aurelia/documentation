@@ -1,6 +1,6 @@
 # Erste Schritte
 
-**Herzlich Willkommen bei Aurelia!** In dieser Anleitung werden anhand einer kleinen Beispielanwendung die grundlegenden Ideen und Konzepte von Aurelia kurz vorgestellt. Wir gehen davon aus, dass Du bereits mit  JavaScript, HTML und CSS vertraut bist. Für einen kurzen Überblick kannst Du die folgenden Abschnitte überspringen und zu "Einrichten der HTML-Seite" springen. Wenn Du dann in der Lage bist, ein Projekt zu erstellen, fahre mit "Konfiguration der Systemumgebung" und "Aufsetzen der Projekt Struktur und der Build-Prozess" fort. Das Ergebnis des Tutorials findest Du in unserem Projekt [Navigationsgerüst](https://github.com/aurelia/skeleton-navigation/releases).
+**Herzlich Willkommen bei Aurelia!** In dieser Anleitung werden anhand einer kleinen Beispielanwendung die grundlegenden Ideen und Konzepte von Aurelia kurz vorgestellt. Wir gehen davon aus, dass Du bereits mit  JavaScript, HTML und CSS vertraut bist. Für einen kurzen Überblick kannst Du die folgenden Abschnitte überspringen und zu "Einrichten der HTML-Seite" springen. Wenn Du dann in der Lage bist, ein Projekt zu erstellen, fahre mit "Konfiguration der Systemumgebung" und "Aufsetzen der Projekt Struktur und der Build Prozess" fort. Das Ergebnis des Tutorials findest Du in unserem Projekt [Navigationsgerüst](https://github.com/aurelia/skeleton-navigation/releases).
 
 > **Hinweis:** Suchst Du diese Anleitung in einer anderen Sprache? Schau in unserem [Dokumentations-Repository](https://github.com/aurelia/documentation) nach.
 
@@ -21,11 +21,11 @@ Nun ist [jspm](http://jspm.io/) an der Reihe (das ist unser client seitiger Pake
   npm install -g jspm
   ```
 
-> **Hinweis:** `jspm` unterstützt wie Bower und Yeoman [git](http://git-scm.com/). `jspm` installiert direkt von GitHub, allerdings schränkt GitHub die Anzahl anonymer Anfragen ein. Um Probleme zu vermeiden, empfehlen wir Dir dringendst, dass Du jspm mit Deinen GitHub Zugangsdaten konfigurierst. Dazu musst Du nur `jspm registry config github` ausführen und die englischsprachigen Anweisungen befolgen. Falls Du jspm nocht verwenden magst - kein Problem: Alle Aurelia Pakete sind auch via [Bower](http://bower.io/) verfügbar.
+> **Hinweis:** `jspm` unterstützt wie Bower und Yeoman [git](http://git-scm.com/). `jspm` installiert direkt von GitHub, allerdings schränkt GitHub die Anzahl anonymer Anfragen ein. Um Probleme zu vermeiden, empfehlen wir Dir dringendst, dass Du jspm mit Deinen GitHub Zugangsdaten konfigurierst. Dazu musst Du nur `jspm registry config github` ausführen und die englischsprachigen Anweisungen befolgen. Falls Du jspm nicht verwenden magst - kein Problem: Alle Aurelia Pakete sind auch via [Bower](http://bower.io/) verfügbar.
 
 ## Aufsetzen der Projekt Struktur und des Build-Prozesses
 
-Wenn alle Werkzeuge installiert sind, können wir mit dem Aufsetzen unserer Beispielanwendungung beginnen. Dazu laden wir zunächst das [Navigationsgerüst herunter](https://github.com/aurelia/skeleton-navigation/releases). Entpacke es und bennene den Ordner um in _navigation-app_.
+Wenn alle Werkzeuge installiert sind, können wir mit dem Aufsetzen unserer Beispielanwendungung beginnen. Dazu lade zunächst das [Navigationsgerüst herunter](https://github.com/aurelia/skeleton-navigation/releases). Entpacke es und bennene den Ordner um in _navigation-app_.
 
 > **Hinweis:** Um das Navigationsgerüst zu "generieren", kannst Du alternativ [Yeoman](http://yeoman.io) folgendermassen verwenden:
 >
@@ -35,7 +35,7 @@ Wenn alle Werkzeuge installiert sind, können wir mit dem Aufsetzen unserer Beis
 >  ```
 
 
-Im Ordner findest Du alles Nötige incl. Konfigurationsdateien, build Skripte, styles, etc.
+Im Ordner findest Du alles Nötige incl. Konfigurationsdateien, Build Skripte, styles, etc.
 
 Du kannst das Dir die _index.html_ Datei sowie alle anderen Ressourcen im _src_ Ordner anschauen. Um das Erstellen einer Aurelia Anwendung von Grund auf zu lernen, solltest Du allerdings nun den Inhalt von _src_ löschen.
 
@@ -54,12 +54,12 @@ OK, wir beginnen mit einigen Kommandos:
   ```
 Für unseres von Grund auf neu erstelltes Javascript Projekt haben wir uns an einen modernen Node.js Enwicklungsprozess gehalten, es gab bislang nichts Aurelia Spezifisches. Vielleicht bist Du mit dem Umgang dieser Werkzeuge bereits vertraut, und wenn nicht - HERZLICH WILLKOMMEN!
 
-> **Hinweis:** Bootstrap und Font-Awesome sind **keine** Abhängigkeiten von Aurelia. Sie werden in diesem Tutorial nur deshalb verwendet, um mit geringem Aufwand ein modernes Aussehen zu erzielen.
+> **Hinweis:** Bootstrap und Font-Awesome sind **keine** Abhängigkeiten von Aurelia. Sie werden in diesem Tutorial nur deshalb verwendet, um ohne grossen Aufwand unsere Anwenung modern aussehen zu lassen.
 
 
 ## Aufsetzen der HTML Seite
 
-Nun solltest Du alle notwendigen Bibliotheken, Konfigurationsdateien und Build Werkzeuge installiert haben, um in die faszinierende Welt der Javascript Anwendungen mit Aurelia eintauchen zu können. Als Nächstes muss die _index.html_ Datei im Wurzelverzeichnis des Projektes erstellt werden. Diese Beispiel Datei dient als Vorlage unserer neuen Aurelia basierten Anwendung.
+Nun solltest Du alle notwendigen Bibliotheken, Konfigurationsdateien und Build Werkzeuge installiert haben, um in die faszinierende Welt der Javascript Aurelia Anwendungen eintauchen zu können. Als Nächstes muss die _index.html_ Datei im Wurzelverzeichnis des Projektes erstellt werden. Diese Beispiel Datei dient als Vorlage unserer neuen Aurelia Anwendung.
 
 ### index.html
 ```markup
