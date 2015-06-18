@@ -339,7 +339,7 @@ export class Flickr{
 
 ## Bonus: Unternavigation mittels Child Router
 
-Hast Du immer noch nicht genug bekommen? Wir haben ein besonderes Bonbon für Dich: Wir fügen eine neue Seite hinzu, welche ihren eigenen Router mitbringt. Wir nennen dies _Child Router_ oder _sub navitation_ oder _Unternavigation_. Ein _Child Router_ bringt seine eigene Konfiguration seiner Routen mit, und navigiert relativ zu seinem übergeordnetem Router (Parent Router). Mach Dich auf den kompletten Wahnsinn gefasst....
+Hast Du immer noch nicht genug bekommen? Wir haben ein besonderes Bonbon für Dich: Wir fügen eine neue Seite hinzu, welche ihren eigenen Router mitbringt. Wir nennen dies _Child Router_ oder _Subnavigation_ oder _Unternavigation_. Ein _Child Router_ bringt eine eigene Konfiguration seiner Routen mit, und navigiert relativ zu seinem übergeordnetem Router (Parent Router). Mach Dich auf den kompletten Wahnsinn gefasst....
 
 Zuerst aktualsieren wir unsere _app.js_ mit der neuen Konfiguration:
 
@@ -383,7 +383,7 @@ export class ChildRouter{
 }
 ```
 
-Was!? Das ist ja die gleiche Konfiguration wie in der `App`? Was? Warum? Hmmm... Normalerweise solltest Du so etwas niemals machen, aber ... es ist ziemlich cool. Das, meine Freunde, ist ein rekursiver Router und wir machen das, ... weil wir es können.
+Was!? Das ist ja die gleiche Konfiguration wie in unserer `App` Klasse? Was? Warum? Hmmm... Normalerweise solltest Du so etwas niemals machen, aber ... es ist ziemlich cool. Das, meine Freunde, ist ein rekursiver Router und wir machen das, ... weil wir es können.
 
 Der Vollständigkeit halber, ist hier die _View_:
 
