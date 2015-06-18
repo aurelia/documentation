@@ -42,17 +42,17 @@ Du kannst das Dir die _index.html_ Datei sowie alle anderen Ressourcen im _src_ 
 OK, wir beginnen mit einigen Kommandos:
 
 1. Öffne eine Konsole und wechsle in den Ordner _navigation-app_.
-2. Install alle Gulp Plugins, welche im Abschnitt _devDependencies_ des Package Manifest _package.json_ aufgeführt sind: 
+2. Installiere alle Gulp Plugins, welche im Abschnitt _devDependencies_ des Package Manifest _package.json_ aufgeführt sind: 
 
   ```shell
   npm install
   ```
-3. Als nächstes installieren wir die Aurelia Bibliothek und alle Abhängigkeiten wie Bootstrap und Font-Awesome, welche im Abschnitt _jspm.dependencies_ aufgeführt sind:
+3. Als nächstes installieren wir die Aurelia Bibliothek und alle Abhängigkeiten wie Bootstrap und Font-Awesome aus dem Abschnitt _jspm.dependencies_:
 
   ```shell
   jspm install -y
   ```
-Für unseres von Grund auf neu erstelltes Javascript Projekt haben wir uns an einen modernen Node.js Enwicklungsprozess gehalten, es gab bislang nichts Aurelia Spezifisches. Vielleicht bist Du mit dem Umgang dieser Werkzeuge bereits vertraut, und wenn nicht - HERZLICH WILLKOMMEN!
+Für unseres von Grund auf neu erstelltes Javascript Projekt haben wir uns an einen gewöhnlichen Node.js Enwicklungsprozess gehalten, es gab bislang nichts Aurelia Spezifisches. Vielleicht bist Du mit dem Umgang dieser Werkzeuge bereits vertraut, und wenn nicht - HERZLICH WILLKOMMEN!
 
 > **Hinweis:** Bootstrap und Font-Awesome sind **keine** Abhängigkeiten von Aurelia. Sie werden in diesem Tutorial nur deshalb verwendet, um ohne grossen Aufwand unsere Anwenung modern aussehen zu lassen.
 
@@ -128,7 +128,7 @@ Was...ist das etwa Javascript?
 
 Ja. Ja und Ja, es ist Javascript. Tatsächlich ist es ECMAScript 7 (ES7), die folgende der nächsten Version von  Javascript, welche viele neue und spannende Features enthalten wird. Glücklicherweise wurde unser automatisierter Build (Gulp) mit [Babel](https://babeljs.io/) konfiguriert. Babel ist ein Transpiler, der Features aus kommenden Javascript Versionen zurückportiert und somit ermöglicht, dass moderner Code auch in heute aktuellen Browsern ablaufen kann. So kannst Du auch heute schon Module, Klassen, Lambdas, String Interpolation und vieles mehr verwenden. Genial! Aber wie genau muss man nun das _View-Model_ erstellen? Wir erstellen einfach eine Klasse und exportieren diese ins Framework.
 
-> **Hinweis:** Du musst nicht Babel oder ES7 Features verwenden, um eine Aurelia Anwendung zu erstellen. Du kannst auch Sprachen wie TypeScript / CoffeeScript oder einfach heute aktuelles ES5 Javascript benutzen. Du musst Dich einzig an die Standardmuster für's Erstellen von Klassen halten und alles ist perfekt. Trotzdem halten wir ES7 für genial und hoffen, Du siehst es genauso. Um mehr über die neueste Version von Javascript und deren geniale Features wie Module und Klassen zu erfahren, empfehlen wir [Babel Learning Guide](http://babeljs.io/docs/learn-es2015/).
+> **Hinweis:** Du musst nicht Babel oder ES7 Features verwenden, um eine Aurelia Anwendung zu erstellen. Alternativ kannst Du auch Sprachen wie TypeScript / CoffeeScript oder einfach heute aktuelles ES5 Javascript benutzen. Du musst Dich einzig an die Standardmuster für's Erstellen von Klassen halten und alles ist perfekt. Trotzdem halten wir ES7 für genial und hoffen, Du siehst es genauso. Um mehr über die neueste Version von Javascript und deren geniale Features wie Module und Klassen zu erfahren, empfehlen wir [Babel Learning Guide](http://babeljs.io/docs/learn-es2015/).
 
 OK. Nun haben wir das _View-Model_ mit einigen Basisdaten und etwas Verhaltenslogik implementiert, schauen wir uns nun dessen Gegenspieler an - die _View_.
 
@@ -173,7 +173,7 @@ Gib in den Browser [http://localhost:9000/](http://localhost:9000/) ein und scha
 
 > **Hinweis:** Wenn es nicht funktioniert, versuche das [Update](https://github.com/npm/npm/wiki/Troubleshooting#try-the-latest-stable-version-of-node) auf die aktuelle Version von `npm` auszuführen.
 
-> **Hinweis:** Aurelia's einzigartiger und mächtiger databinding Mechanismus verwendet adaptive Techniken, um herauszufinden, welcher Weg der Beste zur Überwachung von Änderungen ist. Wenn Du z.B. einen Browser mit [Object.observe](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/observe) Unterstützung verwendest, werden _firstName_ und _lastName_ mit dieser Strategie überwacht. Falls nicht, werden Getter und Setter generiert, welche die Änderungen in eine Warteschlange (Micro Task Queue) einsteuern, welche dann das Object.observe Verhalten korrekt emuliert. Wenn die berechntete Eigenschaft _fullName_ mit solchen Techniken nicht überwacht werden kann, verwenden wir _dirty checking_, welches periodische Checks / Aktualisierungen vornimmt. Zur Optimierung können optional Abhängigkeiten (in unserem Fall zu Vor- und Nachnamen) deklariert werden. Es wird immer die beste Technik verwendet, Du kannst sogar eigene Überwachungsstrategien implementieren und dem Framework "beibringen". Das ist ziemlich cool.
+> **Hinweis:** Aurelia's einzigartiger und mächtiger _databinding_ Mechanismus verwendet adaptive Techniken, um herauszufinden, welcher Weg der Beste zur Überwachung von Änderungen ist. Wenn Du z.B. einen Browser mit [Object.observe](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/observe) Unterstützung verwendest, werden _firstName_ und _lastName_ mit dieser Strategie überwacht. Falls nicht, werden Getter und Setter generiert, welche die Änderungen in eine Warteschlange (Micro Task Queue) einsteuern, welche dann das Object.observe Verhalten korrekt emuliert. Wenn die berechntete Eigenschaft _fullName_ mit solchen Techniken nicht überwacht werden kann, verwenden wir _dirty checking_, welches periodische Checks / Aktualisierungen vornimmt. Zur Optimierung können optional Abhängigkeiten (in unserem Fall zu Vor- und Nachnamen) deklariert werden. Es wird immer die beste Technik verwendet, Du kannst sogar eigene Überwachungsstrategien implementieren und dem Framework "beibringen". Das ist ziemlich cool.
 
 > **Hinweis:** Das `.bind` Kommando verwendet das default binding Verhalten für jede Eigenschaft. Per default ist _two-way binding_ (Model <--> View) nur für Formular Eingabekomponenten vorgesehen, alles Andere ist _one-way_ (Model zur View). Du kannst dieses Verhalten immer überschreiben, und zwar indem dies explizit spezifiert wird `.one-way`, `.two-way` and `.one-time`. Ebenso ist `.delegate` Standard für _event delegation_, Du kannst dies  aber mit `.trigger` überschreiben, um direkt das Ziel Element anzusprechen.
 
@@ -199,9 +199,9 @@ export class App {
 }
 ```
 
-OK, hier gibt es wieder einige interessante Dinge. Im `configureRouter` callback siehst Duzunächst den _title_, welcher als Titel des Dokumentes gesetzt wird. Dann werden die Routen zugeordnet. Jede Routehat die folgenden Eigenschaften:
+OK, hier gibt es wieder einige interessante Dinge. Im `configureRouter` callback siehst Du zunächst den _title_, welcher als Titel des Dokumentes gesetzt wird. Dann werden die Routen zugeordnet. Jede Route hat die folgenden Eigenschaften:
 
-* `route`: Dieses beinhaltet ein Muster (regexp patten). Passt es, so wird der Router auf die entsprechende Seite navigieren. Routen können wie im Beispiel gezeigt statisch definiert sein, Du kannst aber auch parametrisierte Routen spezifizieren: `customer/:id`. Wildcards werden ebenso unterstützt wie _query strings_. Die Route kann entweder durch ein Muster (_single string pattern_) oder aber eine Vielzahl an Mustern festgelegt sein.
+* `route`: Dieses beinhaltet ein Muster (regexp pattern). Passt es, so wird der Router auf die entsprechende Seite navigieren. Routen können - wie im Beispiel gezeigt - statisch definiert sein, Du kannst aber auch parametrisierte Routen spezifizieren: `customer/:id`. Wildcards werden ebenso unterstützt wie _query strings_. Die Route kann entweder durch ein Muster (_single string pattern_) oder aber eine Vielzahl an Mustern festgelegt sein.
 * `name`: Das ist der Name, welcher innerhalb der Anwendung zur Generierung der URLs verwendet wird.
 * `moduleId`: Das ist der relative Pfad zum aktuellen View/View-Model Paar.
 * `title`: Optional kann der Titel des Dokumentes angegeben werden.
@@ -241,11 +241,11 @@ OK, hier gibt es wieder einige interessante Dinge. Im `configureRouter` callback
   </div>
 </template>
 ```
-Ensprechend der Konvention werden die Daten der `App` Klasse an die View in _app.html_ gebunden. Ein grosser Teil des Markups behandelt das Aufsetzen der Hauptnavigation. Du hast bereits das einfache Binding und String Interpolation kennen gelernt, darum konzentrieren wir uns nun auf etwas Neues: Sieh Die das navbar-nav `ul` element an. Dessen `li` demonstriert, wie man repeater Ausdrücke `repeat.for="row of router.navigation"` verwendet. Für jeden Eintrag des `router.navigation` arrays wird ein `li` generiert. Die lokale Laufvariable ist _row_ und man sieht sehr schön, wie es im `li` und dessen untergeordneten Elementes Verwendung findet.
+Ensprechend der Konvention werden die Daten der `App` Klasse an die View in _app.html_ gebunden. Ein grosser Teil des Markups behandelt das Aufsetzen der Hauptnavigation. Du hast bereits das einfache Binding und String Interpolation kennen gelernt, darum konzentrieren wir uns nun auf etwas Neues: Sieh Die das navbar-nav `ul` Element an. Dessen `li` demonstriert, wie man repeater Ausdrücke `repeat.for="row of router.navigation"` verwendet. Für jeden Eintrag des `router.navigation` Arrays wird ein `li` generiert. Die lokale Laufvariable ist _row_ und man sieht sehr schön, wie es im `li` und dessen untergeordneten Elementes Verwendung findet.
 
-> **Hinweis:** Die Eigenschaft `navigation` des Router ist ein array mit alle Routen, welche mit `nav:true` konfiguriert wurden. Aurelia handhabt die `repeat.for` Syntax entsprechend des neuen ES6 Standards `for..of` loop. Man kann es sich also so vorstellen, dass in einer Schleife für jede navigierbare Route eine UI Komponente generiert wird.
+> **Hinweis:** Die Eigenschaft `navigation` des Router ist ein Array mit allen Routen, welche mit `nav:true` konfiguriert wurden. Aurelia handhabt die `repeat.for` Syntax entsprechend des neuen ES6 Standards `for..of` loop. Man kann es sich also so vorstellen, dass in einer Schleife für jede navigierbare Route eine UI Komponente generiert wird.
 
-Am `li` kann man auch sehen, wie String Interpolation genutzt wird, um dynamisch Klassen hinzuzufügen / zu entfernen. Weiter unten in der View gibt es ein zweites `ul`, dessen `li` binding durch den Ausdruck `if.bind="router.isNavigating"` spezifiziert ist: Durch die Bedingung wird das `li` dynamisch hinzugefügt / entfernt. Gewöhnlicherweise aktualisiert der Router seine `isNavigating` Eigenschaft immer dann, wenn er....navigiert.
+Am `li` kann man auch sehen, wie _String Interpolation_ genutzt wird, um dynamisch Klassen hinzuzufügen / zu entfernen. Weiter unten in der View gibt es ein zweites `ul`, dessen `li` _Binding_ durch den Ausdruck `if.bind="router.isNavigating"` spezifiziert ist: Durch die Bedingung wird das `li` dynamisch hinzugefügt / entfernt. Gewöhnlicherweise aktualisiert der Router seine `isNavigating` Eigenschaft immer dann, wenn er ... navigiert.
 
 Das letzte Puzzleteil, was wir uns anschauen wollen, ist die `router-view` am Ende der View. Diese repräsentiert den Ort im DOM, an dem die aktuelle Seite gerendert wird.
 
@@ -257,7 +257,7 @@ OK, nun können wir fortfahren und den Entwickungs Server mit `gulp watch` erneu
 
 So, nachdem wir die technische Basis unseres Navigationssgerüstes gelegt haben, sollten wir eine zweite Seite hinzufügen. Kannst Du Dir vorstellen, wie? Ich wette, Du kannst....
 
-Lass uns Bilder von Flickr anzeigen. Um das zu tun, muss zunächst unser Router für eine neue hypotetische Seite konfiguriert werden:
+Lass uns Bilder von Flickr anzeigen. Um das zu tun, muss zunächst unser Router für eine neue Seite konfiguriert werden:
 
 ### app.js (updated)
 
@@ -314,9 +314,9 @@ Hier gibt's jede Menge coole Dinge: Zuerst importieren wir Aurelia's `HttpClient
 jspm install aurelia-http-client
 ```
 
-Jetzt hoffe ich, dass Du den Sinn des integrierten Paketmanagers und Modulladers erkennst. Du installierst einfach ein Paket mit jspm und importierst es mit exact dem gleichen Bezeichner. Damit kannst Du alles von `GitHub` und `npm` einbinden.
+Jetzt hoffe ich, dass Du den Sinn des integrierten Paketmanagers und Modulladers erkennst. Du installierst einfach ein Paket mit jspm und importierst es mit exakt dem gleichen Bezeichner. Damit kannst Du alles von `GitHub` und `npm` einbinden.
 
-Siehst Du den ES7 `inject` Decorator? Was ist das? Aurelia erzeugt UI Komponenten nach Bedarf, und zwar direkt beim Rendern der Anwendung. Dies geschieht durch eine [Dependency Injection (DI)](http://en.wikipedia.org/wiki/Dependency_injection) Container, welcher im Constructor die Eigenschaften wie den http Client entsprechend injiziert. Aber woher weiss das DI System, was es injizieren muss? Dazu existiert der ES7 `inject` Decorator, dem eine Liste an Klassen übergeben wird, sodass er Instanzen zunächst erzeugen und dann dem Constructor übergeben kann. Für jeden Constructor Parameter muss ein Argument im inject Decorator vorhanden sein. Im Beispiel oben benötigen wir eine HttpClient Instanz, deshalb spezifizierten wir `HttpClient` als Argument des `inject` decorators und fügen dann den entsprechenden Parameter im Constructor hinzu.
+Siehst Du den ES7 `inject` Decorator? Was ist das? Aurelia erzeugt UI Komponenten nach Bedarf, und zwar direkt beim Rendern der Anwendung. Dies geschieht durch eine [Dependency Injection (DI)](http://en.wikipedia.org/wiki/Dependency_injection) Container, welcher im Constructor die Eigenschaften wie den _http Client_ entsprechend injiziert. Aber woher weiss das DI System, was es injizieren muss? Dazu existiert der ES7 `inject` Decorator, dem eine Liste an Klassen übergeben wird, sodass er Instanzen zunächst erzeugen und dann dem Constructor übergeben kann. Für jeden Constructor Parameter muss ein Argument im inject Decorator vorhanden sein. Im Beispiel oben benötigen wir eine _HttpClient_ Instanz, deshalb spezifizierten wir `HttpClient` als Argument des `inject` Decorators und fügen dann den entsprechenden Parameter im Constructor hinzu.
 
 > **Hinweis:** Falls Du keinen decorator verwenden magst, kannst Du auch eine static `inject` Methode verwenden, oder aber einfach eine Property `inject` zur Klasse hinzufügen, welche ein array an Typen beinhaltet, welche injeziert werden sollen.
 
@@ -339,7 +339,7 @@ export class Flickr{
 
 ## Bonus: Unternavigation mittels Child Router
 
-Hast Du immer noch nicht genug bekommen? Wir haben ein besonderes Bonbon für Dich: Wir fügen eine neue Seite hinzu ... welche ihren eigenen Router mitbringt. Wir nennen dies Child Router oder sub navitation oder Unternavigation. Ein Child router bringt seine eigene Konfiguration seiner Routen mit, und navigiert relativ zu seiner übergeordnetem Router (Parent Router). Mach Dich auf den kompletten Wahnsinn gefasst....
+Hast Du immer noch nicht genug bekommen? Wir haben ein besonderes Bonbon für Dich: Wir fügen eine neue Seite hinzu, welche ihren eigenen Router mitbringt. Wir nennen dies _Child Router_ oder _sub navitation_ oder _Unternavigation_. Ein _Child Router_ bringt seine eigene Konfiguration seiner Routen mit, und navigiert relativ zu seinem übergeordnetem Router (Parent Router). Mach Dich auf den kompletten Wahnsinn gefasst....
 
 Zuerst aktualsieren wir unsere _app.js_ mit der neuen Konfiguration:
 
@@ -383,9 +383,9 @@ export class ChildRouter{
 }
 ```
 
-Was!? Das ist ja die gleiche Konfiguration wie in der `App`? Was? Warum? Hmmm... Normalerweise solltest Du so etwas niemals machen, aber ... es ist ziemlich cool. Das, meine Freunde, ist ein rekursiver Router und wir machen das, weil wir es können.
+Was!? Das ist ja die gleiche Konfiguration wie in der `App`? Was? Warum? Hmmm... Normalerweise solltest Du so etwas niemals machen, aber ... es ist ziemlich cool. Das, meine Freunde, ist ein rekursiver Router und wir machen das, ... weil wir es können.
 
-Der Vollständigkeit halber, ist hier die View:
+Der Vollständigkeit halber, ist hier die _View_:
 
 ### child-router.html
 
