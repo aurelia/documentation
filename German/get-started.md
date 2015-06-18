@@ -1,6 +1,6 @@
 # Erste Schritte
 
-**Herzlich Willkommen bei Aurelia!** In dieser Anleitung werden anhand einer kleinen Beispielanwendung die grundlegenden Ideen und Konzepte von Aurelia kurz vorgestellt. Wir gehen davon aus, dass Du bereits mit  JavaScript, HTML und CSS vertraut bist. Für einen kurzen Überblick kannst Du die folgenden Abschnitte überspringen und zu "Einrichten der HTML-Seite" springen. Wenn Du dann in der Lage bist, ein Projekt zu erstellen, fahre mit "Konfiguration der Systemumgebung" und "Aufsetzen der Projekt Struktur und der Build Prozess" fort. Das Ergebnis des Tutorials findest Du in unserem Projekt [Navigationsgerüst](https://github.com/aurelia/skeleton-navigation/releases).
+**Herzlich Willkommen bei Aurelia!** In dieser Anleitung werden anhand einer kleinen Beispielanwendung die grundlegenden Ideen und Konzepte von Aurelia kurz vorgestellt. Wir gehen davon aus, dass Du bereits mit  JavaScript, HTML und CSS vertraut bist. Für einen kurzen Überblick kannst Du die folgenden Abschnitte überspringen und zu "Aufsetzen der HTML-Seite" springen. Wenn Du dann in der Lage bist, ein Projekt zu erstellen, fahre mit "Konfiguration der Systemumgebung" und "Aufsetzen der Projekt Struktur und der Build Prozess" fort. Das Ergebnis des Tutorials findest Du in unserem Projekt [Navigationsgerüst](https://github.com/aurelia/skeleton-navigation/releases).
 
 > **Hinweis:** Suchst Du diese Anleitung in einer anderen Sprache? Schau in unserem [Dokumentations-Repository](https://github.com/aurelia/documentation) nach.
 
