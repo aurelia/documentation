@@ -1395,13 +1395,13 @@ That's really all there is to it. You follow the same view-model/view naming con
 
 <h3 id="template-parts"><a href="#template-parts">Template Parts</a></h3>
 
-Template part replacement in custom elements allows a custom element to specify certain parts of its view which can be replaced with alternate markup at runtime on a per-instance basis.  This can be helpful when creating a custom element where you want to use the concept of Content Selectors from the Shadow DOM but to make it even more extensible.
+Template part replacement in custom elements allows a custom element to specify certain parts of its view which can be replaced with alternate markup at runtime on a per-instance basis.
 
-If you are using a custom element you can mark part of it’s view as replaceable.  Then you can put a template tag inside of it and specify the part you want it to replace in the element’s view.  Use `part="someName"` to identify a part of the template that is replaceable. If it’s not a template for a repeat or if, then you also need the replaceable attribute on the part. Then in your view you use `replace-part"someName"`` on a template to provide the alternate version.
+If you are using a custom element you can mark any part of it’s view as `replaceable`. Then the consumer of your element can specify a template in the element's content indicating the part they want it to replace in the element’s view.  Use `part="someName"` to identify a part of the template that is replaceable. If it’s not a template for a template controller (repeat or if) then you also need the `replaceable` attribute on the part. Finally, when the consumer wants to replace that part, they add `replace-part"someName"`` on a template inside the elements' content to provide the alternate version.
 
-Any template controller can be given a part name and that makes it replaceable. Then there’s a new attribute replaceable that will turn any part of your view into a template that can be replaced. It’s just a template controller designed for this purpose.
+Here's an example that shows how to make the template inside of a repeater replaceable without affecting the `li` container. It also shows how to create the custom element so that the runtime binding context where the custom element is used can be reached by the replaced template.
 
-example.js
+#### example.js
 ```javascript
 export class Example {
   constructor(){
@@ -1413,7 +1413,8 @@ export class Example {
   }
 }
 ```
-example.html
+
+#### example.html
 ```markup
 <template>
   <ul>
@@ -1425,7 +1426,8 @@ example.html
   <ul>
 </template>
 ```
-welcome.js
+
+#### welcome.js
 ```javascript
 export class Welcome{
   heading = 'Welcome to the Aurelia Navigation App!';
@@ -1441,15 +1443,17 @@ export class Welcome{
   }
 }
 ```
-welcome.html
+
+#### welcome.html
 ```markup
 <template>
-<require from="./demo"></require>
-<demo>
-  <template replace-part="item-template">
-    Replacement: ${item} ${$parent.$parent.fullName} <button click.delegate="$parent.$parent.welcome()">Test</button>
-  </template>
-</demo>
+  <require from="./demo"></require>
+
+  <demo>
+    <template replace-part="item-template">
+      Replacement: ${item} ${$parent.$parent.fullName} <button click.delegate="$parent.$parent.welcome()">Test</button>
+    </template>
+  </demo>
 </template>
 ```
 
