@@ -277,7 +277,7 @@ export class App {
     config.title = 'Aurelia';
     config.map([
       { route: ['','welcome'], name: 'welcome',  moduleId: './welcome',      nav: true, title:'Welcome' },
-      { route: 'flickr',       name: 'flickr',   moduleId: './flickr',       nav: true }
+      { route: 'flickr',       name: 'flickr',   moduleId: './flickr',       nav: true, title:'Flickr' }
     ]);
 
     this.router = router;
