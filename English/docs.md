@@ -1230,7 +1230,7 @@ You may be wondering what to do if you want to create a Custom Attribute with mu
 import {customAttribute, bindable} from 'aurelia-framework';
 
 @customAttribute('my-attribute')
-export class MyAttribite {
+export class MyAttribute {
   @bindable foo;
   @bindable bar;
 }
