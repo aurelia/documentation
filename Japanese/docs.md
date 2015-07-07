@@ -944,7 +944,7 @@ gulp.task('serve', ['build'], function(done) {
     port: 9000,
     server: {
       baseDir: ['.'],
-      middleware: [historyApiFallback, function (req, res, next) { // これは配列の先頭にします
+      middleware: [historyApiFallback(), function (req, res, next) { // これは配列の先頭にします
         res.setHeader('Access-Control-Allow-Origin', '*');
         next();
       }]

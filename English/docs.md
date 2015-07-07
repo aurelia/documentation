@@ -982,7 +982,7 @@ gulp.task('serve', ['build'], function(done) {
     port: 9000,
     server: {
       baseDir: ['.'],
-      middleware: [historyApiFallback, function (req, res, next) { // it's the first one in the array
+      middleware: [historyApiFallback(), function (req, res, next) { // it's the first one in the array
         res.setHeader('Access-Control-Allow-Origin', '*');
         next();
       }]
