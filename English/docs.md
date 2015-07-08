@@ -1651,6 +1651,43 @@ The `HttpResponseMessage` has the following properties:
 
 > **Note:** By default, the `HttpClient` assumes you are expecting a JSON responseType.
 
+<h3 id="interceptors"><a href="#interceptors">Interceptors</a></h3>
+
+It is possible to hook into requests and responses with interceptors.
+
+```javascript
+class RequestInterceptor {
+  request(message) {
+    // do something with the message
+    return message;
+  }
+  
+  requestError(error) {
+    throw error; // or return a (Http/Jsonp)RequestMessage to recover from the error
+  }
+}
+
+class ResponseInterceptor {
+  response(message) {
+    // do something with the message
+    return message;
+  }
+  
+  responseError(error) {
+    throw error; // or return an HttpResponseMessage to recover from the error
+  }
+}
+
+var client = new HttpClient();
+  .configure(x => {
+    x.withInterceptor(new RequestInterceptor());
+    x.withInterceptor(new ResponseInterceptor());
+  });i
+```
+
+> **Note:** It is important to realise that all interceptors used with a client form a chain. The return value of an intercept method is passed on as the arugment to the next. Interceptors are called in the order they were added.
+
+
 There are two other apis that are worth noting. You can use `configure` to access a fluent api for configuring all requests sent by the client. You can also use `createRequest` to custom configure individual requests. Here's an example of configuration:
 
 ```javascript
