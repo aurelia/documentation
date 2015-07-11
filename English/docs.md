@@ -1397,7 +1397,7 @@ That's really all there is to it. You follow the same view-model/view naming con
 
 Template part replacement in custom elements allows a custom element to specify certain parts of its view which can be replaced with alternate markup at runtime on a per-instance basis.
 
-If you are using a custom element you can mark any part of it’s view as `replaceable`. Then the consumer of your element can specify a template in the element's content indicating the part they want it to replace in the element’s view.  Use `part="someName"` to identify a part of the template that is replaceable. If it’s not a template for a template controller (repeat or if) then you also need the `replaceable` attribute on the part. Finally, when the consumer wants to replace that part, they add `replace-part"someName"`` on a template inside the elements' content to provide the alternate version.
+If you are using a custom element you can mark any part of it’s view as `replaceable`. Then the consumer of your element can specify a template in the element's content indicating the part they want it to replace in the element’s view.  Use `part="someName"` to identify a part of the template that is replaceable. If it’s not a template for a template controller (repeat or if) then you also need the `replaceable` attribute on the part. Finally, when the consumer wants to replace that part, they add `replace-part="someName"` on a template inside the elements' content to provide the alternate version.
 
 Here's an example that shows how to make the template inside of a repeater replaceable without affecting the `li` container. It also shows how to create the custom element so that the runtime binding context where the custom element is used can be reached by the replaced template.
 
