@@ -51,7 +51,7 @@ Com tudo o que precisamos pronto, vamos executar alguns comandos.
 
 Tudo o que fizemos até agora é puro Node.js, procedimentos de construlçao e de gerenciamento de pacotes. Ele não tem nada específico para com o Aurelia. Estamos apenas exibindo os passos da criação de um projeto moderno em JavaScript, a partir do zero. Você pode já estar familiarizado com isso, mas caso ainda não esteja, seja bem-vindo a este mundo novo e excitante!
 
-> ** Nota: ** Bootstrap e Font-Awesome **não** são dependências do Aurelia. Nós só iremos aproveitá-los neste tutorial para poder produzir rapidamente um visual decente para aplicação.
+> **Nota:** Bootstrap e Font-Awesome **não** são dependências do Aurelia. Nós só iremos aproveitá-los neste tutorial para poder produzir rapidamente um visual decente para aplicação.
 
 
 ## Construindo o Página HTML
@@ -161,7 +161,7 @@ Ok. Agora que temos nossa _view-model_ com alguns dados e comportamentos básicos
 Todas as views estão contidas dentro da tag `template`. Esta view é um formulário básico, estilizado com algumas classes do Bootstrap. Dê uma olhada nos elementos do formulário. Você reparou no `value.bind="firstName"`? Este comando faz um bind (vínculo) entre o _value_ do elemento input e a propriedade _firstName_ da nossa view-model. Toda vez que o valor da propriedade da view-model for atualizado, o elemento em que foi vinculado também será atualizado, e vice-versa. Fácil, não?
 Existem outras coisas mais interessantes neste exemplo. No último grupo do formulário você pode ver esta sintaxe no conteúdo HTML: `${fullname}`. Essa é uma interpolação de string. É um "one-way binding" da view-model para a view, que é automaticamente convertido para uma string e interpolada no documento. Finalmente, dê uma olhada no elemento form do formulário. Você deve ter observado o: `submit.delegate="welcome()"`. Isto é um binding de evento. Ele utiliza uma técnica chamada "event delegation" para vincular o evento _submit_ para que este execute o método _welcome_ sempre que o formulário é enviado.
 
-> **Nota:** Se você ainda não ouviu falar de “event delegation” (delegação de eventos), é uma técnica utilizada para lidar com eventos de forma mais eficiente, anexando um único manipulador de eventos ao um nível pai, ao invés de anexar um manipulador para cada elemento filho.
+> **Nota:** Se você ainda não ouviu falar de "event delegation" (delegação de eventos), é uma técnica utilizada para lidar com eventos de forma mais eficiente, anexando um único manipulador de eventos ao um nível pai, ao invés de anexar um manipulador para cada elemento filho.
 
 Bora executar e ver tudo isso em ação. No console do seu computador, use o seguinte comando para realizar um build e inicializar o servidor.
 
@@ -475,7 +475,7 @@ Além da criação de elementos personalizados, você também pode criar atributos pe
 
 ## Bonus: Trabalhando com Child Routers
 
-Você ainda quer mais, não é mesmo? Bem, eu tenho uma surpresa para você. Vamos adicionar uma terceira página para a nossa aplicação ... com seu próprio router! Chamamos isso de um “child router” (roteador filho). Child Routers têm a sua própria configuração de rota e navegação em relação ao router pai. Prepare-se para a loucura....
+Você ainda quer mais, não é mesmo? Bem, eu tenho uma surpresa para você. Vamos adicionar uma terceira página para a nossa aplicação ... com seu próprio router! Chamamos isso de um "child router" (roteador filho). Child Routers têm a sua própria configuração de rota e navegação em relação ao router pai. Prepare-se para a loucura....
 
 Primeiro, vamos atualizar nosso _app.js_ com a nova configuração. Ele deve ficar desta forma:
 
@@ -547,6 +547,6 @@ Para completar, aqui está a view:
 
 ## Conclusão
 
-Com sua forte ênfase na experiência do desenvolvedor, o Aurelia pode permitir que você crie não só aplicações surpreendentes, mas também aprecie o processo. Nós o projetamos com convenções simples em mente, de uma forma com que você não precise perder tempo com toneladas de configurações ou escrevendo código clichê apenas para satisfazer um framework teimoso ou restritivo. Você nunca irá atingir um obstáculo com o Aurelia. Ele foi cuidadosamente projetado para ser “pluggável” e personalizável.
+Com sua forte ênfase na experiência do desenvolvedor, o Aurelia pode permitir que você crie não só aplicações surpreendentes, mas também aprecie o processo. Nós o projetamos com convenções simples em mente, de uma forma com que você não precise perder tempo com toneladas de configurações ou escrevendo código clichê apenas para satisfazer um framework teimoso ou restritivo. Você nunca irá atingir um obstáculo com o Aurelia. Ele foi cuidadosamente projetado para ser "pluggável" e personalizável.
 
 Obrigado pelo seu tempo e por ler o nosso guia. Nós esperamos que você explore as documentações e construa algo incrível. Estamos ansiosos para ver o que você vai fazer.
