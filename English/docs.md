@@ -232,7 +232,7 @@ Aurelia's templating engine is responsible for loading your views and their requ
 Everything inside the `template` tag will be managed by Aurelia. However, since Aurelia uses HTMLImport technology to load views, you can also include links, and they will be properly loaded, including relative resource resolution semantics. In other words, you can do this:
 
 ```markup
-<link rel="stylesheet" type="text/css" href="./hello.css">
+<link rel="stylesheet" href="./hello.css">
 
 <template>
     <div class="hello">Hello World!</div>

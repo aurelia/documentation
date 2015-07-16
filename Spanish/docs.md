@@ -232,7 +232,7 @@ El motor de plantillas de Aurelia es responsable de cargar las vistas y sus recu
 Todo lo que esté dentro de una etiqueta `template` será manejado por Aurelia. En todo caso, puesto que Aurelia usa la tecnología HTMLImport para cargar las vistas, también puedes incluir _links_ -enlaces-, que serán correctamente cargados, incluyendo semántica de resolución de recursos relativos. En otras palabras, puedes hacer esto:
 
 ```markup
-<link rel="stylesheet" type="text/css" href="./hello.css">
+<link rel="stylesheet" href="./hello.css">
 
 <template>
     <div class="hello">Hello World!</div>
