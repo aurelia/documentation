@@ -67,7 +67,6 @@ Nun solltest Du alle notwendigen Bibliotheken, Konfigurationsdateien und Build W
 <html>
   <head>
     <title>Aurelia</title>
-    <link rel="stylesheet" type="text/css" href="jspm_packages/npm/font-awesome@4.3.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="styles/styles.css">
   </head>
   <body aurelia-app>
@@ -86,9 +85,7 @@ Nun solltest Du alle notwendigen Bibliotheken, Konfigurationsdateien und Build W
   </body>
 </html>
 ```
-So, das war's schon! Das ist die einzige "richtige" HTML Seite unserer Anwendung. Der _head_ Abschnitt ist recht simpel: Wir verlinken auf font-awesome und unsere eigenen Stylesheets. Der _body_ ist das eigentliche Interessante.
-
-> **Hinweis:** Im Link muss auf den lokalen Ordner für font-awesome verwiesen werden. Möglicherweise hat sich seit Erstellung dieses Tutorials die Version erhöht und der generierte Ordner stimmt nicht mehr mit dem Link überein.
+So, das war's schon! Das ist die einzige "richtige" HTML Seite unserer Anwendung. Der _head_ Abschnitt ist recht simpel: Wir verlinken auf unsere eigenen Stylesheet. Der _body_ ist das eigentliche Interessante.
 
 Beginnen wir mit den `script` Tags. Zuerst binden wir _system.js_ ein, unseren ES6 basierten Modullader. Damit werden die Aurelia Bibliotheken sowie der Anwendungscode geladen. In _config.js_ ist die Konfiguration des Modulladers zu finden. Diese wird automatisch beim Ausführen des `jspm` Kommandos erzeugt. Wir empfehlen den clientseitigen Paketmanager `jspm`, weil dieser durch die Integration mit dem SystemJS Modullader für die Aurelia Entwicklung bestens geeignet ist. Genau darunter müssen wir in `System.config` den Ausgabeort für den kompilierten JavaScript Code definieren.
 
@@ -186,6 +183,7 @@ Unser Beispiel soll ja ein Navigationsgrüst sein, und somit sollte unsere Anwen
 ```javascript
 import 'bootstrap';
 import 'bootstrap/css/bootstrap.css!';
+import 'font-awesome/css/font-awesome.css!';
 
 export class App {
   configureRouter(config, router){
@@ -207,7 +205,7 @@ OK, hier gibt es wieder einige interessante Dinge. Im `configureRouter` Callback
 * `title`: Optional kann der Titel des Dokumentes angegeben werden.
 * `nav`: Falls Du UI Komponenten generieren willst, muss die Route ins _navigation model_ eingefügt werden. Dann ist dieser Parameter auf _true_ zu setzen (bzw. eine Zahl, die die Reihenfolge widerspiegelt).
 
-> **Hinweis:** Hast Du gesehen, wie wir ES6 imports verwendet haben, um bootstrap's Javascript und CSS zu laden?
+> **Hinweis:** Hast Du gesehen, wie wir ES6 imports verwendet haben, um font-awesome und bootstrap's Javascript und CSS zu laden?
 
 ### app.html
 
@@ -264,6 +262,7 @@ Lass uns Bilder von Flickr anzeigen. Um das zu tun, muss zunächst unser Router 
 ```javascript
 import 'bootstrap';
 import 'bootstrap/css/bootstrap.css!';
+import 'font-awesome/css/font-awesome.css!';
 
 export class App {
   configureRouter(config, router){
@@ -348,6 +347,7 @@ Zuerst aktualsieren wir unsere _app.js_ mit der neuen Konfiguration:
 ```javascript
 import 'bootstrap';
 import 'bootstrap/css/bootstrap.css!';
+import 'font-awesome/css/font-awesome.css!';
 
 export class App {
   configureRouter(config, router){

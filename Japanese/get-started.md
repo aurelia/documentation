@@ -66,7 +66,6 @@
 <html>
   <head>
     <title>Aurelia</title>
-    <link rel="stylesheet" type="text/css" href="jspm_packages/npm/font-awesome@4.3.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="styles/styles.css">
   </head>
   <body aurelia-app>
@@ -187,6 +186,7 @@ gulp watch
 ```javascript
 import 'bootstrap';
 import 'bootstrap/css/bootstrap.css!';
+import 'font-awesome/css/font-awesome.css!';
 
 export class App {
   configureRouter(config, router){
@@ -264,6 +264,7 @@ Flickrの画像を幾つか表示してみましょう。そのために、最�
 ```javascript
 import 'bootstrap';
 import 'bootstrap/css/bootstrap.css!';
+import 'font-awesome/css/font-awesome.css!';
 
 export class App {
   configureRouter(config, router){
@@ -476,6 +477,7 @@ Aureliaがどうやってカスタムエレメントの名前を決めている�
 ```javascript
 import 'bootstrap';
 import 'bootstrap/css/bootstrap.css!';
+import 'font-awesome/css/font-awesome.css!';
 
 export class App {
   configureRouter(config, router){

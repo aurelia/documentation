@@ -66,7 +66,6 @@ If you've followed along this far, you now have all the libraries, build configu
 <html>
   <head>
     <title>Aurelia</title>
-    <link rel="stylesheet" type="text/css" href="jspm_packages/npm/font-awesome@4.3.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="styles/styles.css">
   </head>
   <body aurelia-app>
@@ -86,9 +85,7 @@ If you've followed along this far, you now have all the libraries, build configu
 </html>
 ```
 
-Yes, that's it. This is the only HTML page in our application. The head of the document is pretty straight forward: we link in our font-awesome and custom stylesheets. It's the body that's interesting.
-
-> **Note:** Be sure to confirm that the local folder name for font-awesome matches the link href. It's possible that these libraries have updated their versions since the authoring of this document.
+Yes, that's it. This is the only HTML page in our application. The head of the document is pretty straight forward: we link in our custom stylesheet. It's the body that's interesting.
 
 Let's start with the script tags. First we have _system.js_, our ES6 standards-based module loader. It's what loads the Aurelia library as well as your own code. Next we have _config.js_. This contains configuration for the loader. It's generated automatically whenever you execute a jspm command. jspm is the client-side package manager we recommend because it provides an amazing developer experience by integrating client-side package management with an ES6 compliant module loader. Immediately under that we have a call to `System.config`. This sets up the output location of our compiled JavaScript code.
 
@@ -187,6 +184,7 @@ Since this is a navigation app, we should probably add some more screens and set
 ```javascript
 import 'bootstrap';
 import 'bootstrap/css/bootstrap.css!';
+import 'font-awesome/css/font-awesome.css!';
 
 export class App {
   configureRouter(config, router){
@@ -208,7 +206,7 @@ Ok, there's some really interesting new stuff here. We want to use the router, s
 * `title`: You can optionally provide a title to be used in generating the document's title.
 * `nav`: If this route should be included in the _navigation model_ because you want to generate a UI with it, set this to true (or a number indicating order).
 
-> **Note:** Did you notice how we used ES6 imports to load both bootstrap's JavaScript and CSS?
+> **Note:** Did you notice how we used ES6 imports to load both font-awesome and bootstrap's JavaScript and CSS?
 
 ### app.html
 
@@ -271,6 +269,7 @@ Let's display some images from Flickr. To do that, let's first configure our rou
 ```javascript
 import 'bootstrap';
 import 'bootstrap/css/bootstrap.css!';
+import 'font-awesome/css/font-awesome.css!';
 
 export class App {
   configureRouter(config, router){
@@ -483,6 +482,7 @@ First, let's update our _app.js_ with the new configuration. Here's what it shou
 ```javascript
 import 'bootstrap';
 import 'bootstrap/css/bootstrap.css!';
+import 'font-awesome/css/font-awesome.css!';
 
 export class App {
   configureRouter(config, router){
