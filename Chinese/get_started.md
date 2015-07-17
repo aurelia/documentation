@@ -54,7 +54,6 @@
 <html>
   <head>
     <title>Aurelia</title>
-    <link rel="stylesheet" type="text/css" href="jspm_packages/npm/font-awesome@4.3.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="styles/styles.css">
   </head>
   <body aurelia-app>
@@ -173,6 +172,9 @@ gulp watch
 ### app.js
 
 ```javascript
+import 'bootstrap';
+import 'bootstrap/css/bootstrap.css!';
+import 'font-awesome/css/font-awesome.css!';
 import {Router} from 'aurelia-router';
 
 export class App {
@@ -260,6 +262,9 @@ Aurelia 是按需创建 UI 组件来渲染页面的。这是通过使用一个�
 ### app.js (更新版)
 
 ```javascript
+import 'bootstrap';
+import 'bootstrap/css/bootstrap.css!';
+import 'font-awesome/css/font-awesome.css!';
 import {Router} from 'aurelia-router';
 
 export class App {
@@ -451,6 +456,9 @@ export class NavBar {
 ### app.js (更新版...的更新版)
 
 ```javascript
+import 'bootstrap';
+import 'bootstrap/css/bootstrap.css!';
+import 'font-awesome/css/font-awesome.css!';
 import {Router} from 'aurelia-router';
 
 export class App {
