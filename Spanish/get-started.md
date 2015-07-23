@@ -66,8 +66,8 @@ Si nos has seguido hasta aquí, ahora dispones de todas las librerías, configur
 <html>
   <head>
     <title>Aurelia</title>
-    <link rel="stylesheet" type="text/css" href="jspm_packages/npm/font-awesome@4.3.0/css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="styles/styles.css">
+    <link rel="stylesheet" href="jspm_packages/npm/font-awesome@4.3.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="styles/styles.css">
   </head>
   <body aurelia-app>
     <script src="jspm_packages/system.js"></script>

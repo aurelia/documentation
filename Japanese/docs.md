@@ -233,7 +233,7 @@ Aureliaのテンプレートエンジンは、あなたのビューやそれが�
 `template` タグの内側にあるものはすべてAureliaによって管理されます。しかし、AureliaはビューのロードにHTMLインポート技術を使っているので、リンクを含めることもできますし、相対パスでリソースを指定しても正しくロードすることができます。言い換えれば、次のようなことができるということです:
 
 ```markup
-<link rel="stylesheet" type="text/css" href="./hello.css">
+<link rel="stylesheet" href="./hello.css">
 
 <template>
     <div class="hello">Hello World!</div>
