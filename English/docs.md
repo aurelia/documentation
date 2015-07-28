@@ -1236,7 +1236,7 @@ export class MyAttribute {
 }
 ```
 
-This creates a Custom Attribute named `my-behavior` with two properties `foo` and `bar`. Each of these properties are available directly on the class. Each can have optional change callbacks, `fooChanged` and `barChanged` respectively. However, they are configured in HTML a bit different. Here's how that would be done:
+This creates a Custom Attribute named `my-attribute` with two properties `foo` and `bar`. Each of these properties are available directly on the class. Each can have optional change callbacks, `fooChanged` and `barChanged` respectively. However, they are configured in HTML a bit different. Here's how that would be done:
 
 ```markup
 <div my-attribute="foo: some literal value; bar.bind: some.expression"></div>
