@@ -203,6 +203,7 @@ export class App {
 オーケー。ここでも興味ぶかい、新しい要素があります。ルーターを使うために、 _App_ クラスを作成し、 `configureRouter` コールバックを実装します。ドキュメントのタイトルを生成するために、設定にタイトルをセットしています。それからルートを設定します。それぞれのルートは次のプロパティを持ちます:
 
 * `route`: これはマッチしたときにこのルートに遷移するパターンを指定します。上記のように固定のルートも設定できますし、 `customer/:id` のようにパラメーターを含んでいてもよいです。ワイルドカードや、クエリ文字列も利用できます。routeは単一のパターンか、パターンの配列です。
+* `name`: これはルートのURLを生成する際に、コード中で使う識別名です。
 * `moduleId`: このルートでレンダリングしたいビュー/ビューモデルの組を指定する、現在のビューモデルからの相対パスです。
 * `title`: ドキュメントのタイトルを指定することができます。オプションです。
 * `nav`: このルートを _ナビゲーションモデル_ に含めて、対応するUIを生成したい場合、これをtrue（または順番を指定する数値）にします。
@@ -215,6 +216,12 @@ export class App {
 <template>
   <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle Navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
       <a class="navbar-brand" href="#">
         <i class="fa fa-home"></i>
         <span>${router.title}</span>
@@ -270,7 +277,7 @@ export class App {
     config.title = 'Aurelia';
     config.map([
       { route: ['','welcome'],  moduleId: './welcome',      nav: true, title:'Welcome' },
-      { route: 'flickr',        moduleId: './flickr',       nav: true }
+      { route: 'flickr',       name: 'flickr',   moduleId: './flickr',       nav: true, title:'Flickr' }
     ]);
 
     this.router = router;
