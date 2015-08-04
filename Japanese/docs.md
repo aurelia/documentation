@@ -9,14 +9,13 @@
 Aureliaは、当初は常時更新のあるブラウザ向けに設計されていました。それには、Chrome、Firefox、IE11そしてSafari 8が含まれます。しかし、IE9以上をサポートする方法を見つけました。これを有効にするには、MutationObserverのpolyfillが必要になります。これはjspmで、 `github:polymer/mutationobservers` からインストールできます。その後、 `aurelia-bootstrapper` を次のようにラップしてください:
 
 ```markup
-<script src="jspm_packages/github/polymer/mutationobservers@0.4.2/MutationObserver.js"></script>
 <script src="jspm_packages/system.js"></script>
 <script src="config.js"></script>
 <script>
   // MutationObserver に必要なWeakMap polyfillを読み込む
   System.import('core-js').then( function() {
     // MutationObserver polyfill をimport
-    System.import('mutationobservers').then( function() {
+    System.import('polymer/mutationobservers').then( function() {
       // IE9に必要なものをすべてロードした後にAureliaを起動する
       System.import('aurelia-bootstrapper');
     })
@@ -957,7 +956,13 @@ export class App {
 }
 ```
 
-[base タグ](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base) をHTMLドキュメントの先頭に加えたくなるかもしれません。これは重要なので、省略してはいけません。
+[base タグ](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base) をHTMLドキュメントの先頭に加えます。JSPMを利用しているなら、更にbaseタグの `href` 属性で、JSPMの `baseURL` を初期化する必要もあります。
+
+```js
+System.config({
+  "baseURL": "/",
+  ...
+```
 
 次に、サーバサイドは、リクエストによらず `index.html` を返す必要があります。すべてのルーティングはクライアントサイドで行われるからです。ナビゲーションサンプルプロジェクトで、 `gulp watch` タスクを `browsersync` と使っている場合は、それを次のように変更します:
 
@@ -1231,7 +1236,7 @@ export class ShowCustomAttribute {
 import {customAttribute, bindable} from 'aurelia-framework';
 
 @customAttribute('my-attribute')
-export class MyAttribite {
+export class MyAttribute {
   @bindable foo;
   @bindable bar;
 }
@@ -1392,6 +1397,71 @@ export class SayHelloCustomElement {
 *  `@skipContentProcessing` - コンパイラにカスタムエレメントを処理しないように指示します。つまり、独自で処理するということになります。
 *  `@useView(path)` - 命名規約とは異なるビューを指定します。
 *  `@noView()` - カスタムエレメントがビューを持たないことを示します。つまり、カスタムエレメントがレンダリングを内部で行うということを意図しています。。
+
+
+<h3 id="template-parts"><a href="#template-parts">テンプレートパート</a></h3>
+
+カスタムエレメントのテンプレートパート置換は、カスタムエレメントのビューの特定の部分を、実行時に、インスタンス毎に別のマークアップに置き換えることを可能とするものです。
+
+カスタムエレメントを使う際、そのビューのどの部分でも `置換可能` にできます。エレメントの利用者は、エレメントのコンテンツに含まれるテンプレートの中から、エレメントのビューが表示される際に置き換えるテンプレートを指定することができます。 `part="someName"` という記法を使い、置換可能なテンプレートのパートを指定します。テンプレートコントローラー(repeatやif)向けのテンプレートでない場合は、パートに `置換可能` な属性も必要になるでしょう。最後に、利用者が置換する際に、エレメントのコンテンツとして置換するテンプレートを書き、そこに `replace-part="someName"` 属性を付けます。
+
+以下は簡単な例で、 外側の `li` コンテナに影響を与えることなく、繰り返される中身だけ置換可能にするテンプレートを作成するものです。またこれは、置き換えられるテンプレートから、カスタムエレメントが利用されるバインディングコンテキストを使う例にもなっています。
+
+#### example.js
+```javascript
+export class Example {
+  constructor(){
+    this.items = [1,2,3,4,5];
+  }
+
+  bind(context){
+    this.$parent = context;
+  }
+}
+```
+
+#### example.html
+```markup
+<template>
+  <ul>
+    <li class="foo" repeat.for="item of items">
+      <template replaceable part="item-template">
+        Original: ${item}
+      </template>
+    </li>
+  <ul>
+</template>
+```
+
+#### welcome.js
+```javascript
+export class Welcome{
+  heading = 'Welcome to the Aurelia Navigation App!';
+  firstName = 'John';
+  lastName = 'Doe';
+
+  get fullName(){
+    return `${this.firstName} ${this.lastName}`;
+  }
+
+  welcome(){
+    alert(`Welcome, ${this.fullName}!`);
+  }
+}
+```
+
+#### welcome.html
+```markup
+<template>
+  <require from="./demo"></require>
+
+  <demo>
+    <template replace-part="item-template">
+      Replacement: ${item} ${$parent.$parent.fullName} <button click.delegate="$parent.$parent.welcome()">Test</button>
+    </template>
+  </demo>
+</template>
+```
 
 <h2 id="eventing"><a href="#eventing">イベント</a></h2>
 
@@ -1586,6 +1656,43 @@ export class HttpClient {
 * `requestMessage` - 送信したリクエストメッセージへの参照です。
 
 > **注:** デフォルトでは `HttpClient` はJSONレスポンスタイプを想定しています。
+
+<h3 id="interceptors"><a href="#interceptors">インターセプター</a></h3>
+
+インターセプターを使って、リクエストとレスポンスにフックをつけることができます。
+
+```javascript
+class RequestInterceptor {
+  request(message) {
+    // メッセージに対して処理を行う
+    return message;
+  }
+  
+  requestError(error) {
+    throw error; // もしくは、(Http/Jsonp)RequestMessage を返し、エラーから復帰する
+  }
+}
+
+class ResponseInterceptor {
+  response(message) {
+    // メッセージに対して処理を行う
+    return message;
+  }
+  
+  responseError(error) {
+    throw error; // もしくは、 HttpResponseMessage を返しエラーから復帰する
+  }
+}
+
+var client = new HttpClient();
+  .configure(x => {
+    x.withInterceptor(new RequestInterceptor());
+    x.withInterceptor(new ResponseInterceptor());
+  });i
+```
+
+> **注:** 一つのクライアントに対する全てのインターセプターは連鎖することを知っておく必要があります。インターセプターメソッドの返値は、次のメソッドの引数となります。インターセプターはそれが指定された順番で呼び出されます。
+
 
 他にも説明しておくべきapiが二つあります。 `configure` を使って、クライアントから送信するすべてのリクエストの設定を流れるような(fluent) APIで設定できます。 `createRequest` を使って、単一のリクエストの設定を行うことができます。下記に設定の例を示します:
 
