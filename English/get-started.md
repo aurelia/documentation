@@ -287,6 +287,7 @@ If you guessed that we need to create a _users.js_ and _users.html_ file, you ar
 ```javascript
 import {inject} from 'aurelia-framework';
 import {HttpClient} from 'aurelia-fetch-client';
+import 'fetch';
 
 @inject(HttpClient)
 export class Users{
@@ -311,7 +312,7 @@ export class Users{
 }
 ```
 
-There's a lot of cool stuff here. Let's start at the beginning. We are importing `HttpClient` from Aurelia's Fetch plugin. This lets us make HTTP requests in a very simple way, based on the upcoming Fetch standard. This plugin is not included with the default Aurelia configuration though, so you need to install the package. To do that, execute this command on the console:
+There's a lot of cool stuff here. Let's start at the beginning. We are importing `HttpClient` from Aurelia's Fetch plugin, as well as the fetch polyfill. This lets us make HTTP requests in a very simple way, based on the upcoming Fetch standard. This plugin is not included with the default Aurelia configuration though, so you need to install the package. To do that, execute this command on the console:
 
 ```shell
 jspm install aurelia-fetch-client
