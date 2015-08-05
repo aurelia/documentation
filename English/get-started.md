@@ -328,10 +328,11 @@ If you are using TypeScript >= 1.5, you can add the `@autoinject` decorator to y
 
 ```javascript
 import {autoinject} from 'aurelia-framework';
-import {HttpClient} from 'aurelia-http-client';
+import {HttpClient} from 'aurelia-fetch-client';
+import 'fetch';
 
 @autoinject
-export class Flickr{
+export class Users{
   ...
 
   constructor(public http:HttpClient){}
