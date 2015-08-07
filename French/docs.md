@@ -93,8 +93,28 @@ Afin de configurer votre plugin depuis l'application vous pouvez spécifier une 
 aurelia.use.plugin('./path/to/plugin', config => { /* configuration work */ });
 ```
 
-> **Note:** Ne vous fiez pas aux coventions de nommage dans les plugins. Vous ne savez pas si le développeur à changer les conventions d'Aurelia. Les  plugins tierds devraient être explicites afin d'assurer qu'ils fonctionnent correctement dans des contextes différents.
+> **Note :** Ne vous fiez pas aux coventions de nommage dans les plugins. Vous ne savez pas si le développeur à changer les conventions d'Aurelia. Les  plugins tierds devraient être explicites afin d'assurer qu'ils fonctionnent correctement dans des contextes différents.
 
 <h4 id="promises"><a href="#promises">Promises</a></h4>
 
 Par défaut, Aurelia utilise les promesses (`Promises`) native à ES6 ou un polyfill. Toutefois, vous pouvez remplacer ceci avec l'excellente librairie [Bluebird](https://github.com/petkaantonov/bluebird). Il vous faut simplement l'inclure dans votre page avant les autres scripts. Il va alors remplacer le système de promesse par le siens qui est plus rapide et possède un meilleur support pour le debugging. Addientionnelent, quand vous l'utiliser avec le convertisseur Babel, vous pouvez utiliser [coroutines](http://babeljs.io/docs/usage/transformers/other/bluebird-coroutines/) pour améliorer votre code asyncrhone.
+
+<h3 id="the-aurelia-object"><a href="#the-aurelia-object">L'Objet Aurelia</a></h3>
+
+Le module personnel de configuration ainsi que les plugins travails interactivement avec l'Objet Aurelia, voici une courte explication de notre API :
+
+```javascript
+export class Aurelia {
+  loader:Loader; //the module loader
+  container:Container; //the app-level dependency injection container
+  use:Plugins; //the plugins api (see above)
+
+  withInstance(type, instance):Aurelia; //DI helper method (pass through to container)
+  withSingleton(type, implementation):Aurelia; //DI helper method (pass through to container)
+  globalizeResources(...resourcePaths):Aurelia; //module ids of resources relative to the configuration/plugin module
+  renameGlobalResource(resourcePath, newName); //renames a globally available resource to avoid naming conflicts
+
+  start():Promise; //starts the framework, causing plugins to be installed and resources to be loaded
+  setRoot(root, applicationHost):Promise; //set your "root" or "app" view-model and display it
+}
+```
