@@ -706,7 +706,7 @@ If you need to conditionally add/remove a group of elements and you cannot place
 </template>
 ```
 
->**Note:** It's important to note that you should NOT add an `if` behavior around a `<content>` element. The ShadowDOM does not support dynamically adding these elements they way you might expect. Instead, use a `show` behavior on a parent element.
+>**Note:** It's important to note that you should NOT add an `if` behavior around a `<content>` element. The ShadowDOM does not support dynamically adding these elements the way you might expect. Instead, use a `show` behavior on a parent element.
 
 <h4 id="repeat"><a href="#repeat">repeat</a></h4>
 
