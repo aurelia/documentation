@@ -74,12 +74,12 @@ You can easily create your own appenders. Simply implement a class that matches 
 
 <h3 id="plugins"><a href="#plugins">Plugins</a></h3>
 
-A _plugin_ is only a module with an exported `configure` function. During startup Aurelia will load all plugin modules and call their `configure` functions, passing to them the Aurelia instance so that they can configure the framework appropriately. Plugins can optionally return a `Promise` from their `configure` function in order to perform asynchronous configuration tasks. When writing a plugin, be sure to explicitly supply all metadata, including a View Strategy for Custom Elements.
+A _plugin_ is only a module with an exported `configure` function. During startup Aurelia will load all plugin modules and call their `configure` functions, passing to them the FrameworkConfiguration instance so that they can configure the framework appropriately. Plugins can optionally return a `Promise` from their `configure` function in order to perform asynchronous configuration tasks. When writing a plugin, be sure to explicitly supply all metadata, including a View Strategy for Custom Elements.
 
-In order to do configuration on your plugin from within the app you can specify a function or object as the second argument to the `configure` function. Your plugin's install function can then use that after your installation work is done. The consumer of your plugin might write code like this:
+In order to do configuration on your plugin from within the app you can specify a function or object as the second argument to the `configure` function. Your plugin's configure function can then use that after your installation work is done. The consumer of your plugin might write code like this:
 
 ```javascript
-aurelia.use.plugin('./path/to/plugin', config => { /* configuration work */ });
+aurelia.use.plugin('plugin-name', config => { /* configuration work */ });
 ```
 
 > **Note:** Do not rely on naming conventions inside plugins. You do not know how the consumer of your plugin will change Aurelia's conventions. 3rd party plugins should be explicit in order to ensure that they function correctly in different contexts.
@@ -98,26 +98,89 @@ By default, Aurelia uses ES6 native Promises or a polyfill. However, you can rep
 
 <h3 id="the-aurelia-object"><a href="#the-aurelia-object">The Aurelia Object</a></h3>
 
-Since both a custom configuration module and plugins do their work by interacting with the Aurelia object, we provide a brief explanation of that API in code below:
+Since both a custom configuration module (view use) and plugins do their work by interacting with the FrameworkConfiguration object, we provide a brief explanation of that API in code below:
 
 ```javascript
-export class Aurelia {
-  loader:Loader; //the module loader
-  container:Container; //the app-level dependency injection container
-  use:Plugins; //the plugins api (see above)
+export class FrameworkConfiguration {
+  /**
+   * Adds an existing object to the framework's dependency injection container.
+   */
+  instance(type: any, instance: any): FrameworkConfiguration;
 
-  withInstance(type, instance):Aurelia; //DI helper method (pass through to container)
-  withSingleton(type, implementation):Aurelia; //DI helper method (pass through to container)
-  withTransient(type, implementation):Aurelia; //DI helper method (pass through to container)
+  /**
+   * Adds a singleton to the framework's dependency injection container.
+   */
+  singleton(type: any, implementation?: Function): FrameworkConfiguration;
 
-  globalizeResources(...resourcePaths):Aurelia; //module ids of resources relative to the configuration/plugin module
-  renameGlobalResource(resourcePath:string, newName:string); //renames a globally available resource to avoid naming conflicts
-  addPreStartTask(task:Function):Aurelia; //execute some code before the plugins are run
-  addPostStartTask(task:Function):Aurelia; //execute some code immediately after startup completes
+  /**
+   * Adds a transient to the framework's dependency injection container.
+   */
+  transient(type: any, implementation?: Function): FrameworkConfiguration;
 
-  start():Promise<Aurelia>; //starts the framework, causing plugins to be installed and resources to be loaded
-  setRoot(root:string='app', applicationHost=null):Promise<Aurelia>; //set your "root" or "app" view-model and display it
-  enhance(bindingContext:Object={}, applicationHost=null):Promise<Aurelia>; //progressively enhance the host element
+  /**
+   * Adds an async function that runs before the plugins are run.
+   */
+  preTask(task: Function): FrameworkConfiguration;
+
+  /**
+   * Adds an async function that runs after the plugins are run.
+   */
+  postTask(task: Function): FrameworkConfiguration;
+
+  /**
+   * Configures an internal feature plugin before Aurelia starts.
+  */
+  feature(plugin: string, config: any): FrameworkConfiguration;
+
+  /**
+   * Adds globally available view resources to be imported into the Aurelia framework.
+   */
+  globalResources(resources: string | string[]): FrameworkConfiguration;
+
+  /**
+   * Renames a global resource that was imported.
+   */
+  globalName(resourcePath: string, newName: string): FrameworkConfiguration;
+
+  /**
+   * Configures an external, 3rd party plugin before Aurelia starts.
+   */
+  plugin(plugin: string, config: any): FrameworkConfiguration;
+
+  /**
+   * Plugs in the default binding language from aurelia-templating-binding.
+   */
+  defaultBindingLanguage(): FrameworkConfiguration;
+
+  /**
+   * Plugs in the router from aurelia-templating-router.
+   */
+  router(): FrameworkConfiguration;
+
+  /**
+   * Plugs in the default history implementation from aurelia-history-browser.
+   */
+  history(): FrameworkConfiguration;
+
+  /**
+   * Plugs in the default templating resources (if, repeat, show, compose, etc.) from aurelia-templating-resources.
+   */
+  defaultResources(): FrameworkConfiguration;
+
+  /**
+   * Plugs in the event aggregator from aurelia-event-aggregator.
+   */
+  eventAggregator(): FrameworkConfiguration;
+
+  /**
+   * Sets up the Aurelia configuration. This is equivalent to calling `.defaultBindingLanguage().defaultResources().history().router().eventAggregator();`
+   */
+  standardConfiguration(): FrameworkConfiguration;
+
+  /**
+   * Plugs in the ConsoleAppender and sets the log level to debug.
+   */
+  developmentLogging(): FrameworkConfiguration;
 }
 ```
 
@@ -1083,6 +1146,8 @@ export class YourViewModel {
 }
 ```
 
+> **Note:** Additionally, you can add an `activationStrategy` property to your route config if the strategy is always the same and you don't want that to be in your view-model code.
+
 If you just want to force a refresh of the life-cycle (useful with `<compose>` bindings) you may do something like the following:
 
 ```javascript
@@ -1163,7 +1228,8 @@ These extensions are not visible to the compiler by default. There are three mai
 
 All extensions can opt into the view lifecycle by implementing any of the following hooks:
 
-* `bind(bindingContext)` - Invoked when the databinding engine binds the view. The binding context is the instance that the view is databound to.
+* `created(view:View)` - Invoked after both the view and view-model have been created. Allows your behavior to have direct access to the View instance.
+* `bind(bindingContext:any)` - Invoked when the databinding engine binds the view. The binding context is the instance that the view is databound to.
 * `unbind()` - Invoked when the databinding engine unbinds the view.
 * `attached()` - Invoked when the view that contains the extension is attached to the DOM.
 * `detached()` - Invoked when the view that contains the extension is detached from the DOM.
@@ -1754,6 +1820,10 @@ client.createRequest('some/cool/path')
 The fluent API has the following chainable methods: `asDelete()`, `asGet()`, `asHead()`, `asOptions()`, `asPatch()`, `asPost()`, `asPut()`, `asJsonp()`, `withUrl()`, `withBaseUrl()`, `withContent()`, `withParams()`, `withResponseType()`, `withTimeout()`, `withHeader()`, `withCredentials()`, `withReviver()`, `withReplacer()`, `withProgressCallback()`, and `withCallbackParameterName()`.
 
 >**Note:** We are working on a more moden HttpClient located in the `aurelia-fetch-client` repo. That is the client that the getting started guide now uses. We recommend using it, since it is based on the upcoming Fetch standard. It is still a work in progress. Docs on it will be coming in the near future.
+
+<h2 id="debugging"><a href="#debugging">Debugging</a></h2>
+
+During debug mode Aurelia will output various information to the browser's console window. However, this is not always enough information if you are having an issue with a binding expression or a view. To help in these situations Aurelia provides two Custom Attributes: `compile-spy` and `view-spy`. `compile-spy` can be placed on any element to have it emit the View Compiler's `TargetInstruction` into the debug console, giving you insight into all the parsed bindings, behaviors and event handers for the targeted element. The `view-spy` can be placed on any HTML element in a view to emit the View instance to the debug console, giving you insight into the live View instance, including all child views, live bindings, behaviors and more.
 
 <h2 id="customization"><a href="#customization">Customization</a></h2>
 
