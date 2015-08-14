@@ -17,10 +17,12 @@
 次に、 [jspm](http://jspm.io/) をインストールします。これはクライアントサイドのパッケージマネージャーです。次のようにしてください:
 
   ```shell
-  npm install -g jspm
+  npm install -g jspm@beta
   ```
 
 > **注:** jspmはBowerやYeomanのように、 [git](http://git-scm.com/) を活用します。gitをまだインストールしていなければ、インストールしておく必要があります。また、jspmはインストールするパッケージをGitHubに問い合わせますが、GitHubは匿名のAPIアクセスに上限があります。この問題を回避するために、あなたのGitHub認証情報を使うようにjspmを設定することが推奨されます。これを行うために `jspm registry config github` を実行して、以降のプロンプトに従ってください。jspmを使いたくない? 問題ありません。すべてのAureliaパッケージは [Bower](http://bower.io/) でも取得可能です。
+
+> **注:** jspm betaがリリースされ、リリースブランチに統合された後は、 `@beta` をつける必要はありません。
 
 ## プロジェクト構成とビルドの準備
 
