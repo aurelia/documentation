@@ -96,9 +96,9 @@ aurelia.use.feature('feature-folder-name-here');
 
 By default, Aurelia uses ES6 native Promises or a polyfill. However, you can replace this with the excellent [Bluebird](https://github.com/petkaantonov/bluebird) Promise library. Simply include it in your page before you reference the other scripts. It will provide its own standards-compliant Promise implementation which is currently faster than native and has better debugging support. Additionally, when used in combination with the Babel transpiler, you can use [coroutines](http://babeljs.io/docs/usage/transformers/other/bluebird-coroutines/) for improved async code.
 
-<h3 id="the-aurelia-object"><a href="#the-aurelia-object">The Aurelia Object</a></h3>
+<h3 id="framework-configuration"><a href="#framework-configuration">Framework Configuration</a></h3>
 
-Since both a custom configuration module (view use) and plugins do their work by interacting with the FrameworkConfiguration object, we provide a brief explanation of that API in code below:
+An instance of the `Aurelia` object is passed to your main `configure` function as shown in the examples above. The `use` property of this object is an instance of `FrameworkConfiguration` which can be used to prepare the framework with plugins, features, global resources, services and more. Also, plugin and feature `configure` methods receive an instance of `FrameworkConfiguration` so that they can configure themselves. Since this configuration API is very important, we provide a brief explanation of it in code below:
 
 ```javascript
 export class FrameworkConfiguration {
