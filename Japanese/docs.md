@@ -46,7 +46,7 @@ export function configure(aurelia) {
     .history()
     .router()
     .eventAggregator()
-    .plugin('./path/to/plugin');
+    .plugin('custom-plugin');
 
   aurelia.start().then(a => a.setRoot('app', document.body));
 }
@@ -79,10 +79,18 @@ _plugin_ はexportされた `configure` 関数をもつモジュールです。�
 アプリケシーション中からプラグインを設定するために、 `configure` 関数の第二引数として関数を指定することができます。これにより、configure内で渡された関数を実行することができます。ユーザーは次のように書きます:
 
 ```javascript
-aurelia.use.plugin('./path/to/plugin', config => { /* 設定処理 */ });
+aurelia.use.plugin('path/to/plugin', config => { /* 設定処理 */ });
 ```
 
 > **注:** プラグイン中では名前付け規約に頼ってはいけません。プラグインのユーザーがAureliaの規約を変えてしまっているかもしれません。サードパーティのプラグインは様々なコンテキストにおいて、正しく動作できるように、明示的に書く必要があります。
+
+<h4 id="features"><a href="#features">フィーチャープラグイン</a></h4>
+
+上記のプラグインAPIは外部の、サードパーティ製のプラグインをインストールできるように設計されています。もちろん、あなた自身も、自分のプロジェクトをいくつかのプラグインの組み合わせとして構成することも可能です。そのために、このような内部の `フィーチャー` プラグインのためのフォルダを作成します。そのフォルダの中に、 `index.js` ファイルを作成し、 `configure` 関数を一つexportします。この関数はサードパーティ製のプラグインと同様の動作をします。起動時の設定でこのフィーチャーを読みこむには、次のコード例のように書きます:
+
+```javascript
+aurelia.use.feature('feature-folder-name-here');
+```
 
 <h4 id="promises"><a href="#promises">Promise</a></h4>
 
@@ -100,11 +108,16 @@ export class Aurelia {
 
   withInstance(type, instance):Aurelia; //DI ヘルパーメソッド(コンテナに渡される)
   withSingleton(type, implementation):Aurelia; //DI ヘルパーメソッド(コンテナに渡される)
-  globalizeResources(...resourcePaths):Aurelia; //リソースのモジュールid。configuration/pluginモジュールからの相対パス
-  renameGlobalResource(resourcePath, newName); //名前衝突を避けるため、リソースにグローバルな別名をつける
+  withTransient(type, implementation):Aurelia; //DI ヘルパーメソッド(コンテナに渡される)
 
-  start():Promise; //フレームワークの開始、プラグインのインストールとリソースのロード
-  setRoot(root, applicationHost):Promise; //"root" または "app" ビューモデルをセットし、表示する
+  globalizeResources(...resourcePaths):Aurelia; //リソースのモジュールid。configuration/pluginモジュールからの相対パス
+  renameGlobalResource(resourcePath:string, newName:string); //名前衝突を避けるため、リソースにグローバルな別名をつける
+  addPreStartTask(task:Function):Aurelia; //プラグインの起動前に処理を行う
+  addPostStartTask(task:Function):Aurelia; //プラグインの起動後直ちに処理を行う
+
+  start():Promise<Aurelia>; //フレームワークの開始、プラグインのインストールとリソースのロード
+  setRoot(root:string='app', applicationHost=null):Promise<Aurelia>; //"root" または "app" ビューモデルをセットし、表示する
+  enhance(bindingContext:Object={}, applicationHost=null):Promise<Aurelia>; //ホストエレメントを漸進的に拡張する
 }
 ```
 
@@ -116,11 +129,11 @@ Aureliaでは、ユーザーインターフェースコンポーネントは _�
 
 ビューモデルや他のUI要素、例えばカスタムエレメントやカスタム属性は、クラスとして作成し、フレームワークがDIコンテナを使ってインスタンス化します。このスタイルで書かれたコードはモジュール化やテストが容易です。大きなクラスを作成するより、協力して目的を達成する小さいオブジェクトに分割するようにできます。DIが実行時にそれらのオブジェクトを統合してくれます。
 
-DIを自分でも使う場合は、クラスにデコレータを追加して、コンストラクタに何を渡すかをフレームワークに伝えるだけです。これはAureliaのHttpClientに依存するビューモデルの例です。
+DIを自分でも使う場合は、クラスにデコレータを追加して、コンストラクタに何を渡すかをフレームワークに伝えるだけです。これはAureliaのfetch clientに依存するビューモデルの例です。
 
 ```javascript
 import {inject} from 'aurelia-framework';
-import {HttpClient} from 'aurelia-http-client';
+import {HttpClient} from 'aurelia-fetch-client';
 
 @inject(HttpClient)
 export class CustomerDetail{
@@ -130,10 +143,10 @@ export class CustomerDetail{
 }
 ```
 
-ES7や、デコレータが有効なTypeScriptでは、 `inject` デコレータを追加して、injectする型ごとに一つの引数を渡します。デコレータをサポートしていない言語や、デコレータを使いたくない場合は、 `inject` という名前のスタティックメソッド、またはプロパティを追加し、注入したいものの配列を返すだけです。同じ例をCoffeeScriptでCommonJSモジュールとして書いたものが下記です:
+ES2016や、デコレータが有効なTypeScriptでは、 `inject` デコレータを追加して、injectする型ごとに一つの引数を渡します。デコレータをサポートしていない言語や、デコレータを使いたくない場合は、 `inject` という名前のスタティックメソッド、またはプロパティを追加し、注入したい型の配列を返すだけです。同じ例をCoffeeScriptでCommonJSモジュールとして書いたものが下記です:
 
 ```coffeescript
-HttpClient = require('aurelia-http-client').HttpClient;
+HttpClient = require('aurelia-fetch-client').HttpClient;
 
 class Flickr
   constructor: (@http) ->
@@ -144,7 +157,7 @@ TypeScriptを利用しているなら、`--emitDecoratorMetadata` コンパイ�
 
 ```javascript
 import {autoinject} from 'aurelia-framework';
-import {HttpClient} from 'aurelia-http-client';
+import {HttpClient} from 'aurelia-fetch-client';
 
 @autoinject
 export class CustomerDetail {
@@ -160,7 +173,7 @@ export class CustomerDetail {
 
 ```javascript
 import {Lazy, inject} from 'aurelia-framework';
-import {HttpClient} from 'aurelia-http-client';
+import {HttpClient} from 'aurelia-fetch-client';
 
 @inject(Lazy.of(HttpClient))
 export class CustomerDetail{
@@ -183,7 +196,7 @@ export class CustomerDetail{
 
 ```javascript
 import {transient, inject} from 'aurelia-framework';
-import {HttpClient} from 'aurelia-http-client';
+import {HttpClient} from 'aurelia-fetch-client';
 
 @transient()
 @inject(HttpClient)
@@ -232,7 +245,7 @@ Aureliaのテンプレートエンジンは、あなたのビューやそれが�
 `template` タグの内側にあるものはすべてAureliaによって管理されます。しかし、AureliaはビューのロードにHTMLインポート技術を使っているので、リンクを含めることもできますし、相対パスでリソースを指定しても正しくロードすることができます。言い換えれば、次のようなことができるということです:
 
 ```markup
-<link rel="stylesheet" href="./hello.css">
+<link rel="stylesheet" href="hello.css">
 
 <template>
     <div class="hello">Hello World!</div>
@@ -245,7 +258,7 @@ Aureliaに固有のリソース、Aureliaの _カスタムエレメント_ や�
 
 ```markup
 <template>
-  <require from='./nav-bar'></require>
+  <require from='nav-bar'></require>
 
   <nav-bar router.bind="router"></nav-bar>
 
@@ -261,7 +274,7 @@ Aureliaに固有のリソース、Aureliaの _カスタムエレメント_ や�
 * ワンタイムコンパイル - この方法でインポートされたカスタムエレメントのテンプレートはアプリケーションを通じて一回のみコンパイルされます。
 * 局所スコープ - 読み込まれたリソースはrequireしたビューの中でのみ可視となり、グローバルを削除することで名前衝突の可能性を減らし、メンテナンス性を向上させ理解しやすくします。
 * リネーム - 同じビューで同じ名前、もしくは似た名前の二つのサードパーティ製リソースを同時に使うときに、名前を変更することが可能です。
-    - 例. `<require from="./nav-bar" as="foo-bar"></require>` - `nav-bar` 要素の代わりに、 `foo-bar` として使うことができます。(これはES6にもとづいています。ES6では、リネームはエイリアスの代替として考えられており、それはエイリアスが厳密に型の名前を変えてしまうからです。)
+    - 例. `<require from="nav-bar" as="foo-bar"></require>` - `nav-bar` 要素の代わりに、 `foo-bar` として使うことができます。(これはES6にもとづいています。ES6では、リネームはエイリアスの代替として考えられており、それは局所的ながらも、厳密に型の名前を変えてしまうからです。)
 * パッケージ - requireは、一つのビューにインポートされることになる複数リソースからなるモジュールを指すこともできます。
 * 拡張性 - あなたは新しいタイプのリソースを定義することも可能です。このように読み込まれた時に、独自のローディング(非同期に一度だけ)や、登録(ビューごとに)を行うようにできます。これは宣言的で、拡張可能なリソースローディングパイプラインです。
 * ES6 - コードはHTMLインポートではなく、ES6ローダーによりロードされ、ローダーの機能、拡張性のすべてを利用できます。この設計方針は、リソースがJavaScript、HTMLどちらから読み込まれたかに関係なく、アプリケーションに必要なリソースのロードを統一することができるのです。
@@ -342,6 +355,8 @@ _これは何を意味するのでしょうか?_
 ```
 
 > **注:** イベントデリゲーションについて詳しくない方のために。これはDOMのイベントが親に向かって湧き上がるように伝播する性質を用いたテクニックです。 `.delegate` を一つのイベントハンドラに対して使うとき、それは個々の要素ではなく、ドキュメントに対し接続されます。その要素のイベントが発火すると、それはDOMツリーを泡のように上にたどっていき、最終的にそれが処理されるドキュメントに到達します。これによってイベント処理時のメモリ効率が良くなります。そして、この方式をあなたの標準の処理方式とすることが推奨されます。
+
+> **注:** イベントデリゲーションは *閉じられた* ShadowDOMの中では動作しません。一方、開かれたShadowDOMの中では動作します。
 
 これら全てはDOMイベントに対して、様々な方法で動作を行うものでした。後で手動で呼び出せるように、直接関数を参照するような、カスタム属性やカスタムエレメントを使うこともあるでしょう。関数リファレンスを渡すためには、 `.call` バインディングを使います。(それをあとで _呼び出す_ からです):
 
@@ -691,6 +706,8 @@ export class IssueSearch {
 </template>
 ```
 
+>**注:** `if` 属性を `<content>` エレメントに付与してはいけません。ShadowDOMはここで期待されるような、動的なエレメントの追加をサポートしていません。代わりに、親エレメントに `show` を付与することで実現できます。
+
 <h4 id="repeat"><a href="#repeat">repeat</a></h4>
 
 `repeat` カスタム属性は、配列内の要素ごとに、テンプレートを複数回表示することができます。 顧客名のリストを表示するサンプルです:
@@ -798,18 +815,16 @@ export class App {
 
     config.title = 'Aurelia';
     config.map([
-      { route: ['', 'home'],       name: 'home',       moduleId: './home/index' },
-      { route: 'users',            name: 'users',      moduleId: './users/index',                      nav: true },
-      { route: 'users/:id/detail', name: 'userDetail', moduleId: './users/detail' },
-      { route: 'files*path',       name: 'files',      moduleId: './files/index',     href:'#files',   nav: true }
+      { route: ['', 'home'],       name: 'home',       moduleId: 'home/index' },
+      { route: 'users',            name: 'users',      moduleId: 'users/index',   nav: true },
+      { route: 'users/:id/detail', name: 'userDetail', moduleId: 'users/detail' },
+      { route: 'files*path',       name: 'files',      moduleId: 'files/index',   href:'#files',   nav: true }
     ]);
   }
 }
 ```
 
 まず、 `configureRouter` メソッドを実装します。 ドキュメントのタイトルに使う `title` プロパティを設定することもできます。ただ、一番重要なのはルートの設定の部分です。ルーターの `map` メソッドは、あなたのルート情報を表す、シンプルなJSONデータを引数にとります。最も重要なプロパティは二つで、ルートのパターンを定義する `route` (文字列、もしくは文字列の配列) と、ビューモデルの相対パスを持つ `moduleId` です。他にも、後でルートへのリンクを生成する `name` プロパティ、ドキュメントのタイトルを設定する `title` プロパティ、ナビゲーションモデルに含めるかどうかを指定する(この指定は順番を意味する数字でも良い) `nav` プロパティ、 _ナビゲーションモデル_ とバインドする `href` プロパティを設定することもできます。
-
->**注:** 指定しなかったプロパティは、与えられた情報を踏まえて、フレームワークが規約にもとづいて決めます。
 
 ルートの指定の仕方にはどのようなものがあるのでしょうか?
 
@@ -882,7 +897,7 @@ export class App {
 }
 ```
 
-やらなければならないことは、 `config.moduleId` プロパティをセットするだけです。それで、準備は完了です。また、 `mapUnknownRoutes` でPromiseを返すことで、遷移先を非同期に決定することもできます。
+やらなければならないことは、 `instruction.config.moduleId` プロパティをセットするだけです。それで、準備は完了です。また、 `mapUnknownRoutes` でPromiseを返すことで、遷移先を非同期に決定することもできます。
 
 >**注:** 規約によるルーティングに関係があるわけではないですが、ルーターを非同期に設定する必要に駆られることがあるかもしれません例えば、ルートの設定の前に、ユーザーの権限を取得するWebサービスを呼び出さなければいけない、などです。これを実現するためには、 `configureRouter` で Promise を返すようにしてください。
 
@@ -902,8 +917,8 @@ export class App {
     config.map([
       { route: ['welcome'],    name: 'welcome',       moduleId: 'welcome',      nav: true, title:'Welcome' },
       { route: 'flickr',       name: 'flickr',        moduleId: 'flickr',       nav: true, auth: true },
-      { route: 'child-router', name: 'childRouter',   moduleId: 'child-router',  nav: true, title:'Child Router' },
-      { route: '',              redirect: 'welcome' }
+      { route: 'child-router', name: 'childRouter',   moduleId: 'child-router', nav: true, title:'Child Router' },
+      { route: '', redirect: 'welcome' }
     ]);
   }
 }
@@ -1047,8 +1062,8 @@ export class App {
   configureRouter(config) {
     config.title = 'Aurelia';
     config.map([
-      { route: 'product/a',    moduleId: './product',     nav: true },
-      { route: 'product/b',    moduleId: './product',     nav: true },
+      { route: 'product/a',    moduleId: 'product',     nav: true },
+      { route: 'product/b',    moduleId: 'product',     nav: true },
     ]);
   }
 }
@@ -1104,10 +1119,10 @@ configureRouter(config){
     route: 'edit',
       viewPorts: {
         left: {
-          moduleId: './editor'
+          moduleId: 'editor'
         },
         right: {
-          moduleId: './preview'
+          moduleId: 'preview'
         }
       }
     }]);
@@ -1144,7 +1159,7 @@ Aureliaには強力かつ拡張可能なHTMLテンプレートコンパイラが
 * ブートストラップ時に、Aureliaオブジェクトの `.globalizeResources(...resources)` を使ってHTML拡張を登録し、アプリケーショングローバルに見えるようにする。
 * HTML拡張をアプリケーショングローバルに見えるように登録するようなプラグインをインストールする。
 
->**注:** お勧めの方法は、アプリケーション固有のHTML拡張やバリューコンバーターなどを _resources_ フォルダに入れることです。その後、それらすべてを内部的にプラグインとする _index.js_ ファイルを作成します。最後に、そのプラグインをアプリケーションのブートストラップ時にインストールします。こうすることで、リソースとその登録コードを一緒にして、既知の場所に保管することができます。また、設定ファイルを汚すこともありません。
+>**注:** お勧めの方法は、アプリケーション固有のHTML拡張やバリューコンバーターなどを _resources_ フォルダに入れることです。その後、それらすべてを内部的にプラグインとする _index.js_ ファイルを作成します。最後に、そのプラグインをアプリケーションのブートストラップ時に `aurelia.use.feature('resources')` としてインストールします。こうすることで、リソースとその登録コードを一緒にして、既知の場所に保管することができます。また、設定ファイルを汚すこともありません。
 
 すべてのHTML拡張は、次のフックを実装することで、ビューのライフサイクルに組み込むことができます:
 
@@ -1252,7 +1267,7 @@ export class MyAttribute {
 
 > **注:** `delegate` や `trigger` コマンドは、オプション属性中で利用しないでください。これらは素のDOMイベントと連携するため、常にエレメントに付加されます。ただし、 `call` は利用可能です。
 
-もしES7のプロパティイニシャライザを使っていなければ、 `@bindable` デコレータを直接クラスに指定することも可能です。その場合はプロパティ名を `@bindable('propertyName')` のように指定します。バインド可能なプロパティの細かい設定を行う場合は、次のようにオプションオブジェクトを渡します:
+もしES2016のプロパティイニシャライザを使っていなければ、 `@bindable` デコレータを直接クラスに指定することも可能です。その場合はプロパティ名を `@bindable('propertyName')` のように指定します。バインド可能なプロパティの細かい設定を行う場合は、次のようにオプションオブジェクトを渡します:
 
 ```javascript
 @bindable({
@@ -1266,7 +1281,7 @@ export class MyAttribute {
 
 デフォルトと規約については上述した通りなので、変更の必要があるものだけを指定すればよいです。
 
-> **注:** 特別な `@dynamicOptions` デコレータというものがあります。これはカスタム属性に、動的なプロパティを持たせるもので、オプション属性のシンタックスで指定したプロパティを実行時にマッピングします。これを使うときは `bindable` を使ってプロパティを宣言しないでください。 `@dynamicOptions` デコレータを記載すれば、オプション属性のシンタックス中で定義されているプロパティにマッピングされます。
+> **注:** 特別な `@dynamicOptions` デコレータというものがあります。これはカスタム属性に、動的なプロパティを持たせるもので、オプション属性のシンタックスで指定したプロパティを実行時にマッピングします。これを使うときは `bindable` を使ってプロパティを宣言しないでください。 `@dynamicOptions` デコレータを記載すれば、オプション属性のシンタックス中で定義されているプロパティにマッピングされます。動的なプロパティが変わった時に通知を行うには、次のメソッドをクラスに実装します: `propertyChanged(propertyName, newValue, oldValue)`　実際のところ、これはどの属性にも実装できます。
 
 > **注:** デコレータを使いたくない、または言語がサポートしていない場合、デコレータは `Decorators` ヘルパを使って `decorators` プロパティもしくはメソッドで指定できることを思い出してください。以前でてきたCoffeeScriptの例を参照ください。
 
@@ -1342,7 +1357,7 @@ export class If {
 
 ```markup
 <template>
-    <require from="./say-hello"></require>
+    <require from="say-hello"></require>
 
     <input type="text" ref="name">
     <say-hello to.bind="name.value"></say-hello>
@@ -1393,11 +1408,13 @@ export class SayHelloCustomElement {
 
 やることはこれだけです。カスタムエレメントでも通常のビューモデル/ビューと同じ名前規約に従います。カスタムエレメント固有のデコレータもあるので、覚えておきましょう:
 
-* `@syncChildren(property, changeHandler, selector)` - クエリセレクタに応じて、配列の中身がビューと同期するような配列プロパティを作成します。
-*  `@skipContentProcessing` - コンパイラにカスタムエレメントを処理しないように指示します。つまり、独自で処理するということになります。
+* `@sync(selector)` - プロパティを拡張し、クエリセレクタに応じて、配列の中身がビューと同期するような配列を作成します。
+*  `@processContent(false|Function)` - コンパイラにエレメントの中身が特別扱いをしなければならないことを伝えます。デコレーターの引数に `false` を与えた場合、コンパイラはカスタムエレメントの中身を処理しません。これは自前で独自の処理を行う場合に必要になります。しかし、関数を引数として渡して、ビューのコンパイル時にエレメントの中身の処理を行わせることも可能です。関数の返値としてtrue/falseを返すことができ、これはコンパイラも中身を処理するかを示します。関数は、次の形式をとります。 `function(compiler, resources, node, instruction):boolean`
 *  `@useView(path)` - 命名規約とは異なるビューを指定します。
 *  `@noView()` - カスタムエレメントがビューを持たないことを示します。つまり、カスタムエレメントがレンダリングを内部で行うということを意図しています。。
-
+* `@inlineView(markup, dependencies?)` - 開発者に、ビューのコンパイル時に組み込まれる文字列を指定する機能を提供します。
+* `@containerless()` - エレメントのビューを、その外側のコンテナで囲うことなしに、そのまま表示します。これは `@sync` や `@useShadowDOM` と一緒に使えません。また、代理ビヘイビアとも一緒に使えません。
+* `@useShadowDOM()` - ビューをShadowDOMにレンダリングします。ShadowDOMにレンダリングされる際には、コンストラクタに `DOMBoundary` インスタンスをインジェクトすることもできます。これはshadow rootを表します。
 
 <h3 id="template-parts"><a href="#template-parts">テンプレートパート</a></h3>
 
@@ -1453,13 +1470,29 @@ export class Welcome{
 #### welcome.html
 ```markup
 <template>
-  <require from="./demo"></require>
+  <require from="example"></require>
 
-  <demo>
+  <example>
     <template replace-part="item-template">
       Replacement: ${item} ${$parent.$parent.fullName} <button click.delegate="$parent.$parent.welcome()">Test</button>
     </template>
-  </demo>
+  </example>
+</template>
+```
+
+<h3 id="surrogate-behaviors"><a href="#surrogate-behaviors">代理ビヘイビア</a></h3>
+
+`プログレスバー` カスタムエレメントを作ることを想像してください。アクセシビリティを考えれば、このカスタムエレメントにもすべてのaria属性を付けたくなります。問題は、このカスタムエレメントを利用する利用者側でaria属性を付与するか、プログラムでaria属性を付与して、変更をaria属性に通知するようにコーディングするかです。綺麗なやり方ではありません。
+
+そこで代理ビヘイビアです
+
+代理ビヘイビアを使って、バインディングやカスタム属性などをカスタムエレメント自身の `template` エレメントに書くことができます。エレメントがインスタンス化されるときに、バインディングや振る舞いがカスタムエレメントのホストに付与されます。このように、 `template` エレメントは実行時のHTMLの代理、代役なのです。このバインディングや振る舞いはカスタムエレメントのクラスに結び付けられたものです。以下はプログレスバービューの例です:
+
+```markup
+<template role="progress-bar" aria-valuenow.bind="progress" aria-valuemin="0" aria-valuemax="100">
+  <div class="bar">
+    <div class="progress" css="width:${progress}%"></div>
+  </div>
 </template>
 ```
 
@@ -1667,7 +1700,7 @@ class RequestInterceptor {
     // メッセージに対して処理を行う
     return message;
   }
-  
+
   requestError(error) {
     throw error; // もしくは、(Http/Jsonp)RequestMessage を返し、エラーから復帰する
   }
@@ -1678,7 +1711,7 @@ class ResponseInterceptor {
     // メッセージに対して処理を行う
     return message;
   }
-  
+
   responseError(error) {
     throw error; // もしくは、 HttpResponseMessage を返しエラーから復帰する
   }
@@ -1720,6 +1753,8 @@ client.createRequest('some/cool/path')
 
 流れるようなAPIには、続けて書くことができる下記のメソッドがあります: `asDelete()`,`asGet()`,`asHead()`,`asOptions()`,`asPatch()`,`asPost()`,`asPut()`,`asJsonp()`,`withUrl()`,`withBaseUrl()`,`withContent()`,`withParams()`,`withResponseType()`,`withTimeout()`,`withHeader()`,`withCredentials()`,`withReviver()`,`withReplacer()`,`withProgressCallback()`,`withCallbackParameterName()`.
 
+>**注:** 我々は、`aurelia-fetch-client` パッケージに含まれる、より新しい HttpClient に取り組んでいます。最新のgetting startガイドはこのクラスを利用するようになっています。このクラスは最新の Fetch 標準に基づくものなので、利用を推奨します。しかし、まだ開発中のものでもあります。ドキュメントは近い将来整備する予定です。
+
 <h2 id="customization"><a href="#customization">カスタマイズ</a></h2>
 
 <h3 id="view-and-view-model-conventions"><a href="#view-and-view-model-conventions">ビューとビューモデル規約</a></h3>
@@ -1730,7 +1765,8 @@ client.createRequest('some/cool/path')
 import {ConventionalViewStrategy} from 'aurelia-framework';
 
 ConventionalViewStrategy.convertModuleIdToViewUrl = function(moduleId){
-  return moduleId.replace('view-models', 'views') + '.html';
+  var id = (moduleId.endsWith('.js') || moduleId.endsWith('.ts')) ? moduleId.substring(0, moduleId.length - 3) : moduleId;
+  return id + '.html';
 }
 ```
 
