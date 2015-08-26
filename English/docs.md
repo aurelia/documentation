@@ -13,12 +13,12 @@ Aurelia was originally designed for Evergreen Browsers. This includes Chrome, Fi
 <script src="config.js"></script>
 <script>
   // Loads WeakMap polyfill needed by MutationObservers
-  System.import('core-js').then( function() {
+  System.import('core-js').then(function() {
     // Imports MutationObserver polyfill
-    System.import('polymer/mutationobservers').then( function() {
-      // Ensures start of Aurelia when all required IE9 dependencies are loaded
-      System.import('aurelia-bootstrapper');
-    })
+    return System.import('polymer/mutationobservers');
+  }).then(function() {
+    // Ensures start of Aurelia when all required IE9 dependencies are loaded
+    System.import('aurelia-bootstrapper');
   });
 </script>
 ```
