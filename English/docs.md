@@ -344,7 +344,7 @@ In this case `nav-bar` is an Aurelia _Custom Element_ which we've required for u
 
 In your view you will often leverage the different types of resources mentioned above as well as databinding.
 
->**Note:** You may be concerned about the tediousness of having to import things into each view. Remember, during the bootstrapping phase you can configure Aurelia with global resources to be available in every view. Just use `aurelia.globalResources(...resourcePaths)`.
+>**Note:** You may be concerned about the tediousness of having to import things into each view. Remember, during the bootstrapping phase you can configure Aurelia with global resources to be available in every view. Just use `aurelia.use.globalResources(...resourcePaths)`.
 
 Aurelia polyfills browsers that don't support templates. However, a few features of templates can't be polyfilled and require workarounds. In particular this occurs when adding `<template>` elements inside `<select>` and `<table>` elements. The following can't be done in a browser that doesn't natively support templates:
 
@@ -1221,7 +1221,7 @@ Aurelia has a powerful and extensible HTML template compiler. The compiler itsel
 These extensions are not visible to the compiler by default. There are three main ways to plug them in:
 
 * Use the `require` element to require an extension in a view. The `from` attribute specifies the relative path to the extension's module. The extension will be locally defined.
-* Use the Aurelia object during your bootstrapping phase to call `.globalResources(...resourcePaths)` to register extensions with global visibility in your application.
+* Use the Aurelia object during your bootstrapping phase to call `aurelia.use.globalResources(...resourcePaths)` to register extensions with global visibility in your application.
 * Install a plugin that registers extensions with global visibility in your application.
 
 >**Note:** A recommended practice for your own apps is to place all your app-specific extensions, value converters, etc. into a _resources_ folder. Then create an _index.js_ file that turns them all into an internal feature plugin. Finally, install the feature during your app's bootstrapping phase using `aurelia.use.feature('resources')`. This will keep your resources located in a known location, along with their registration code. It will also keep your configuration file clean and simple.
