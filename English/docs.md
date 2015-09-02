@@ -783,13 +783,14 @@ The `repeat` Custom Attribute allows you to render a template multiple times, on
 
 An important note about the repeat attribute is that it works in conjunction with the `.for` binding command. This binding command interprets a special syntax in the form "item of collection" where "item" is the local name you will use in the template and "collection" is a normal binding expression that evaluates to an array or map.
 
-Speaking of Maps, here's how you would bind to an ES6 Map:
+Speaking of Maps, since they're key:value you can't simply bind to them as to an array. Instead you have to specify two variables in an array-like-syntax: the first one will be populated with key, the second one with value.
 
 ```markup
 <ul>
   <li repeat.for="[id, customer] of customers">${id} ${customer.fullName}</li>
 </ul>
 ```
+> **Note:**: You can also omit variable for key like this: `repeat.for="[, customer]`.
 
 If instead of iterating over a collection you would rather iterate a specified number of times, you can instead use the syntax "i of count" where "i" is the index of the iteration and "count" is a binding expression that evaluates to an integer.
 
