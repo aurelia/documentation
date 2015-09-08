@@ -380,15 +380,28 @@ SVG (scalable vector graphic) tags can also be fixed to support Aurelia's custom
 </template>
 ```
 
-.. And then (inside your custom view) simply wrap the svg subcomponent in it's own `<svg>` tag.
+.. then (inside your custom view) wrap the svg subcomponent in it's own `<svg>` tag ..
 
 ```markup
 <!-- e.g. in 'my-custom-rect.html' -->
 <template>
-	<svg><!-- this second, wrapping svg makes the magic happen -->
+	<svg><!-- this second, wrapping svg bundles things up nicely -->
 		<rect width="10" height="10" fill="red" x="50" y="50"/>
 	</svg>
 </template>
+```
+
+.. and lastly make sure the custom element class uses the `@containerless()` decorator.
+
+```javascript
+// e.g. in 'my-custom-rect.js'
+import {containerless} from 'aurelia-framework';
+
+@containerless() // this removes the wrapping <template> tags from the final DOM element
+export class MyCustomRect {
+	..
+}
+
 ```
 
 <h3 id="databinding"><a href="#databinding">Databinding</a></h3>
