@@ -34,6 +34,8 @@ With the tooling installed, we can now turn our attention to setting up a basic 
 >  npm install -g yo generator-aurelia
 >  yo aurelia
 >  ```
+>
+> This also runs the `npm` and `jspm` commands listed below.
 
 Inside the folder you will now find everything you need including a basic build, package configuration, styles and more.
 
