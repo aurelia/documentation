@@ -1854,6 +1854,7 @@ There's also a number of live demos which further explain and show certain parts
 * [Localization](http://aurelia.io/validation/#/i18n)
 * [Select element binding](http://jdanyow.github.io/aurelia-examples/#/)
 * [Child router](http://jdanyow.github.io/aurelia-examples/#/child-router)
+* [Flickr API](http://jdanyow.github.io/aurelia-examples/#/flickr)
 * [Northwind database application](http://jdanyow.github.io/aurelia-breeze-northwind/#/orders)
 
 > **Note:** Some of aformentioned demos might not represent current version of aurelia framework.
