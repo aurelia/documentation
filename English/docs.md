@@ -1847,7 +1847,7 @@ You should execute this code as part of your bootstrapping configuration logic s
 
 <h2 id="live-demos"><a href="#live-demos">Live demos</a></h2>
 
-There's also a number of live demos which further explain and show certain parts of framework such as but not limited to binding converters, selelect element binding, and validation.
+There's also a number of live demos which further explain and show certain parts of framework such as but not limited to binding converters, selelect element binding, and validation. Other community created resources can be found [here](https://github.com/wshayes/aurelia-notes/wiki).
 
 * [Value converters](http://jdanyow.github.io/aurelia-converters-sample/)
 * [Validation](http://aurelia.io/validation/)
