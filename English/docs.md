@@ -569,6 +569,7 @@ You can of course bind each checkboxes to it's boolean properties like this:
 <li><label><input type="checkbox" checked.bind="wantsSprinkles" />Sprinkles</label></li>
 <li><label><input type="checkbox" checked.bind="wantsCherry" />Cherry</label></li>
 ```
+> NOTE:  You cannot use a click.delegate on checkboxes if you want to attach a method to it.  You need to use change.delegate.
 
 <h4 id="innerhtml"><a href="#innerhtml">innerHTML</a></h4>
 
