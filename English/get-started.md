@@ -465,7 +465,7 @@ Wait! I know what you are thinking. This custom element is so simple...it seems 
 
 First, delete the _nav-bar.js_ file. Next, we need to make one change to the _nav-bar.html_ file. On the template element, we can declare the bindable properties of our element like this:
 
-```
+```markup
 <template bindable="router">
   ...
 </template>
