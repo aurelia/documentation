@@ -24,6 +24,12 @@ Next, we need to install [jspm](http://jspm.io/). This will serve as our client-
 
 > **Note:** Don't want to use jspm? No problem. All Aurelia packages are available via [Bower](http://bower.io/) as well.
 
+Next, we need to install [babel-eslint](https://github.com/babel/babel-eslint). This will serve as our JavaScript syntax validator. You can do that like this:
+
+  ```shell
+  npm install -g babel-eslint
+  ```
+
 ## Setting up the Project Structure and Build
 
 With the tooling installed, we can now turn our attention to setting up a basic structure for your app. Begin by [downloading the navigation skeleton](https://github.com/aurelia/skeleton-navigation/releases). Unzip it and rename the folder to _navigation-app_.
