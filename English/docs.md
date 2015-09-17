@@ -490,7 +490,16 @@ Sometimes you want to work with object instances rather than strings.  Here's th
 </select>
 ```
 
-The primary difference between this example and the previous example is we're storing the option values in a special property, `model`, instead of the option element's `value` property which only accepts strings.
+Alternativly you can bind the id of the element and display the name of the element.
+
+```markup
+<select value.bind="employeeOfTheMonthId">
+  <option>Select An Employee</option>
+  <option repeat.for="employee of employees" model.bind="employee.id">${employee.fullName}</option>
+</select>
+```
+
+The primary difference between these examples and the previous example is we're storing the option values in a special property, `model`, instead of the option element's `value` property which only accepts strings.
 
 <h4 id="multi-select-elements"><a href="#multi-select-elements">multi select elements</a></h4>
 
