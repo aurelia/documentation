@@ -1854,3 +1854,17 @@ ConventionalViewStrategy.convertModuleIdToViewUrl = function(moduleId){
 You should execute this code as part of your bootstrapping configuration logic so that it takes effect before any Custom Elements are loaded. This will affect *everything* including custom elements. So, if you need or want those to act differently, you will need to account for that in your implementation of `convertModuleIdToViewUrl`.
 
 > **Note:** This is an example of why 3rd party plugin authors should not rely on conventions. Developers may change these conventions in order to fit the needs of their own app.
+
+<h2 id="live-demos"><a href="#live-demos">Live demos</a></h2>
+
+There's also a number of live demos which further explain and show certain parts of framework such as but not limited to binding converters, selelect element binding, and validation. Other community created resources can be found [here](https://github.com/wshayes/aurelia-notes/wiki).
+
+* [Value converters](http://jdanyow.github.io/aurelia-converters-sample/)
+* [Validation](http://aurelia.io/validation/)
+* [Localization](http://aurelia.io/validation/#/i18n)
+* [Select element binding](http://jdanyow.github.io/aurelia-examples/#/)
+* [Child router](http://jdanyow.github.io/aurelia-examples/#/child-router)
+* [Flickr API](http://jdanyow.github.io/aurelia-examples/#/flickr)
+* [Northwind database application](http://jdanyow.github.io/aurelia-breeze-northwind/#/orders)
+
+> **Note:** Some of aformentioned demos might not represent current version of aurelia framework.
