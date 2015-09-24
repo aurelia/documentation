@@ -368,6 +368,42 @@ In order to repeat over the `<tr>` elements, simply add the `repeat` on the `<tr
   </table>
 ```
 
+SVG (scalable vector graphic) tags can also be fixed to support Aurelia's custom element `<template>` tags by  nesting the templated code inside a second `<svg>` tag. For example if you had a base `<svg>` element and wanted to add a templated `<rect ../>` inside it, you would first put your custom tag inside the main `<svg>` tag as expected ..
+
+```markup
+<!-- e.g. in any view -->
+<template>
+	<require from="my-custom-rect"></require>
+	<svg width="100" height="100" >
+		<my-custom-rect></my-custom-rect>
+	</svg>
+</template>
+```
+
+.. then (inside your custom view) wrap the svg subcomponent in it's own `<svg>` tag ..
+
+```markup
+<!-- e.g. in 'my-custom-rect.html' -->
+<template>
+	<svg><!-- this second, wrapping svg bundles things up nicely -->
+		<rect width="10" height="10" fill="red" x="50" y="50"/>
+	</svg>
+</template>
+```
+
+.. and lastly make sure the custom element class uses the `@containerless()` decorator.
+
+```javascript
+// e.g. in 'my-custom-rect.js'
+import {containerless} from 'aurelia-framework';
+
+@containerless() // this removes the wrapping <template> tags from the final DOM element
+export class MyCustomRect {
+	..
+}
+
+```
+
 <h3 id="databinding"><a href="#databinding">Databinding</a></h3>
 
 Databinding allows you to link the state and behavior in a JavaScript object to an HTML view. When this link is established, any changes in linked properties can be synced in one or both directions. Changes in the JavaScript object can be reflected in the view and changes in the view can be reflected in the JavaScript object. To establish this link, you will leverage "binding commands" in your HTML. Binding commands are clearly identifiable via their use of the "." as a kind of binding operator. Whenever an HTML attribute contains a ".", the compiler will pass the attribute name and value off to the binding language for interpretation. The result is one or more binding expressions that are capable of establishing the linkage when the view is created.
