@@ -147,7 +147,7 @@ Ok. Now that we have a _view-model_ with some basic data and behavior, let's hav
         <label>Full Name</label>
         <p>${fullName}</p>
       </div>
-      <button type="submit>Submit</button>
+      <button type="submit">Submit</button>
     </form>
   </section>
 </template>
