@@ -20,22 +20,26 @@ Next, we need to install [jspm](http://jspm.io/). This will serve as our client-
   npm install -g jspm
   ```
 
-> **Note:** jspm, like Bower and Yeoman, leverages [git](http://git-scm.com/) so you need to install that if you don't have it. Also, jspm queries GitHub to install packages, but GitHub has a rate limit on anonymous API requests. It is advised that you configure jspm with your GitHub credentials in order to avoid problems. You can do this by executing `jspm registry config github` and following the prompts. Don't want to use jspm? No problem. All Aurelia packages are available via [Bower](http://bower.io/) as well.
+> **Note:** jspm, like Bower and Yeoman, leverages [git](http://git-scm.com/) so you need to install that if you don't have it. Also, jspm queries GitHub to install packages, but GitHub has a rate limit on anonymous API requests. It is advised that you configure jspm with your GitHub credentials in order to avoid problems. You can do this by executing `jspm registry config github` and following the prompts. If you choose to authorize jspm by an access token instead of giving your password (see GitHub `Settings > Personal Access Tokens`), `public_repo` access for the token is required.
+
+> **Note:** Don't want to use jspm? No problem. All Aurelia packages are available via [Bower](http://bower.io/) as well.
 
 ## Setting up the Project Structure and Build
 
 With the tooling installed, we can now turn our attention to setting up a basic structure for your app. Begin by [downloading the navigation skeleton](https://github.com/aurelia/skeleton-navigation/releases). Unzip it and rename the folder to _navigation-app_.
 
-> **Note:** Alternatively use can use [Yeoman](http://yeoman.io) to "generate" the skeleton project in the target folder, as follows:
+> **Note:** Alternatively, you can use [Yeoman](http://yeoman.io) to "generate" the skeleton project in the target folder, as follows:
 >
 >  ```
 >  npm install -g yo generator-aurelia
 >  yo aurelia
 >  ```
+>
+> This also runs the `npm` and `jspm` commands listed below.
 
 Inside the folder you will now find everything you need including a basic build, package configuration, styles and more.
 
-You may examine the provided _index.html_ file and the rest of the files in _src_, however we recommend deleting both before moving on with this tutorial. That way you can more effectively learn how to build an Aurelia app from scratch.
+You may examine the provided _index.html_ file and the rest of the files in _src_ and _dist_, however we recommend deleting these folders before moving on with this tutorial. By doing so, you can more effectively learn how to build an Aurelia app from scratch.
 
 With all this in place, let's run some commands.
 
@@ -66,19 +70,12 @@ If you've followed along this far, you now have all the libraries, build configu
 <html>
   <head>
     <title>Aurelia</title>
-    <link rel="stylesheet" href="jspm_packages/npm/font-awesome@4.3.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="styles/styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
   </head>
   <body aurelia-app>
     <script src="jspm_packages/system.js"></script>
     <script src="config.js"></script>
-    <script>
-     System.config({
-       "paths": {
-         "*": "dist/*.js"
-       }
-     });
-   </script>
     <script>
       System.import('aurelia-bootstrapper');
     </script>
@@ -86,11 +83,9 @@ If you've followed along this far, you now have all the libraries, build configu
 </html>
 ```
 
-Yes, that's it. This is the only HTML page in our application. The head of the document is pretty straight forward: we link in our font-awesome and custom stylesheets. It's the body that's interesting.
+Yes, that's it. This is the only HTML page in our application. The head of the document is pretty straight forward: just a style sheet link and some metadata. It's the body that's interesting.
 
-> **Note:** Be sure to confirm that the local folder name for font-awesome matches the link href. It's possible that these libraries have updated their versions since the authoring of this document.
-
-Let's start with the script tags. First we have _system.js_, our ES6 standards-based module loader. It's what loads the Aurelia library as well as your own code. Next we have _config.js_. This contains configuration for the loader. It's generated automatically whenever you execute a jspm command. jspm is the client-side package manager we recommend because it provides an amazing developer experience by integrating client-side package management with an ES6 compliant module loader. Immediately under that we have a call to `System.config`. This sets up the output location of our compiled JavaScript code.
+Let's start with the script tags. First we have _system.js_, our ES6 standards-based module loader. It's what loads the Aurelia library as well as your own code. Next we have _config.js_. This contains configuration for the loader. It's generated automatically whenever you execute a jspm command. jspm is the client-side package manager we recommend because it provides an amazing developer experience by integrating client-side package management with an ES6 compliant module loader.
 
 >**Note:** The Aurelia Framework isn't tied to jspm or SystemJS. We also support require-style APIs like RequireJS and Dojo Loader out of the box. Also, you can implement your own loader and handle package management any way you want. However we do think jspm/SystemJS is the best ES6-oriented solution today and it's our recommended approach.
 
@@ -102,11 +97,11 @@ Wait a minute....we don't have an _app_ view-model or view. Ummm...WHAT NOW!?
 
 ## Creating Your First Screen
 
-In Aurelia, user interface elements are composed of _view_ and _view-model_ pairs. The _view_ is written with HTML and is rendered into the DOM. The _view-model_ is written with JavaScript and provides data and behavior to the _view_. Aurelia's powerful _databinding_ links the two pieces together allowing changes in your data to be reflected in the _view_ and vice versa. This Separation of Concerns is great for developer/designer collaboration, maintainability, architectural flexibility and even source control.
+In Aurelia, user interface elements are composed of _view_ and _view-model_ pairs, sometimes referred to together as a "component". The _view_ is written with HTML and is rendered into the DOM. The _view-model_ is written with JavaScript and provides data and behavior to the _view_. Aurelia's powerful _databinding_ links the two pieces together allowing changes in your data to be reflected in the _view_ and vice versa. This Separation of Concerns is great for developer/designer collaboration, maintainability, architectural flexibility and even source control.
 
 Let's see how it works...
 
-In the _src_ folder create an _app.html_ file and an _app.js_ file. This is the app view and view-model that the bootstrapper was looking for. Let's start with the _view-model_ by creating a simple class to hold a _firstName_ and _lastName_. We'll also add a computed property for _fullName_ and a method to "welcome" the person. Here's what that would look like:
+In the _src_ folder create an _app.html_ file and an _app.js_ file. This is the app view and view-model that the bootstrapper was looking for. Let's start with the _view-model_ by creating a simple class to hold a _firstName_ and _lastName_. We'll also add a computed property for _fullName_ and a method to "submit" the person. Here's what that would look like:
 
 ### app.js
 ```javascript
@@ -119,7 +114,7 @@ export class Welcome{
     return `${this.firstName} ${this.lastName}`;
   }
 
-  welcome(){
+  submit(){
     alert(`Welcome, ${this.fullName}!`);
   }
 }
@@ -127,9 +122,9 @@ export class Welcome{
 
 What...is that JavaScript?
 
-Yes. Yes it is. In fact it's ECMAScript 7 (ES7), the next..next version of JavaScript which introduces many new features to the language. Fortunately the Gulp file you downloaded above has you set up with [Babel](https://babeljs.io/), an amazing transpiler that allows you to write tomorrow's JavaScript and run it on today's browsers. Now you can use modules, classes, lambdas, string interpolation and more. Sweet! So, how do you create a _view-model_? You create a plain class and _export_ it to the framework. Piece. Of. Cake.
+Yes. Yes it is. In fact it's ECMAScript 2016 (formerly ES7), the next version of JavaScript which introduces many new features to the language. Fortunately the Gulp file you downloaded above has you set up with [Babel](https://babeljs.io/), an amazing transpiler that allows you to write tomorrow's JavaScript and run it on today's browsers. Now you can use modules, classes, lambdas, string interpolation and more. Sweet! So, how do you create a _view-model_? You create a plain class and _export_ it to the framework. Piece. Of. Cake.
 
-> **Note:** You don't have to use Babel or even ES7 to write an Aurelia app. You can use languages like TypeScript and CoffeeScript...or today's browser language: ES5. All you have to do is follow the language's standard pattern for creating classes and everything will work fine. We think ES7 is awesome though and hope you will consider it first. To learn more about the newest version of JavaScript including features like module exports and classes we recommend reading through [The Babel Learning Guide](http://babeljs.io/docs/learn-es6/).
+> **Note:** You don't have to use Babel or even ES2016 to write an Aurelia app. You can use languages like TypeScript and CoffeeScript...or today's browser language: ES5 and ES2015. All you have to do is follow the language's standard pattern for creating classes and everything will work fine. We think ES2016 is awesome though and hope you will consider it first. To learn more about the newest version of JavaScript including features like module exports and classes we recommend reading through [The Babel Learning Guide](http://babeljs.io/docs/learn-es6/).
 
 Ok. Now that we have a _view-model_ with some basic data and behavior, let's have a look at its partner in crime...the _view_.
 
@@ -139,28 +134,28 @@ Ok. Now that we have a _view-model_ with some basic data and behavior, let's hav
   <section>
     <h2>${heading}</h2>
 
-    <form role="form" submit.delegate="welcome()">
-      <div class="form-group">
-        <label for="fn">First Name</label>
-        <input type="text" value.bind="firstName" class="form-control" id="fn" placeholder="first name">
+    <form submit.delegate="submit()">
+      <div>
+        <label>First Name</label>
+        <input type="text" value.bind="firstName">
       </div>
-      <div class="form-group">
-        <label for="ln">Last Name</label>
-        <input type="text" value.bind="lastName" class="form-control" id="ln" placeholder="last name">
+      <div>
+        <label>Last Name</label>
+        <input type="text" value.bind="lastName">
       </div>
-      <div class="form-group">
+      <div>
         <label>Full Name</label>
-        <p class="help-block">${fullName}</p>
+        <p>${fullName}</p>
       </div>
-      <button type="submit" class="btn btn-default">Submit</button>
+      <button type="submit>Submit</button>
     </form>
   </section>
 </template>
 ```
 
-All views are contained within a `template` tag. This view is a basic input form, styled using bootstrap classes. Look at the input controls. Did you see `value.bind="firstName"`? That databinds the input's _value_ to the _firstName_ property in our view-model. Any time the view-model's property changes, the input will be updated with the new value. Any time you change the value in the input control, Aurelia will push the new value into your view-model. It's that easy.
+The first thing to notice is that all views are contained within a `template` tag, part of the W3C spec for Web Components. This particular view is a basic input form. Look at the input controls. Did you notice `value.bind="firstName"`? That databinds the input's _value_ to the _firstName_ property in our view-model. Any time the view-model's property changes, the input will be updated with the new value. Any time you change the value in the input control, Aurelia will push the new value into your view-model. It's that easy.
 
-There's a couple more interesting things in this example. In the last form group you can see this syntax in the HTML content: `${fullName}`. That's a string interpolation. It's a one-way binding from the view-model into the view that is automatically converted to a string and interpolated into the document. Finally, have a look at the form element itself. You should notice this: `submit.delegate="welcome()"`. That's an event binding. This uses event delegation to bind the _submit_ event so that it executes the _welcome_ method any time the form is submitted.
+There's a couple more interesting things in this example. In the last form group you can see this syntax in the HTML content: `${fullName}`. That's a string interpolation. It's a one-way binding from the view-model into the view that is automatically converted to a string and interpolated into the document. Finally, have a look at the form element itself. You should notice this: `submit.delegate="submit()"`. That's an event binding. This uses event delegation to bind the _submit_ event so that it executes the _submit_ method any time the form is submitted.
 
 > **Note:** If you haven't heard of event delegation, it's a technique used to more efficiently handle events in browser by attaching a single event handler at the document level which handles all events of a type, rather than attaching event handlers to every node.
 
@@ -180,19 +175,18 @@ You can now browse to [http://localhost:9000/](http://localhost:9000/) to see th
 
 ## Adding Navigation
 
-Since this is a navigation app, we should probably add some more screens and set up a client-side router, don't you think? Let's begin by renaming our _app.js_ and _app.html_ to _welcome.js_ and _welcome.html_ respectively. This will be the first page of our app. Now, lets create a new _app.js_ and _app.html_ which will serve as our "layout" or "master page". The view will contain our navigation UI and the content placeholder for the current page and the view-model will have a router instance, configured with our routes. We'll start with the view-model so you can see how to set up the router:
+Since this is a navigation app, we should probably add some more screens and set up a client-side router, don't you think? Let's begin by renaming our _app.js_ and _app.html_ to _welcome.js_ and _welcome.html_ respectively. This will be the first page of our app. Now, lets create a new _app.js_ and _app.html_ which will serve as our "layout",  "master page" or "root component". The view will contain our navigation UI and the content placeholder for the current page and the view-model will configure a router instance with our routes. We'll start with the view-model so you can see how to set up the router:
 
 ### app.js
 
 ```javascript
 import 'bootstrap';
-import 'bootstrap/css/bootstrap.css!';
 
 export class App {
   configureRouter(config, router){
     config.title = 'Aurelia';
     config.map([
-      { route: ['','welcome'], name: 'welcome',  moduleId: './welcome',      nav: true, title:'Welcome' }
+      { route: ['','welcome'], name: 'welcome', moduleId: 'welcome', nav: true, title:'Welcome' }
     ]);
 
     this.router = router;
@@ -200,20 +194,21 @@ export class App {
 }
 ```
 
-Ok, there's some really interesting new stuff here. We want to use the router, so we begin by creating our _App_ class and having it implement the `configureRouter` callback. You can set a title to use when generating the document's title. Then you map your routes. Each route has the following properties:
+Ok, there's some really interesting new stuff here. First, we're going to be using some bootstrap navigation components in a minute, so we use the ES6 module system to import bootstrap so that it's active and ready to go. Next, we want to use the router, so we begin by creating and exporting our _App_ class and having it implement the `configureRouter` callback. This callback with be invoked with a configuration object. With it, you can set a title to use when generating the document's title, then you map your routes. Each route has the following properties:
 
-* `route`: This is a pattern which, when matched, will cause the router to navigate to this route. You can use static routes like above, but you can also use parameters like this: `customer/:id`. There's also support for wildcard routes and query string parameters. The route can be a single string pattern or an array of patterns.
+* `route`: This is a pattern which, when matched, will cause the router to navigate to this route. You can use static routes like above, but you can also use parameters like this: `customer/:id`. There's also support for wildcard routes and query string parameters. The route can be a single string pattern or an array of patterns as above.
 * `name`: This is a name to use in code when generating URLs for the route.
-* `moduleId`: This is a path relative to the current view-model which specifies the view/view-model pair you want to render for this route.
+* `moduleId`: This is a path which specifies the component you want to render for this route.
 * `title`: You can optionally provide a title to be used in generating the document's title.
 * `nav`: If this route should be included in the _navigation model_ because you want to generate a UI with it, set this to true (or a number indicating order).
-
-> **Note:** Did you notice how we used ES6 imports to load both bootstrap's JavaScript and CSS?
 
 ### app.html
 
 ```markup
 <template>
+  <require from="bootstrap/css/bootstrap.css"></require>
+  <require from="font-awesome/css/font-awesome.css"></require>
+
   <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
@@ -248,13 +243,16 @@ Ok, there's some really interesting new stuff here. We want to use the router, s
   </div>
 </template>
 ```
-Following our simple app-building convention, the `App` class will be databound to the above view in _app.html_. A large part of this markup deals with setting up the main navigation structure. You've seen basic binding and string interpolation already, so let's focus on the new stuff.  Take a look at the navbar-nav `ul` element. Its `li` demonstrates how to use a repeater with the following expression `repeat.for="row of router.navigation"`. This will create one `li` for each item in the `router.navigation` array. The local variable is _row_ and you can see that used throughout the `li` and its child elements.
+
+Following our simple app-building convention, the `App` class will be databound to the above view in _app.html_. A large part of this markup deals with setting up the main navigation structure. But before we get into that...do you see the `require` elements at the top of the view? In the same way that you can use `import` statements in ES2015, Aurelia enables you to use `require` elements in HTML. The require element enables loading and including of functionality such as custom elements and behaviors, and in this case, CSS. Here, since our sample app is going to use some bootstrap styles and icons from font-awesome, we "require" those style sheets. With that in place, we can use bootstrap to layout our navigation structure, as above. But that's not the interesting part of this view. What we really want to focus on is the binding and custom elements...
+
+Since you've seen basic binding and string interpolation already, let's focus on the new stuff. Take a look at the navbar-nav `ul` element. Its `li` demonstrates how to use a repeater with the following expression `repeat.for="row of router.navigation"`. This will create one `li` for each item in the `router.navigation` array. The local variable is _row_ and you can see that used throughout the `li` and its child elements.
 
 > **Note:** The `navigation` property on the router is an array populated with all the routes you marked as `nav:true` in your route config. Aurelia models its `repeat.for` syntax after the new standard ES6 `for..of` loop. So, you can think of looping over the array of navigable routes and generating UI for each.
 
 Also on the `li` you can see a demonstration of how to use string interpolation to dynamically add/remove classes. Further down in the view, there's a second `ul`. See the binding on its single child `li`? `if.bind="router.isNavigating"` This conditionally adds/removes the `li` based on the value of the bound expression. Conveniently, the router will update its `isNavigating` property whenever it is....navigating.
 
-The last piece we want to look at is the `router-view` element near the bottom of the view. This represents the location in the DOM where the current "page" will be rendered, based on the configured router's state.
+The last piece we want to look at is the `router-view` custom element near the bottom of the view. This element, provided by Aurelia, represents the location in the DOM where the current "page" will be rendered, based on the configured router's state.
 
 With this in place, go ahead and start the dev server with `gulp watch`. Open the browser and have a look. You should now see a main navigation with a single selected tab for our "welcome" route. The _welcome_ view should display in the main content area and function as before. Open up the browser's debug tools and have a look at the live DOM. You will see that the _welcome_ view content is displayed inside the `router-view`.
 
@@ -264,20 +262,19 @@ With this in place, go ahead and start the dev server with `gulp watch`. Open th
 
 Well, we've technically got a navigation application now...but it's not very interesting because there's only one page. Let's add a second page. Can you guess how to do it? I bet you can...
 
-Let's display some images from Flickr. To do that, let's first configure our router for the hypothetical page:
+Let's display some users from Github. To do that, let's first configure our router for the hypothetical page:
 
 ### app.js (updated)
 
 ```javascript
 import 'bootstrap';
-import 'bootstrap/css/bootstrap.css!';
 
 export class App {
   configureRouter(config, router){
     config.title = 'Aurelia';
     config.map([
-      { route: ['','welcome'], name: 'welcome',  moduleId: './welcome',      nav: true, title:'Welcome' },
-      { route: 'flickr',       name: 'flickr',   moduleId: './flickr',       nav: true, title:'Flickr' }
+      { route: ['','welcome'],  name: 'welcome',  moduleId: 'welcome',  nav: true, title:'Welcome' },
+      { route: 'users',         name: 'users',    moduleId: 'users',    nav: true, title:'Github Users' }
     ]);
 
     this.router = router;
@@ -285,45 +282,47 @@ export class App {
 }
 ```
 
-If you guessed that we need to create a _flickr.js_ and _flickr.html_ file, you are correct. Here's the source:
+If you guessed that we need to create a _users.js_ and _users.html_ file, you are correct. Here's the source:
 
-### flickr.js
+### users.js
 
 ```javascript
 import {inject} from 'aurelia-framework';
-import {HttpClient} from 'aurelia-http-client';
+import {HttpClient} from 'aurelia-fetch-client';
+import 'fetch';
 
 @inject(HttpClient)
-export class Flickr{
-  heading = 'Flickr';
-  images = [];
-  url = 'http://api.flickr.com/services/feeds/photos_public.gne?tags=rainier&tagmode=any&format=json';
+export class Users{
+  heading = 'Github Users';
+  users = [];
 
   constructor(http){
+    http.configure(config => {
+      config
+        .useStandardConfiguration()
+        .withBaseUrl('https://api.github.com/');
+    });
+
     this.http = http;
   }
 
   activate(){
-    return this.http.jsonp(this.url).then(response => {
-      this.images = response.content.items;
-    });
-  }
-
-  canDeactivate(){
-    return confirm('Are you sure you want to leave?');
+    return this.http.fetch('users')
+      .then(response => response.json())
+      .then(users => this.users = users);
   }
 }
 ```
 
-There's a lot of cool stuff here. Let's start at the beginning. We are importing `HttpClient` from Aurelia. This lets us make HTTP requests in a very simple way. It's not included with the default Aurelia configuration though, so you need to install the package. To do that, execute this command on the console:
+There's a lot of cool stuff here. Let's start at the beginning. We are importing `HttpClient` from Aurelia's Fetch plugin, as well as the fetch polyfill. This lets us make HTTP requests in a very simple way, based on the upcoming Fetch standard. This plugin is not included with the default Aurelia configuration though, so you need to install the package. To do that, execute this command on the console:
 
 ```shell
-jspm install aurelia-http-client
+jspm install aurelia-fetch-client
 ```
 
-Now I hope you see the power of the integrated package manager and loader. You simply install a package with jspm and then you import it in your code using the same exact identifier. You can install anything from GitHub or NPM in this way.
+Now I hope you see the power of the integrated package manager and loader. You simply install a package with jspm and then you import it in your code using the same exact identifier. You can install almost anything from GitHub or NPM in this way.
 
-Now, take a look at that ES7 `inject` decorator? What does that do? Well, Aurelia creates the UI components as needed to render your app. It does this by using a [Dependency Injection](http://en.wikipedia.org/wiki/Dependency_injection) container capable of providing constructor dependencies like HttpClient. How does the DI system know what to provide? All you have to do is add that ES7 `inject` decorator to your class that passes a list of types to provide instances of. There should be one argument for each constructor parameter. In the above example, we needed an HttpClient instance, so we added the `HttpClient` type in the `inject` decorator and then added an corresponding parameter in the constructor.
+Now, take a look at that ES2016 `inject` decorator. What does that do? Well, Aurelia creates the UI components as needed to render your app. It does this by using a [Dependency Injection](http://en.wikipedia.org/wiki/Dependency_injection) container capable of providing constructor dependencies like HttpClient. How does the DI system know what to provide? All you have to do is add that ES2015 `inject` decorator to your class that passes a list of types to provide instances of. There should be one argument for each constructor parameter. In the above example, we needed an HttpClient instance, so we added the `HttpClient` type in the `inject` decorator and then added a corresponding parameter in the constructor.
 
 > **Note:** If you don't like using a decorator in this case, you can also add a static `inject` method or property to the class that returns an array of types to inject.
 
@@ -331,10 +330,11 @@ If you are using TypeScript >= 1.5, you can add the `@autoinject` decorator to y
 
 ```javascript
 import {autoinject} from 'aurelia-framework';
-import {HttpClient} from 'aurelia-http-client';
+import {HttpClient} from 'aurelia-fetch-client';
+import 'fetch';
 
 @autoinject
-export class Flickr{
+export class Users{
   ...
 
   constructor(public http:HttpClient){}
@@ -343,30 +343,37 @@ export class Flickr{
 }
 ```
 
-Aurelia's router enforces a lifecycle on view-models whenever routes change. This is referred to as the "Screen Activation Lifecycle". View-models can optionally hook into various parts of the lifecycle to control flow into and out of the route. When your route is ready to activate the router will call the `activate` hook, if present. In the above code, we use this hook to call the Flickr api and get some images back. Notice that we return the result of the http request back from our `activate` method. All the `HttpClient` APIs return a `Promise`. The router will detect a `Promise` and wait to complete navigation until after it resolves. So, in this way, you can optionally force the router to delay displaying the page until it is populated with data.
+Aurelia's router enforces a lifecycle on view-models whenever routes change. This is referred to as the "Screen Activation Lifecycle" or "Navigation Lifecycle". View-models can optionally hook into various parts of the lifecycle to control flow into and out of the route. When your route is ready to activate the router will call the `activate` hook, if present. In the above code, we use this hook to call the GitHub api and get some users back. Notice that we return the result of the http request back from our `activate` method. All the `HttpClient` APIs return a `Promise`. The router will detect a `Promise` and wait to complete navigation until after it resolves. So, in this way, you can optionally force the router to delay displaying the page until it is populated with data.
 
-There's a second lifecycle hook demonstrated here as well: `canDeactivate`. The router calls this before navigation away from the route happens. It gives you the opportunity to allow or disallow the navigation to continue by returning a boolean. You can also return a `Promise` for that value. The full lifecycle includes `canActivate`, `activate`, `canDeactivate` and `deactivate` hooks.
+>**Note:** The full navigation lifecycle includes `canActivate`, `activate`, `canDeactivate` and `deactivate` hooks. The can* methods can return a boolean (or Promise of boolean) to accept or reject the transition into or out of the current screen.
 
->**Note:** If you aren't familiar with [Promises](http://www.html5rocks.com/en/tutorials/es6/promises/), these are a new feature of ES6 designed to improve asynchronous programming. A `Promise` is an object that represents a future result. Essentially, it represents a "promise" to complete some work or to provide some data at some point in the future.
+>**Note:** If you aren't familiar with [Promises](http://www.html5rocks.com/en/tutorials/es6/promises/), these are a new feature of ES2015 designed to improve asynchronous programming. A `Promise` is an object that represents a future result. Essentially, it represents a "promise" to complete some work or to provide some data at some point in the future.
 
-### flickr.html
+### users.html
 
 ```markup
 <template>
-    <section>
-        <h2>${heading}</h2>
-        <div class="row">
-        <div class="col-sm-6 col-md-3" repeat.for="image of images">
-          <a class="thumbnail">
-            <img style="width: 260px; height: 180px;" src.bind="image.media.m"/>
-          </a>
+  <section>
+      <h2>${heading}</h2>
+      <div class="row au-stagger">
+        <div class="col-sm-6 col-md-3 card-container" repeat.for="user of users">
+            <div class="card">
+                <canvas class="header-bg" width="250" height="70"></canvas>
+                <div class="avatar">
+                    <img src.bind="user.avatar_url" crossorigin />
+                </div>
+                <div class="content">
+                    <p class="name">${user.login}</p>
+                    <p><a target="_blank" class="btn btn-default" href.bind="user.html_url">Contact</a></p>
+                </div>
+            </div>
         </div>
-        </div>
-    </section>
+      </div>
+  </section>
 </template>
 ```
 
-The view for this screen is pretty straight forward. There's nothing you haven't seen before, including the awesome use of the very taboo inline style. (Just look the other way...nothing to see there.)
+The view for this screen is pretty straight forward. There's nothing you haven't seen before.
 
 Once you've got all this in place, go ahead and run your app again. You should now see two items in the nav bar and be able to switch back and forth between them. Huzzah!
 
@@ -377,6 +384,8 @@ Let's recap. To add a page to your app:
 3. Add a view with the same name (but with an .html extension).
 4. Celebrate.
 
+>**Note:** At this point, it may worth it for you to look at the original skeleton code for these screens. You will find a few other goodies there such as animation, element binding, value converters and custom attributes. You'll also see an alternative way to start up the framework itself and install a 3rd party plugin.
+
 ## Bonus: Creating a Custom Element
 
 Look at you, you overachiever! I see you're interested in learning some extra awesome on this fine day. In that case, let's create a custom HTML element. I think a good candidate for this is our navbar. That's a lot of HTML in our _app.html_ file. Why not extract a custom `<nav-bar>` element to make things a bit more declarative? Here's what we want to be able to write in the end:
@@ -385,7 +394,9 @@ Look at you, you overachiever! I see you're interested in learning some extra aw
 
 ```markup
 <template>
-  <require from='./nav-bar'></require>
+  <require from="bootstrap/css/bootstrap.css"></require>
+  <require from="font-awesome/css/font-awesome.css"></require>
+  <require from='nav-bar'></require>
 
   <nav-bar router.bind="router"></nav-bar>
 
@@ -395,9 +406,9 @@ Look at you, you overachiever! I see you're interested in learning some extra aw
 </template>
 ```
 
-This code requires a `nav-bar` element from "./nav-bar" and once it's available in the view, we can use it like any other element, including databinding to its custom properties (like _router_). So, how do we get to this end product?
+This code requires a `nav-bar` element from "nav-bar" and once it's available in the view, we can use it like any other element, including databinding to its custom properties (like _router_). So, how do we get to this end product?
 
-Guess what? Our simple view-model/view conventions still apply for custom elements. (In fact you've been creating what we sometimes call "anonymous" custom elements all along...you just didn't realize it.) Let's create a _nav-bar.js_ and a _nav-bar.html_. Here's the code for the view-model first:
+Guess what? Our simple view-model/view conventions still apply for custom elements. Let's create a _nav-bar.js_ and a _nav-bar.html_. Here's the code for the view-model first:
 
 ### nav-bar.js
 
@@ -448,13 +459,27 @@ To create a custom element, you create and export a class. Since this class is g
 
 This looks almost identical to the navbar HTML in our original _app.html_ file. We've basically extracted that and put it into this template. Instead of binding to _app.js_ though, it's now binding to _nav-bar.js_.
 
-This is a very simple custom element with no real behavior, but it is complete and usable as shown above. We repeat that markup here for your convenience.
+This is a very simple custom element with no real behavior, but it is complete and usable as shown above.
+
+Wait! I know what you are thinking. This custom element is so simple...it seems a bit silly to require a JavaScript class just to define the single `router` property. Couldn't we get rid of that somehow? Well, the answer is YES. For very simple elements which have no behavior but simply provide a view that can be bound to a set of properties, we can omit the JavaScript file altogether. Let's see how that works.
+
+First, delete the _nav-bar.js_ file. Next, we need to make one change to the _nav-bar.html_ file. On the template element, we can declare the bindable properties of our element like this:
+
+```markup
+<template bindable="router">
+  ...
+</template>
+```
+
+We can have more than one property by separating them by commas. Finally, we need to update our _app.html_ file so that the `require` element points to our html component. Here's what it should look like:
 
 ### app.html
 
 ```markup
 <template>
-  <require from='./nav-bar'></require>
+  <require from="bootstrap/css/bootstrap.css"></require>
+  <require from="font-awesome/css/font-awesome.css"></require>
+  <require from='nav-bar.html'></require>
 
   <nav-bar router.bind="router"></nav-bar>
 
@@ -464,13 +489,11 @@ This is a very simple custom element with no real behavior, but it is complete a
 </template>
 ```
 
-To recap: First we have a `require` element. Aurelia uses this to load the custom element via the relative source indicated in the `from` attribute. It's following our simple conventions so it will know how to load our _nav-bar.js_ and _nav-bar.html_ files. Anything required into a view in this way is local to the view. As a result, you don't have to worry about name conflicts. The second point is the actual use of the element which uses databinding against the `App`'s router. We are piping the router instance on our `App` class through to the corresponding property on the `NavBar` element for internal rendering. Sweet!
+> **Note:** Anything required into a view with the `require` element is local to the view. As a result, you don't have to worry about name conflicts. You can also load app-wide elements and other behaviors for convenience so you don't have to require common resources in every view. See the docs for more information on that.
 
-> **Note:** You can also load app-wide elements and other behaviors for convenience so you don't have to require common resources in every view.
+You may wonder how Aurelia determines the name of the custom element. By convention, it will use the export name of the class, lowered and hyphenated. (In our html-only scenario, it will use the file name.) However, you can always be explicit. To do so, add the `@customElement('nav-bar')` decorator to your class. What if your custom element doesn't have a view template because it's all implemented in code? No problem, add the `@noView()` decorator. Want to use ShadowDOM for your custom element? Do it like a pro by using the `@useShadowDOM()` decorator. Don't worry about whether or not the browser supports it. We have an efficient, full-fidelity ShadowDOM fallback implementation. You can read more about these decorators in the custom elements section of the docs.
 
-You may wonder how Aurelia determines the name of the custom element. By convention, it will use the export name, lowered and hyphenated. However, you can always be explicit. To do so, add `@customElement('nav-bar')` decorator. What if your custom element doesn't have a view template because it's all implemented in code? No problem, add `@noView()`. Want to use ShadowDOM for your custom element? Do it like a pro by using `@useShadowDOM()`. Don't worry about whether or not the browser supports it. We have an efficient, full-fidelity ShadowDOM fallback implementation.
-
-In addition to creating custom elements, you can also create custom attributes which add new behavior to existing elements. On occasion you may even need an attribute to dynamically control templates by adding and removing DOM from the view, like the `repeat` and `if` we used above. You can do all that and much more with Aurelia's powerful and extensible templating engine.
+In addition to creating custom elements, you can also create custom attributes which add new behavior to existing elements. On occasion you may even need an attribute to dynamically control templates by adding and removing DOM from the view, like the `repeat` and `if` we used above. You can do all that and much more with Aurelia's powerful and extensible templating engine. Here's a secret...none of Aurelia's so-called "built in" behaviors are actually built in. They are in their own library and are "installed" into Aurelia as a plugin. We provide our built-ins using the same core that you have to build your own apps and plugins.
 
 ## Bonus: Leveraging Child Routers
 
@@ -482,15 +505,14 @@ First, let's update our _app.js_ with the new configuration. Here's what it shou
 
 ```javascript
 import 'bootstrap';
-import 'bootstrap/css/bootstrap.css!';
 
 export class App {
   configureRouter(config, router){
     config.title = 'Aurelia';
     config.map([
-      { route: ['','welcome'], name: 'welcome',      moduleId: './welcome',      nav: true, title:'Welcome' },
-      { route: 'flickr',       name: 'flickr',       moduleId: './flickr',       nav: true },
-      { route: 'child-router', name: 'childRouter',  moduleId: './child-router', nav: true, title:'Child Router' }
+      { route: ['','welcome'],  name: 'welcome',      moduleId: 'welcome',      nav: true, title:'Welcome' },
+      { route: 'users',         name: 'users',        moduleId: 'users',        nav: true, title:'Github Users' },
+      { route: 'child-router',  name: 'child-router', moduleId: 'child-router', nav: true, title:'Child Router' }
     ]);
 
     this.router = router;
@@ -508,9 +530,9 @@ export class ChildRouter{
 
   configureRouter(config, router){
     config.map([
-      { route: ['','welcome'], name: 'welcome',     moduleId: './welcome',      nav: true, title:'Welcome' },
-      { route: 'flickr',       name: 'flickr',      moduleId: './flickr',       nav: true },
-      { route: 'child-router', name: 'childRouter', moduleId: './child-router', nav: true, title:'Child Router' }
+      { route: ['','welcome'],  name: 'welcome',       moduleId: 'welcome',       nav: true, title:'Welcome' },
+      { route: 'users',         name: 'users',         moduleId: 'users',         nav: true, title:'Github Users' },
+      { route: 'child-router',  name: 'child-router',  moduleId: 'child-router',  nav: true, title:'Child Router' }
     ]);
 
     this.router = router;

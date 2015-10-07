@@ -54,7 +54,7 @@ Tudo o que fizemos até agora é puro Node.js, procedimentos de construlçao e de g
 > **Nota:** Bootstrap e Font-Awesome **não** são dependências do Aurelia. Nós só iremos aproveitá-los neste tutorial para poder produzir rapidamente um visual decente para aplicação.
 
 
-## Construindo o Página HTML
+## Construindo a Página HTML
 
 Se você chegou até aqui, você tem todas as bibliotecas e ferramentas de construção que iremos utilizar para criar um incrível aplicativo em JavaScript com Aurelia. A próxima coisa a ser feita é criar o arquivo _index.html_ na pasta raiz do projeto. O exemplo abaixo fornece um bom modelo para os aplicativos baseados em Aurelia.
 
@@ -64,8 +64,8 @@ Se você chegou até aqui, você tem todas as bibliotecas e ferramentas de construç
 <html>
   <head>
     <title>Aurelia</title>
-    <link rel="stylesheet" type="text/css" href="jspm_packages/npm/font-awesome@4.3.0/css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="styles/styles.css">
+    <link rel="stylesheet" href="jspm_packages/npm/font-awesome@4.3.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="styles/styles.css">
   </head>
   <body aurelia-app>
     <script src="jspm_packages/system.js"></script>
