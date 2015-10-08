@@ -21,7 +21,6 @@ Em seguida, é preciso instalar o [jspm] (http://jspm.io/). Ele irá servir como
 >
 > **Nota:** Não quer usar o jspm? Sem problemas! Todos os pacotes do Aurelia estão disponíveis através do [Bower] (http://bower.io/) também.
 
-
 ## Configurando a Estrutura do Projeto
 
 Com o conjunto de ferramentas instalada, podemos voltar a nossa atenção para a criação de uma estrutura básica para seu aplicativo. Comece [baixando o esqueleto de navegação] (https://github.com/aurelia/skeleton-navigation/releases). Descompacte-o e mude o nome da pasta para _navigation-app_.
@@ -37,7 +36,7 @@ Com o conjunto de ferramentas instalada, podemos voltar a nossa atenção para a
 
 Dentro da pasta você vai encontrar tudo que você irá precisar, incluindo uma compilação base, configuração de pacotes, estilos e muito mais.
 
-Você pode verificar que existe um arquivo _index.html_ e alguns outros dentro da pasta _src_, no entanto, recomendamos que você exclua estes arquivos antes de avançar com este tutorial. Dessa forma, você aprenderá de uma forma eficaz como construir um aplicativo do zero usando o Aurelia.
+Você pode verificar que foi lhe foi fornecido um arquivo _index.html_ e alguns outros que dentro da pasta _src_ e _dist_, no entanto, recomendamos que você exclua estas **pastas** antes de avançar com este tutorial. Dessa forma, você aprenderá de uma forma eficaz como construir um aplicativo do zero usando o Aurelia.
 
 Com tudo o que precisamos pronto, vamos executar alguns comandos.
 
@@ -61,7 +60,7 @@ Tudo o que fizemos até agora é puro Node.js, procedimentos de construlçao e d
 
 ## Construindo a Página HTML
 
-Se você chegou até aqui, você tem todas as bibliotecas e ferramentas de construção que iremos utilizar para criar um incrível aplicativo em JavaScript com Aurelia. A próxima coisa a ser feita é criar o arquivo _index.html_ na pasta raiz do projeto. O exemplo abaixo fornece um bom modelo para os aplicativos baseados em Aurelia.
+Se você chegou até aqui, você tem todas as bibliotecas e ferramentas de construção que iremos utilizar para criar um incrível aplicativo em JavaScript com Aurelia. A próxima coisa a ser feita é criar o arquivo _index.html_ na **pasta raiz do projeto**. O exemplo abaixo fornece um bom modelo para os aplicativos baseados em Aurelia.
 
 ### index.html
 ```markup
@@ -82,7 +81,7 @@ Se você chegou até aqui, você tem todas as bibliotecas e ferramentas de const
 </html>
 ```
 
-Sim, é isso! Esta é a única página HTML em nossa aplicação. O cabeçalho é bastante simples: nós adicionamos o font-awesome e alguns arquivos CSSs personalizados. Agora, é o corpo da página que é interessante.
+Sim, é isso! Esta é a única página HTML em nossa aplicação. O cabeçalho é bastante simples. Agora, é o corpo da página que é interessante.
 
 Vamos começar com as tags script. Primeiro temos o _system.js_, nosso carregador de módulos baseado em padrões do ES6. É ele quem carrega a biblioteca do Aurelia, bem como o seu próprio código. Em seguida, temos o _config.js_. Ele contém a configuração para o carregador. É gerado automaticamente sempre que você executar um comando jspm. O jspm é o gerenciador de pacotes client-side, é recomendável que você o utilize porque ele fornece uma experiência de desenvolvimento incrível através da integração de gerenciamento de pacotes client-side com um módulo compatível com o carregador do ES6.
 
@@ -93,7 +92,6 @@ Uma vez que temos o nosso carregador de módulos e sua configuração, nós carr
 Quando o bootstrapper é carregado ele inspeciona o documento HTML procurando por atributos _aurelia-app_. Neste caso, ele vai identificar que o body tem um atributo `aurelia-app`. Isso informa ao bootstrapper para carregar nossa view-model e sua view, convencionalmente localizado nos arquivos _app.js_ e _app.html_ e depois utilizá-los como uma aplicação Aurelia no DOM.
 
 Espere um minuto .... Nós não temos um _app_ view-model ou view. Hmmm ...  E AGORA !?
-
 
 ## Criando Sua Primeira Tela
 
@@ -148,7 +146,7 @@ Ok. Agora que temos nossa _view-model_ com alguns dados e comportamentos básico
         <label>Full Name</label>
         <p>${fullName}</p>
       </div>
-      <button type="submit>Submit</button>
+      <button type="submit">Submit</button>
     </form>
   </section>
 </template>
@@ -169,10 +167,9 @@ gulp watch
 Agora navegue em [http://localhost:9000/] (http: //localhost:9000/) para ver a nossa aplicação. Preencha o formulário e observe que o FullName é atualizado sempre que os outros campos são alterados. Clique no botão Submit e veja que o nosso método será disparado.
 
 > **Nota:** Se não estiver funcionando, tente [atualizar] (https://github.com/npm/npm/wiki/Troubleshooting#try-the-latest-stable-version-of-node) para a última versão do NPM.
-
-
+>
 > **Nota:** O Aurelia tem uma engine de databinding única e poderosa, que utiliza técnicas adaptativas para escolher a melhor maneira de observar as mudanças em cada propriedade. Por exemplo, se você estiver usando um navegador com suporte ao [Object.observe](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/observe), o _firstName_  e o _lastName_ serão observados com essa estratégia. Se não, nós iremos gerar getters e setters que loteiam mudanças para o Micro Task Queue, emulando corretamente comportamento do Object.observe. Uma vez que a propriedade _fullName_ é calculada, ela não pode ser observada com qualquer uma destas técnicas, neste caso nós usamos uma técnica chamada "dirty checking". Mas, você pode, opcionalmente, declarar suas dependências, a fim de permitir-nos a observá-la corretamente. Nós usaremos a melhor técnica dependendo da situação e você pode até mesmo criar técnicas personalizadas, a fim de "ensinar" o framework como observar tipos especiais de padrões de modelagem. Nós achamos este recurso muito legal :)
-
+>
 > **Nota:** O comando `.bind` usa o comportamento de bind padrão para qualquer propriedade. O padrão é "one-way binding" (model para view) para tudo, exceto os controles de formulário, que padrão é "two-way binding". Você sempre poderá substituir isso usando os comandos de bind explícitos `.one-way`, `.two-way` e `.one-time'. Da mesma forma, você pode usar `.delegate` para delegação evento, mas você também pode usar `.trigger` para anexar diretamente para o elemento desejado.
 
 
@@ -251,7 +248,7 @@ Seguindo nossa simples convenção de construção do aplicativo, a classe `App`
 
 Levando em conta que você já viu a interpolação de string, vamos focar nas coisas novas. De uma olhada no element ul navbar-nav. Seu li demonstra como usar um repetidor utilizando a expressão `repeat.for="row of router.navigation"`. Isto irá criar um li para cada item no array `router.navigation`. A variável local é row e você pode ver que usamos por todo li e seus elementos filhos.
 
-> **Nota:** A propriedade `navigation` no router é um array preenchido com todas as rotas marcadas como `nav:true` na sua configuração. A sintaxe `repeat.for` do Aurelia funciona como o `for..of` do padrão ES6. Assim, você pode pensar em um loop sobre a array de rotas, gerando o código necessário para cada uma delas.
+> **Nota:** A propriedade `navigation` no router é um array preenchido com todas as rotas marcadas como `nav:true` na sua configuração. A sintaxe `repeat.for` do Aurelia funciona como o `for..of` do padrão ES2015. Assim, você pode pensar em um loop sobre a array de rotas, gerando o código necessário para cada uma delas.
 
 Ainda sobre os `li` você pode ver uma demonstração de como usar interpolação de string para adicionar/remover dinamicamente as classes CSSs. Mais abaixo, há uma segunda `ul`. Viu o binding em sua única filha `li`? `if.bind="router.isNavigating"` Isto condicionalmente adiciona/remove o `li` com base no valor da expressão. 
 Convenientemente, o roteador irá atualizar sua propriedade `isNavigating` sempre que estiver no processo de carregamento da rota.
