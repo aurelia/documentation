@@ -36,7 +36,7 @@ Com o conjunto de ferramentas instalada, podemos voltar a nossa atenção para a
 
 Dentro da pasta você vai encontrar tudo que você irá precisar, incluindo uma compilação base, configuração de pacotes, estilos e muito mais.
 
-Você pode verificar que foi lhe foi fornecido um arquivo _index.html_ e alguns outros que dentro da pasta _src_ e _dist_, no entanto, recomendamos que você exclua estas **pastas** antes de avançar com este tutorial. Dessa forma, você aprenderá de uma forma eficaz como construir um aplicativo do zero usando o Aurelia.
+Você pode verificar que foi lhe foi fornecido um arquivo _index.html_ e alguns outros arquivos dentro da pasta _src_ e _dist_, no entanto, recomendamos que você exclua o arquivo **index.html**, as pastas **src** e **dist**, para que então possa avançar com este tutorial. Dessa forma, você aprenderá de uma forma eficaz como construir um aplicativo do zero usando o Aurelia.
 
 Com tudo o que precisamos pronto, vamos executar alguns comandos.
 
@@ -99,7 +99,7 @@ No Aurelia, elementos de interface do usuário são compostos por pares de _view
 
 Vamos dar uma olhada em como isso funciona...
 
-Na pasta _src_ crie um arquivo _app.html_ e um _app.js_. Esta é a view e view-model que o bootstrapper estava procurando. Vamos começar com a _view-model_ criando uma classe simples para manter um _firstName_ e _lastName_. Nós também vamos adicionar uma propriedade calculada para _fullName_ e um método de "submit", que irá enviar a pessoa. Nossa view-model ficará da seguinte forma:
+Na raiz do project, crie uma pasta chamada _src_, dentro dela crie um arquivo _app.html_ e um _app.js_. Esta é a view e view-model que o bootstrapper estava procurando. Vamos começar com a _view-model_ criando uma classe simples para manter um _firstName_ e _lastName_. Nós também vamos adicionar uma propriedade calculada para _fullName_ e um método de "submit", que irá enviar a pessoa. Nossa view-model ficará da seguinte forma:
 
 ### app.js
 
