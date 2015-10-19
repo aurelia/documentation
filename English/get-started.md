@@ -196,7 +196,7 @@ export class App {
 }
 ```
 
-Ok, there's some really interesting new stuff here. First, we're going to be using some bootstrap navigation components in a minute, so we use the ES6 module system to import bootstrap so that it's active and ready to go. Next, we want to use the router, so we begin by creating and exporting our _App_ class and having it implement the `configureRouter` callback. This callback with be invoked with a configuration object. With it, you can set a title to use when generating the document's title, then you map your routes. Each route has the following properties:
+Ok, there's some really interesting new stuff here. First, we're going to be using some bootstrap navigation components in a minute, so we use the ES6 module system to import bootstrap so that it's active and ready to go. Next, we want to use the router, so we begin by creating and exporting our _App_ class and having it implement the `configureRouter` callback. This callback will be invoked with a configuration object. With it, you can set a title to use when generating the document's title, then you map your routes. Each route has the following properties:
 
 * `route`: This is a pattern which, when matched, will cause the router to navigate to this route. You can use static routes like above, but you can also use parameters like this: `customer/:id`. There's also support for wildcard routes and query string parameters. The route can be a single string pattern or an array of patterns as above.
 * `name`: This is a name to use in code when generating URLs for the route.
@@ -324,7 +324,7 @@ jspm install aurelia-fetch-client
 
 Now I hope you see the power of the integrated package manager and loader. You simply install a package with jspm and then you import it in your code using the same exact identifier. You can install almost anything from GitHub or NPM in this way.
 
-Now, take a look at that ES2016 `inject` decorator. What does that do? Well, Aurelia creates the UI components as needed to render your app. It does this by using a [Dependency Injection](http://en.wikipedia.org/wiki/Dependency_injection) container capable of providing constructor dependencies like HttpClient. How does the DI system know what to provide? All you have to do is add that ES2015 `inject` decorator to your class that passes a list of types to provide instances of. There should be one argument for each constructor parameter. In the above example, we needed an HttpClient instance, so we added the `HttpClient` type in the `inject` decorator and then added a corresponding parameter in the constructor.
+Now, take a look at that ES2016 `inject` decorator. What does that do? Well, Aurelia creates the UI components as needed to render your app. It does this by using a [Dependency Injection](http://en.wikipedia.org/wiki/Dependency_injection) container capable of providing constructor dependencies like HttpClient. How does the DI system know what to provide? All you have to do is add that ES2016 `inject` decorator to your class that passes a list of types to provide instances of. There should be one argument for each constructor parameter. In the above example, we needed an HttpClient instance, so we added the `HttpClient` type in the `inject` decorator and then added a corresponding parameter in the constructor.
 
 > **Note:** If you don't like using a decorator in this case, you can also add a static `inject` method or property to the class that returns an array of types to inject.
 
