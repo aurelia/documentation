@@ -39,7 +39,7 @@
 >
 > 这样，同样执行了下面列出的 `npm` 和 `jspm` 命令。
 
-这个目录下已经有所有必须的东西了，包括一个基本组建、包配置文件、样式表等等。
+这个目录下已经有所有必需的东西了，包括一个基本组建、包配置文件、样式表等等。
 
 你或许已经看了项目提供的 _index.html_ 和 _src_ _dist_ 目录中的其余文件，然而，我们推荐在开始这篇教程之前删除这些文件。这样做，你可以更有效的学习如何从头构建一个 aurelia app。
 
@@ -105,6 +105,7 @@
 在 _src_ 目录下，创建一个 _app.html_ 文件和一个 _app.js_  文件。这就是 `aurelia-bootstrapper` 要查找的 view 和 view-model。先创建一个简单的类（class），这个类有  _firstName_ 和 _lastName_ 属性。接着为这个类添加一个计算属性 _fullName_ 以及一个“欢迎”方法。这是 _app.js_ 看起来的样子：
 
 ### app.js
+
 ```javascript
 export class Welcome{
   constructor(){
@@ -172,7 +173,7 @@ gulp watch
 
 > **注：** 如果不行，尝试[更新](https://github.com/npm/npm/wiki/Troubleshooting#try-the-latest-stable-version-of-node)到 npm 的最新版本。
 
-> **注：** Aurelia 有一个独一无二的、强大的数据绑定引擎，使用自适应技术选择最佳的方式来监视（observe）每个属性的更新。例如，如果使用了支持 [Object.observe](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/observe) 的浏览器，那么 _firstName_ 和 _lastName_ 就会使用这种监视策略。否则，Aurelia 会生成 getter 和 setter 把更动批处理到 Micro Task Queue，准确无误地模仿 Object.observe 的行为。因为计算属性 _fullName_ 无法通过上述两种方式监视，所以使用 dirty checking 来监视它。但是，你可以通过声明它的依赖关系，使得属性被 Aurelia 正确监控。Aurelia 会根据现实情况使用最佳的技术，甚至还可以用插件“教会” Aurelia 如何监视一些特定的模式，使用自定义的策略。这真的很酷。
+> **注：** Aurelia 有一个独一无二的、强大的数据绑定引擎，使用自适应技术选择最佳的方式来监视（observe）每个属性的更新。例如，如果使用了支持 [Object.observe](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/observe) 的浏览器，那么 _firstName_ 和 _lastName_ 就会使用这种监视策略。否则，Aurelia 会生成 getter 和 setter 把变动批处理到 Micro Task Queue，准确无误地模仿 Object.observe 的行为。因为计算属性 _fullName_ 无法通过上述两种方式监视，所以使用 dirty checking 来监视它。但是，你可以通过声明它的依赖关系，使得属性被 Aurelia 正确监控。Aurelia 会根据实际情况使用最佳的技术，甚至还可以用插件“教会” Aurelia 如何监视一些特定的模式，使用自定义的策略。这真的很酷。
 
 > **注：** `.bind` 命令对所有的属性都默认使用单向绑定，除了表单控制元素默认使用双向绑定。特定的绑定命令 `.one-way`、`.two-way` 和 `.one-time` 可以随时用来覆盖默认行为。类似地，`.delegate` 可以用于事件委托，同时也能使用 `.trigger` 把事件句柄直接绑定到目标元素上。
 
@@ -468,13 +469,25 @@ export class NavBar {
 
 这是一个没有实际行为的非常简单的自定义元素，但它就如上面显示的一样，是完整且可用的。
 
-等一下！
+等一下！我知道你在想什么。这个自定义元素太简单了...还要额外引用一个仅定义一个 `router` 属性的 javascript 文件，这看起来有些愚蠢。能不能以某种方式避免这种写法呢？答案是，能。对于没有任何行为，仅仅为 view 提供绑定属性的元素，我们完全可以省略对应的 javascript 文件。让我们看看这是如何工作的。
+
+首先，删除 _nav-bar.js_ 文件。其次，我们小更改 _nav-bar.html_ 文件。在 template 元素上，我们声明绑定的属性，如下：
+
+```markup
+<template bindable="router">
+  ...
+</template>
+```
+
+如果有不知一项需要绑定的属性，请使用逗号分隔。最后，我们需要修改 _app.html_，通过 require 引入我们的组件，如下：
 
 ### app.html
 
 ```markup
 <template>
-  <import from='./nav-bar'></import>
+  <require from="bootstrap/css/bootstrap.css"></require>
+  <require from="font-awesome/css/font-awesome.css"></require>
+  <require from='nav-bar.html'></require>
 
   <nav-bar router.bind="router"></nav-bar>
 
@@ -484,37 +497,31 @@ export class NavBar {
 </template>
 ```
 
-总结：首先有一个 `import` 元素，用于加载自定义元素。这是通过`from` 属性指向的相对资源（relative source）实现的。`import` 遵循 Aurelia 的约定，所以知道如何加载 _nav-bar.js_ 和 _nav-bar.html_。所有通过这种方式引入到一个 view 的东西都只在这个 view 中可见。这样做的结果是，不必担心命名冲突。第二点是，绑定到 `App` 的 router 上元素的实际用处。 `App` 类上的 router 实例最后导向（pipe） `NavBar` 元素的同名属性上，用于元素内部的渲染。漂亮！
+> **注：** 任何通过 require 元素引入进来的资源对 view 来说都是本地的。所以，你不必担心命名的冲突。为了方便，你仍然可以加载 app-wide 元素和其他行为。没必要在每个 view 中都引入资源。查看 docs 获取更多信息。
 
-> **注：** 你也可以图方便加载应用范围的元素和其他一些行为，这样就不必在每个 view 里都引入公共资源。
+你可能会好奇 Aurelia 是如何判断自定义元素的名称的。按照约定，它使用类的名称，只不过变为连接式的小写字母。（在纯 html 的场景下，使用文件名称）。不过你随时可以使用精确的写法，通过这样做，给你的 class 添加 `@customElement('nav-bar')` 装饰器。但是，如果你的自定义元素没有相应的 view 模板，而是通过 js 代码实现的，该怎么做？这也没问题，可以添加 `@noView()` 装饰器。想在自定义元素中使用 ShadowDOM？那么就添加 `@useShadowDOM()` 的装饰器。你不用担心浏览器是否支持 ShadowDOM，Aurelia 有一套高效、忠于标准的 ShadowDOM 回退实现。你可以在 docs 的自定义元素章节了解更多有关装饰器的知识。
 
-你可能会好奇 Aurelia 是如何判断自定义元素的名称的。按照约定，它使用类的名称，只不过变为连接式的小写字母。不过你随时可以使用精确的写法：在 `Behavior` 上再链接一个 `.customElement('nav-bar')`  metadata 。要是自定义元素没有 view 模版怎么办？没问题，链接一个 `.noView()`。想让自定义元素使用 ShadowDOM？像专业人士那样再链接一个 `.useShadowDOM()`即可。不要担心浏览器支不支持，Aurelia 有一个高效而且精确的 ShadowDOM 回退实现（fallback implementation）。
-
-除了能创建自定义元素，还可以在已有的元素上创建独立的属性为之增添一些新的行为。这叫做 _Attached Behaviors_。有时可能还需要创建 _Template Controllers_ 来动态增删 view 里的 DOM，比如上面用到的 `repeat` 和 `for`。Aurelia 能做的远远不止这些，其模版引擎（templating engine）在功能和拓展性上都很强大。
-
-> **注：** AtScript 用户可以利用这门语言的类型注解。那些支持静态类属性的语言（比如 TypeScript）的用户，能够很方便地把 `metadata` 当作属性而不是方法来使用。依赖注入容器所使用的 `inject` 也可以这样。
+除了能创建自定义元素，还可以在已有的元素上创建独立的属性为之增添一些新的行为。有时你可能需要一个属性来动态的控制模板通过添加和删除 view 中的 DOM，像上面用到的 `repeat` 和 `if`。Aurelia 能做的远远不止这些，其模版引擎（templating engine）在功能和拓展性上都很强大。这是一个秘密...所有所谓的内置行为，实际上都不是内置的。它们都在各自的库中，仅仅是以插件的形式安装到 Aurelia。Aurelia 提供的所谓内置行为和你自己开发的 app、插件使用的是一样的核心。
 
 ## 彩蛋：使用子路由
 
-还不满足是吧？那行，给你个好东西：为这个应用添加第三个页面……用它自己的路由！这叫子路由（child router）。所谓子路由，就是有自己的路由配置，并相对于父路由进行导航。准备好精神错乱吧……
+还不满足是吧？那行，给你个好东西：为这个应用添加第三个页面……用它自己的路由！这叫子路由（child router）。所谓子路由，就是有自己的路由配置，并相对于父路由进行导航。准备好精神错乱吧...
 
-### app.js (更新版...的更新版)
+### app.js (再次更新版...)
 
 ```javascript
-import {Router} from 'aurelia-router';
+import 'bootstrap';
 
 export class App {
-  static inject() { return [Router]; }
-  constructor(router) {
+  configureRouter(config, router){
+    config.title = 'Aurelia';
+    config.map([
+      { route: ['','welcome'],  name: 'welcome',      moduleId: 'welcome',      nav: true, title:'Welcome' },
+      { route: 'users',         name: 'users',        moduleId: 'users',        nav: true, title:'Github Users' },
+      { route: 'child-router',  name: 'child-router', moduleId: 'child-router', nav: true, title:'Child Router' }
+    ]);
+
     this.router = router;
-    this.router.configure(config => {
-      config.title = 'Aurelia';
-      config.map([
-        { route: ['','welcome'],  moduleId: 'welcome',      nav: true, title:'Welcome' },
-        { route: 'flickr',        moduleId: 'flickr',       nav: true },
-        { route: 'child-router',  moduleId: 'child-router', nav: true, title:'Child Router' }
-      ]);
-    });
   }
 }
 ```
@@ -524,31 +531,28 @@ export class App {
 ### child-router.js
 
 ```javascript
-import {Router} from 'aurelia-router';
-
 export class ChildRouter{
-  static inject() { return [Router]; }
-  constructor(router){
-    this.heading = 'Child Router';
+  heading = 'Child Router';
+
+  configureRouter(config, router){
+    config.map([
+      { route: ['','welcome'],  name: 'welcome',       moduleId: 'welcome',       nav: true, title:'Welcome' },
+      { route: 'users',         name: 'users',         moduleId: 'users',         nav: true, title:'Github Users' },
+      { route: 'child-router',  name: 'child-router',  moduleId: 'child-router',  nav: true, title:'Child Router' }
+    ]);
+
     this.router = router;
-    router.configure(config => {
-      config.map([
-        { route: ['','welcome'],  moduleId: 'welcome',      nav: true, title:'Welcome' },
-        { route: 'flickr',        moduleId: 'flickr',       nav: true },
-        { route: 'child-router',  moduleId: 'child-router', nav: true, title:'Child Router' }
-      ]);
-    });
   }
 }
 ```
 
-什么？！和 `App` 几乎一模一样的配置？这到底是什么？为什么会这样？呃……可能永远也不该在现实中这么做……但这真的很酷。这，我的朋友，是一个递归路由（recursive router）。我们这么做是因为我们能够这么做。
+什么？！和 `App` 几乎一模一样的配置？这到底是什么？为什么会这样？呃...可能永远也不该在现实中这么做...但这真的很酷。这，我的朋友，是一个递归路由（recursive router）。我们这么做是因为我们能够这么做。
 
 为了完整起见，这是 view：
 
 ### child-router.html
 
-```javascript
+```markup
 <template>
   <section>
     <h2>${heading}</h2>
@@ -568,7 +572,7 @@ export class ChildRouter{
 </template>
 ```
 
-运行应用，看看有什么神奇的事情发生……祈祷宇宙不会爆炸。
+运行应用，看看有什么神奇的事情发生...祈祷宇宙不会爆炸。
 
 ## 结论
 
