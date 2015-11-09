@@ -196,7 +196,7 @@ export class App {
 }
 ```
 
-Ok, there's some really interesting new stuff here. First, we're going to be using some bootstrap navigation components in a minute, so we use the ES6 module system to import bootstrap so that it's active and ready to go. Next, we want to use the router, so we begin by creating and exporting our _App_ class and having it implement the `configureRouter` callback. This callback with be invoked with a configuration object. With it, you can set a title to use when generating the document's title, then you map your routes. Each route has the following properties:
+Ok, there's some really interesting new stuff here. First, we're going to be using some bootstrap navigation components in a minute, so we use the ES6 module system to import bootstrap so that it's active and ready to go. Next, we want to use the router, so we begin by creating and exporting our _App_ class and having it implement the `configureRouter` callback. This callback will be invoked with a configuration object. With it, you can set a title to use when generating the document's title, then you map your routes. Each route has the following properties:
 
 * `route`: This is a pattern which, when matched, will cause the router to navigate to this route. You can use static routes like above, but you can also use parameters like this: `customer/:id`. There's also support for wildcard routes and query string parameters. The route can be a single string pattern or an array of patterns as above.
 * `name`: This is a name to use in code when generating URLs for the route.
