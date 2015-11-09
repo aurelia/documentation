@@ -708,6 +708,8 @@ In today's browser environment dirty-checking is a necessary evil.  Very few bro
 A few bindings using dirty-checking will not cause performance problems in your application.  Extensive use of dirty-checking may.  Fortunately there's a way you can avoid dirty-checking simple computed properties.  Consider the 'fullName' property in the example below:
 
 ```javascript
+import {computedFrom} from 'aurelia-binding';
+
 export class Person {
   firstName = 'John';
   lastName = 'Doe';
