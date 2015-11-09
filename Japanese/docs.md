@@ -891,7 +891,7 @@ export class App {
   configureRouter(config){
     config.mapUnknownRoutes(instruction => {
       //check instruction.fragment
-      //set instruction.config.moduleId
+      //return moduleId
     });
   }
 }
@@ -924,11 +924,11 @@ export class App {
 }
 
 class AuthorizeStep {
-  run(routingContext, next) {
+  run(navigationInstruction, next) {
     // ルートが "auth" キーを持っているか確認する
-    // `nextInstructions`を使う理由は、
+    // `getAllInstructions()`を使う理由は、
     // それが子ルートを含むから。
-    if (routingContext.nextInstructions.some(i => i.config.auth)) {
+    if (navigationInstruction.getAllInstructions().some(i => i.config.auth)) {
       var isLoggedIn = /* ここを書き換えること */false;
       if (!isLoggedIn) {
         return next.cancel(new Redirect('login'));

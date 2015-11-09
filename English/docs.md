@@ -1003,13 +1003,13 @@ export class App {
   configureRouter(config){
     config.mapUnknownRoutes(instruction => {
       //check instruction.fragment
-      //set instruction.config.moduleId
+      //return moduleId
     });
   }
 }
 ```
 
-All you have to do is set the `instruction.config.moduleId` property and you are good to go. You can also return a promise from `mapUnknownRoutes` in order to asynchronously determine the destination.
+All you have to do is return a module ID, or a route config object containing a `moduleId` property and you are good to go. You can also return a promise from `mapUnknownRoutes` in order to asynchronously determine the destination.
 
 >**Note:** Though not necessarily related to conventional routing, you may sometimes have a need to asynchronously configure your router. For example, you may need to call a web service to get user permissions before setting up routes. To do this, return a promise from `configureRouter`.
 
@@ -1036,11 +1036,11 @@ export class App {
 }
 
 class AuthorizeStep {
-  run(routingContext, next) {
+  run(navigationInstruction, next) {
     // Check if the route has an "auth" key
-    // The reason for using `nextInstructions` is because
+    // The reason for using `getAllInstructions()` is because
     // this includes child routes.
-    if (routingContext.nextInstructions.some(i => i.config.auth)) {
+    if (navigationInstruction.getAllInstructions().some(i => i.config.auth)) {
       var isLoggedIn = /* insert magic here */false;
       if (!isLoggedIn) {
         return next.cancel(new Redirect('login'));

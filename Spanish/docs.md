@@ -861,7 +861,7 @@ export class App {
   configureRouter(config){
     config.mapUnknownRoutes(instruction => {
       //check instruction.fragment
-      //set instruction.config.moduleId
+      //return moduleId
     });
   }
 }
@@ -894,11 +894,11 @@ export class App {
 }
 
 class AuthorizeStep {
-  run(routingContext, next) {
+  run(navigationInstruction, next) {
     // Check if the route has an "auth" key
-    // The reason for using `nextInstructions` is because
+    // The reason for using `getAllInstructions()` is because
     // this includes child routes.
-    if (routingContext.nextInstructions.some(i => i.config.auth)) {
+    if (navigationInstruction.getAllInstructions().some(i => i.config.auth)) {
       var isLoggedIn = /* insert magic here */false;
       if (!isLoggedIn) {
         return next.cancel(new Redirect('login'));
