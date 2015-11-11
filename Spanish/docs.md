@@ -498,8 +498,8 @@ Puedes enlazar con la propiedad `innerHTML` de un elemento usando el atributo `i
 Aurelia proporciona un sencillo conversor para depuración de HTML que se puede usar de la siguiente manera:
 
 ``` markup
-<div innerhtml.bind="htmlProperty | sanitizeHtml"></div>
-<div innerhtml="${htmlProperty | sanitizeHtml}"></div>
+<div innerhtml.bind="htmlProperty | sanitizeHTML"></div>
+<div innerhtml="${htmlProperty | sanitizeHTML}"></div>
 ```
 
 Te animamos a usar un depurador HTML más completo como [sanitize-html](https://www.npmjs.com/package/sanitize-html). Así es como construirías usando este paquete:

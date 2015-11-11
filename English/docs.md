@@ -628,8 +628,8 @@ You can bind an element's `innerHTML` property using the `innerhtml` attribute:
 Aurelia provides a simple html sanitization converter that can be used like this:
 
 ``` markup
-<div innerhtml.bind="htmlProperty | sanitizeHtml"></div>
-<div innerhtml="${htmlProperty | sanitizeHtml}"></div>
+<div innerhtml.bind="htmlProperty | sanitizeHTML"></div>
+<div innerhtml="${htmlProperty | sanitizeHTML}"></div>
 ```
 
 You're encouraged to use a more complete html sanitizer such as [sanitize-html](https://www.npmjs.com/package/sanitize-html).  Here's how you would build a converter using this package:
