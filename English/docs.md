@@ -284,8 +284,8 @@ class CustomerDetail
 ```
 
 <h3 id="parent-vm-reference"><a href="#parent-vm-reference">Parent View Models</a></h3>
-
-By default a View-model's access is limited to injected objects as well as children of the class. Sometimes it may be desirable to refer to objects and methods on a parent View-model, which can be achieved by storing the parent during the _bind_ method of the view lifecycle:
+Old Way:  
+~~By default a View-model's access is limited to injected objects as well as children of the class. Sometimes it may be desirable to refer to objects and methods on a parent View-model, which can be achieved by storing the parent during the _bind_ method of the view lifecycle:~~
 
 ```javascript
 class ChildViewModel {
@@ -294,6 +294,8 @@ class ChildViewModel {
   }
 }
 ```
+New Way:   
+We now flow an "override scope" through the binding engine. This allows us to detect variables and methods on the parent binding context automatically. So, while you can continue to use $parent in your bindings if you want...it is no longer needed.
 
 <h2 id="templating"><a href="#templating">Templating</a></h2>
 
