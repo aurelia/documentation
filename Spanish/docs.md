@@ -393,7 +393,7 @@ Un típico elemento select se muestra usando una combinación de `value.bind` y 
 ```markup
 <select value.bind="favoriteColor">
     <option>Select A Color</option>
-    <option repeat.for="color of colors" value.bind="color">${color}</option>
+    <option repeat.for="color of colors" model.bind="color">${color}</option>
 </select>
 ```
 
@@ -414,7 +414,7 @@ Puedes enlazar el valor del elemento select a una propiedad vector en un escenar
 
 ```markup
 <select value.bind="favoriteColors" multiple>
-    <option repeat.for="color of colors" value.bind="color">${color}</option>
+    <option repeat.for="color of colors" model.bind="color">${color}</option>
 </select>
 ```
 
