@@ -513,7 +513,7 @@ A typical select element is rendered using a combination of `value.bind` and `re
 ```markup
 <select value.bind="favoriteColor">
     <option>Select A Color</option>
-    <option repeat.for="color of colors" value.bind="color">${color}</option>
+    <option repeat.for="color of colors" model.bind="color">${color}</option>
 </select>
 ```
 
@@ -543,7 +543,7 @@ You can bind the select element's value to an array property in multi-select sce
 
 ```markup
 <select value.bind="favoriteColors" multiple>
-    <option repeat.for="color of colors" value.bind="color">${color}</option>
+    <option repeat.for="color of colors" model.bind="color">${color}</option>
 </select>
 ```
 
