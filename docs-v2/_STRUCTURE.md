@@ -5,7 +5,6 @@ A reference document for Aurelia documentation.
 ### Introduction
 - What is Aurelia?
   - Licensing
-  - Core Philosophy
   - Comparison with other frameworks & libraries
     - AngularJS
     - React

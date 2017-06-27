@@ -1,0 +1,3 @@
+# Licensing
+
+Aurelia's code is open sourced under the MIT License , a very permissive license used by many popular web projects today. Our starter kits are available under the Creative Commons 0 license. We also have a Contributor for those who wish to join us in working on Aurelia. Ultimately, this means that you can use Aurelia without fear of legal repercussions and we can build it in the same confidence.
