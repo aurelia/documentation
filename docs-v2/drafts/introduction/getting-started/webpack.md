@@ -7,11 +7,12 @@ Until the CLI supports generating Webpack applications you can either use one of
 If you're confused as to which one you should choose, the skeleton applications are a great starting point as they require the least amount of effort in getting something functional. If you want to configure every aspect of the process, then going from scratch gives you more flexibility.
 
 ## From the skeleton
+
 The benefit of basing your Webpack application on the skeleton is you have a functional Aurelia application out-of-the-box configured to work with your chosen format: Javascript or TypeScript. The skeleton projects also come with support for CSS and other formats out of the box.
 
 The downside of the skeleton is the defaults might not reflect your needs and the skeleton applications come with additional dependencies such as; Bootstrap, Font Awesome and jQuery. Unless you require these, you'll want to remove them.
 
-#### The two choices that you have to choose from are:
+### The two choices that you have to choose from are
 
 [skeleton-esnext-webpack](https://github.com/aurelia/skeleton-navigation/tree/master/skeleton-esnext-webpack) A Webpack application configured for working with Javascript and the popular Babel transpiler for transpiling your code to ES5. Comes with sane Webpack defaults and support for CSS, HTML, Fonts and images.
 
@@ -40,6 +41,7 @@ To install the dependencies all you need to type is: `npm install` which will pu
 Once the dependencies have installed, to run the application type: `npm start` which will spin up a Webpack development server and expose your application at: `http://localhost:8080`. Have a click around and you'll see the router in action, fetching data via Aurelia Fetch Client and child routers.
 
 ### Running tests
+
 All Aurelia skeletons come pre-configured to support unit tests as well as end-to-end tests.
 
 - `npm test` runs unit tests using Karma
@@ -71,32 +73,32 @@ Open up a terminal window and type: `npm init` and fill out the required pieces 
 
 Now, we need to install our required development dependencies. Namely, Babel and the Aurelia Webpack plugin. 
 
-In the same directory, run: 
+In the same directory, run:
 
-```
+```shell
 npm install aurelia-webpack-plugin babel-core babel-loader babel-plugin-transform-class-properties babel-plugin-transform-decorators-legacy babel-polyfill babel-preset-env css-loader html-webpack-plugin style-loader webpack webpack-dev-server --save-dev
 ```
 
 The above long Npm install command will download and save the following dependencies into the `devDependencies` section of `package.json`:
 
-- aurelia-webpack-plugin: configures Webpack to be aware of Aurelia's libraries
-- babel-core: the core of the babel transpiler
-- babel-loader: a Webpack loader for using Babel with Javascript files
-- babel-plugin-transform-class-properties: adds support for class properties in app classes
-- babel-plugin-transform-decorators-legacy: adds support for decorators
-- babel-polyfill: polyfills missing browser features and adds support for async/await via regeneratorRuntime
-- babel-preset-env: a smart Babel plugin which determines based on your supported browsers configuration which polyfills and features to include
-- css-loader: a Webpack loader for working with CSS imports and requires from inside of your Aurelia applications
-- html-webpack-plugin: a Webpack plugin responsible for placing generated bundles into your main index file
-- style-loader: takes CSS and places it inline
-- webpack: responsible for bundling, minification, module loading and everything else in between
-- webpack-dev-server: a fully-featured Webpack development server that allows you to run your Aurelia application locally, watches files and recompiles on the fly
+- **aurelia-webpack-plugin:** configures Webpack to be aware of Aurelia's libraries
+- **babel-core:** the core of the babel transpiler
+- **babel-loader:** a Webpack loader for using Babel with Javascript files
+- **babel-plugin-transform-class-properties:** adds support for class properties in app classes
+- **babel-plugin-transform-decorators-legacy:** adds support for decorators
+- **babel-polyfill:** polyfills missing browser features and adds support for async/await via regeneratorRuntime
+- **babel-preset-env:** a smart Babel plugin which determines based on your supported browsers configuration which polyfills and features to include
+- **css-loader:** a Webpack loader for working with CSS imports and requires from inside of your Aurelia applications
+- **html-webpack-plugin:** a Webpack plugin responsible for placing generated bundles into your main index file
+- **style-loader:** takes CSS and places it inline
+- **webpack:** responsible for bundling, minification, module loading and everything else in between
+- **webpack-dev-server:** a fully-featured Webpack development server that allows you to run your Aurelia application locally, watches files and recompiles on the fly
 
 #### Install dependencies
 
 Lastly, we need application dependencies, which are mostly just Aurelia framework modules used for templating, routing and other aspects. 
 
-```
+```shell
 npm install --save aurelia-bootstrapper aurelia-framework aurelia-history-browser aurelia-loader-webpack aurelia-logging-console aurelia-pal-browser aurelia-polyfills aurelia-router aurelia-templating aurelia-templating-binding aurelia-templating-resources aurelia-templating-router bluebird
 ```
 
@@ -106,7 +108,7 @@ We don't need to go through any of these, as they're all self-explanatory Aureli
 
 Open up `package.json` and add in the following scripts section:
 
-```
+```json
 "scripts": {
     "start": "webpack-dev-server --inline",
     "build": "webpack -p --progress --profile --colors"
@@ -119,7 +121,7 @@ This will allow us to type `npm start` to spin up a development server which wil
 
 Let's create our `webpack.config.js` file in the root directory alongside `package.json`. This file is based on the `skeleton-esnext-webpack` configuration file, with a few things ommited and simplified.
 
-```
+```javascript
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { AureliaPlugin } = require('aurelia-webpack-plugin');
@@ -139,7 +141,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     publicPath: '/',
-    filename: '[name].js',    
+    filename: '[name].js',
     chunkFilename: '[name].js'
   },
 
@@ -160,21 +162,21 @@ module.exports = {
         issuer: [{ test: /\.html$/i }],
         use: ['css-loader']
       },
-      { 
-        test: /\.html$/i, 
-        loader: 'html-loader' 
+      {
+        test: /\.html$/i,
+        loader: 'html-loader'
       },
-      { 
-        test: /\.js$/i, 
-        loader: 'babel-loader', 
-        exclude: 'node_modules' 
+      {
+        test: /\.js$/i
+        loader: 'babel-loader',
+        exclude: 'node_modules'
       },
     ]
-  },  
+  },
 
   plugins: [
     new AureliaPlugin(),
-    new ProvidePlugin({        
+    new ProvidePlugin({
       'Promise': 'bluebird'
     }),
     new HtmlWebpackPlugin({
@@ -188,7 +190,7 @@ module.exports = {
 
 Now we need an `index.html` file in the root for our app to bootstrap itself into. There is not really anything to this, except the `aurelia-app="main"` attribute on the body. This is for Aurelia to bootstrap itself into the body element.
 
-```
+```html
 <!doctype html>
 <html>
   <head>
@@ -203,9 +205,9 @@ Now we need an `index.html` file in the root for our app to bootstrap itself int
 
 Because we are using Babel, we need to add in a configuration file. In Babel 7, a new configuration format of `.babelrc.js` is introduced. Until Babel 7 is released, we have to add in two files. The old format simply includes the Javascript file meaning we can remove `.babelrc` when Babel 7 is released.
 
-**.babelrc.js**
+##### .babelrc.js
 
-```
+```javascript
 // this file will be used by default by babel@7 once it is released
 module.exports = {
   "plugins": [
@@ -231,9 +233,9 @@ module.exports = {
 }
 ```
 
-**.babelrc**
+##### .babelrc
 
-```
+```dotfile
 {
   "presets": [
     "./.babelrc.js"
@@ -242,13 +244,14 @@ module.exports = {
 ```
 
 #### Lastly, create some source files
+
 We have a functional starting base, but if you were to try and run it nothing would happen. In-fact, you'd get an error because we have no main entry point, which we specified on the `aurelia-app` attribute on our body in `index.html`.
 
 Let's create a new folder called `src` in the root of our application. Now we want to create a file called `main.js` (the main part aurelia-app refers to) and put in the following:
 
-**src/main.js**
+##### src/main.js
 
-```
+```javascript
 import { Aurelia } from 'aurelia-framework';
 import { PLATFORM } from 'aurelia-pal';
 import 'babel-polyfill';
@@ -273,9 +276,9 @@ That `aurelia.use` line and subsequent function calls set up some default settin
 
 The last two lines are where the magic happens. We call the `aurelia.start` method which bootstraps Aurelia and gets the framework ready. Lastly, we tell Aurelia where the root entry file to our app is that handles rendering. In this case, it's `src/app.js` which we will now create.
 
-**src/app.js**
+##### src/app.js
 
-```
+```javascript
 import { inject, PLATFORM } from 'aurelia-framework';
 import { Router } from 'aurelia-router';
 
@@ -283,7 +286,7 @@ import { Router } from 'aurelia-router';
 export class App {
   configureRouter(config, router) {
     this.router = router;
-    
+
     config.map([
       { route: '', name: 'home', moduleId: PLATFORM.moduleName('home', 'home') },
     ]);
@@ -299,9 +302,9 @@ We'll get into lazy loading in a different section. For now, keep this in mind a
 
 Because Aurelia by default convention assumes all view-models have accompanying view files, we need to create a `src/app.html` file.
 
-**src/app.html**
+##### src/app.html
 
-```
+```html
 <template>
   <h1>Aurelia Webpack</h1>
   <router-view></router-view>
@@ -312,17 +315,17 @@ A pretty basic view with a heading and `<router-view>` tags. The `router-view` e
 
 Lastly, we need to create our `src/home.js` and `src/home.html` files that are referenced inside of `app.js` for our home route.
 
-**src/home.js**
+##### src/home.js
 
-```
+```javascript
 export class Home {
-    
+
 }
 ```
 
-**src/home.html**
+##### src/home.html
 
-```
+```html
 <template>
     <h1>Welcome home</h1>
     <p>The homepage of your brand new Aurelia application using Webpack.</p>
@@ -351,9 +354,9 @@ Open up a terminal window and type: `npm init` and fill out the required pieces 
 
 Now, we need to install our required development dependencies. The most important being TypeScript and the Aurelia Webpack plugin. 
 
-In the same directory, run: 
+In the same directory, run:
 
-```
+```shell
 npm install aurelia-webpack-plugin awesome-typescript-loader css-loader html-webpack-plugin style-loader tslib typescript webpack webpack-dev-server --save-dev
 ```
 
@@ -383,9 +386,170 @@ npm install --save aurelia-bootstrapper aurelia-framework aurelia-history-browse
 
 Open up `package.json` and add in the following scripts section (taken from the Babel instructions above)
 
-```
+```json
 "scripts": {
     "start": "webpack-dev-server --inline",
     "build": "webpack -p --progress --profile --colors"
 }
 ```
+
+## Configuring Webpack
+
+Support for Webpack comes in the form of the Aurelia Webpack Plugin and in its basic form (as can be seen in the Webpck skeletons) it can be added into the `plugins` section as `new AureliaPlugin()` which is pretty standard way of adding in plugins.
+
+The Aurelia plugin is quite configurable in that it accepts configuration options and the `aurelia-webpack-plugin` module comes with additional exports.
+
+The `AureliaPlugin` construct accepts the following configuration options:
+
+### includeAll
+
+```typescript
+includeAll: false | string = false
+```
+
+The `includeAll` option allows you to specify to the Aurelia Webpack Plugin that you want to take an entire folder and include it in the final output bundle. This saves you from having to tell the plugin about dynamic dependencies that Webpack can't trace, although it comes with some tradeoffs like increased bundle size.
+
+The following example will tell the plugin to take the entire `src` directory and bundle its contents.
+
+```javascript
+new AureliaPlugin({
+  includeAll: 'src'
+})
+```
+
+**NOTE:** When refering to external dependencies, you still need to wrap them into `PLATFORM.moduleName`, for example in a `.plugin('aurelia-datatable')` as they otherwise won't be in the bundle.
+
+### aureliaApp
+
+```typescript
+aureliaApp: string | undefined = "main"
+```
+
+If you start your application with `aurelia-bootstrapper`, your startup module is probably in a `aurelia-app` attribute in your main HTML file (especially if you're using one of the skeletons. Because this file is generally not parsed by webpack, this initial dependency is lost.
+
+That's why `AureliaPlugin` adds `aureliaApp` as a dependency to your entry point. By default it adds main but you can change it to another name like `app` or `index`.
+
+If you have different startup code that doesn't require this initial dependency, you can remove it with `aureliaApp: undefined`.
+
+Note that if a Webpack DllPlugin is detected, no default value is set. This is because a DLL typically doesn't include your app entry point.
+
+### aureliaConfig
+
+```typescript
+aureliaConfig: string | string[] | undefined = ["standard", "developpmentLogging"]
+```
+
+When starting an Aurelia app, you commonly call `aurelia.use.standardConfig()` to enable the core default services.
+
+This option makes sure all those services are dependencies of `aurelia-framework`. By default it includes everything, so that it just works.
+
+If you don't use everything you can trim down your build by specifying what you actually use. All framework configurations have a matching string:
+
+```text
+"defaultBindingLanguage", "router", "history", "defaultResources", "eventAggregator", "developmentLogging",
+"standard", "basic"
+```
+
+### dist
+
+```typescript
+dist: string | undefined = "native-modules"
+```
+
+This lets you easily switch the Aurelia distribution that you use. It adds a webpack resolver that tries to substitute `dist/xxx/` with `dist/[dist option]/` when resolving modules.
+
+By default it is set to `native-modules`, which is a better choice than `commonjs` because it uses ES `import` and `export`, which support Webpack tree-shaking.
+
+### entry
+
+```typescript
+entry: undefined | string | string[] = undefined
+```
+
+Aurelia sometimes needs to add dependencies that are not attached to a particular module, e.g. when you use `includeAll`, `aureliaApp` or `DLLReferencePlugin`. It also automatically adds `aurelia-loader-webpack` to your entry.
+
+For all those things, `AureliaPlugin` adds them to your Webpack entry point. If you have multiple entry points, it adds them to the first one.
+
+If you need to change that behavior, you can use this option to specify which entry point(s) `AureliaPlugin` should target. Note that this option expects an entry name, not a module name.
+
+### features
+
+```typescript
+features: { 
+  ie: boolean = true;
+  svg: boolean = true;
+  unparser: boolean = true;
+  polyfills: "es2015" | "es2016" | "esnext" | "none" = "es2015";
+}
+```
+
+This lets you remove Aurelia features that you don't use from a minified build. It works simply by defining free global variables with `DefinePlugin`.
+
+- `ie: false -> FEATURE_NO_IE = true` saves 4K by removing IE support from `aurelia-pal-browser`.
+- `svg: false -> FEATURE_NO_SVG = true` saves 20K but bindings on svg elements won't work anymore.
+- `unparser: false -> FEATURE_NO_UNPARSER = true` saves 2K by removing a debugging feature that prints expression AST back into strings. Caution: this is currently used by aurelia-validation, if you use it don't set this to false. See aurelia/validation#412.
+- `polyfills -> FEATURE_NO_ES5, FEATURE_NO_ES6, FEATURE_NO_ESNEXT` saves around 10K when set to esnext. You can use this to remove Aurelia's own polyfills if you don't need them (e.g. when targeting modern browsers or when providing your own polyfills). Note: the features required by Aurelia are listed [here](https://github.com/aurelia/polyfills).
+
+### noHtmlLoader
+
+```typescript
+noHtmlLoader: boolean = false
+```
+
+By default ``AureliaPlugin`` adds ``html-resources-loader`` to .htm and .html resources. This loader detects Aurelia dependencies in views, like `<require from="...">`.
+
+If the loader interferes with your build you can disable it by setting this option to `true`.
+
+Note that if you don't use HTML views but another markup language, you need to manually add `html-resources-loader` to your default loaders at the right place (after your templating loader and before `html-loader`, so that `html-resources-loader` can consume HTML).
+
+If you use `HtmlWebpackPlugin`, which creates static html files to load your app, you should note that this adds a loader for all `.html` files. It means that if you specify a template like `new HtmlWebpackPlugin({ template: 'index.html' }),` it will prevent the fallback ejs loader to kick in (see HtmlWebpackPlugin docs). There are several workarounds:
+
+- use a different file extension like index.ejs.
+- specify the loader you want explicitly, maybe prefixing with ! (which disables default loaders): { template: '!html-webpack-plugin/lib/loader!index.html' }
+- set `noHtmlLoader: true` and manually use `html-resources-loader` with a more specific test.
+
+### noModulePathResolve
+
+```typescript
+noModulePathResolve: boolean = false
+```
+
+This modules enables you to reference to files inside a package that might no be at the root.
+
+For example, a library `aurelia-chart` might actually resolve to `aurelia-chart/dist/index.js`. In that setup you normally can't refer to sibling files with `aurelia-chart/pie`, which is what you would use with `aurelia-loader`.
+
+Thanks to that plugin the example `aurelia-chart/pie` would work and resolve to `aurelia-chart/dist/pie.js`.
+
+If the plugin interferes with your build you can disable it by setting this option to `true`.
+
+### noWebpackLoader
+
+```typescript
+noWebpackLoader: boolean = false
+```
+
+AureliaPlugin automatically inserts `aurelia-loader-webpack` into your build. If you don't want this to happen (e.g. if you use a custom loader), you can set this option to `true`.
+
+### pal
+
+```typescript
+pal: string | undefined
+```
+
+`AureliaPlugin` automatically bundles the correct `aurelia-pal-***` platform abstraction layer based on your webpack config target.
+
+If you want a specific PAL module or none at all, you can use this option.
+
+### viewFor and viewExtensions
+
+```typescript
+viewsFor: string = "src/**/*.{ts,js}" viewsExtensions: string | string[] | Function | Function[] = ".html"
+```
+
+Aurelia uses conventions to locate views for custom elements or view models. If your view model does not have `@noView` or `@useView("...")` or `@inlineView("...")` then Aurelia will just try to load a file with the same name but the extension swapped to `.html`.
+
+This pair of options tries to add such dependencies automatically. For all files that match the glob `viewsFor`, it tries to resolve a module with the extension swap to `viewsExtensions` and adds it if it exists.
+
+You typically would change `viewsFor` if your code is not in a `src` folder.
+
+If you pass a string to `viewsExtensions` it will try a simple extension swap. For more complex scenarios you can also pass a function `(filename: string) => string` that takes the current module name and returns the matching view module name.
