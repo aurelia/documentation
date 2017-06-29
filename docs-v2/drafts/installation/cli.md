@@ -1,10 +1,11 @@
 # Aurelia CLI
 
-The Aurelia CLI is the fastest way possible to get an Aurelia application up and running. At present, the CLI supports scaffolding an Aurelia application using either JSPM or RequireJS. You will be guided through a series of helpful prompts asking you questions about your setup, if you want testing and so on.
+The Aurelia CLI is the fastest way possible to get an Aurelia application up and running. At present, the CLI supports scaffolding an Aurelia application using either JSPM/System.js or RequireJS. You will be guided through a series of helpful prompts asking you questions about your setup, if you want testing and so on.
 
 Because the CLI is powered by Node.js, you will need to ensure that you have Node.js and Npm installed on your machine before you proceed.
 
 ## Installing the CLI
+
 It could not be any easier. To install the CLI, run the following Npm install command to install the Aurelia CLI globally.
 
 ```
@@ -110,6 +111,10 @@ If you want to adopt a TDD (Test Drive Development) approach to your application
 ```
 $ au test --watch
 ```
+
+## Installing Npm Modules
+
+The CLI utilises a project file format in the form of `aurelia.json` which contains all of the dependencies that exist inside of your Aurelia application so that they can be traced. 
 
 ## Scaffolding application components
 
