@@ -10,16 +10,16 @@ A reference document for Aurelia documentation.
     - React
     - Vue.js
 - Getting started
-  - Aurelia CLI
-  - Webpack
-  - See an Aurelia "Hello World" Application In Action
-  - Polyfilling Older Browsers
-- The View/View-model Relationship Explained
-- Templating Basics
+  - [Preparing Your Machine](drafts/getting-started/preparing-your-machine.md)
+  - [Aurelia CLI](drafts/getting-started/cli.md)
+  - [Webpack](drafts/getting-started/webpack.md)
+  - [Polyfilling](drafts/getting-started/polyfilling.md)
+- The Basics
+  - The View/View-model Relationship Explained
+  - The Lifecycle Explained
   - Conditionals and Loops
   - Handling User Input
   - Component Composition
-- The Lifecycle Explained
 
 ### Best Practices
 - Structuring an Aurelia application
