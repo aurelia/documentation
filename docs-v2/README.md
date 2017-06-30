@@ -15,7 +15,7 @@ A reference document for Aurelia documentation.
   - [Webpack](drafts/getting-started/webpack.md)
   - [Polyfilling](drafts/getting-started/polyfilling.md)
 - The Basics
-  - [The View/View-model Relationship Explained](drafts/basics/view-view-model-explained.md)
+  - [The View/View-model Relationship Explained](drafts/the-basics/view-view-model-explained.md)
   - The Lifecycle Explained
   - [Conditionals and Loops](drafts/basics/conditionals-and-loops.md)
   - Handling User Input

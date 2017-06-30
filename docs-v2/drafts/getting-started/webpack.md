@@ -392,3 +392,146 @@ Open up `package.json` and add in the following scripts section (taken from the 
     "build": "webpack -p --progress --profile --colors"
 }
 ```
+
+#### Create an index.html file
+
+Quite similar to the step in the Babel section, we need an entry point in the form of an `index.html` file.
+
+```html
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+  </head>
+  <body aurelia-app="main">
+    <script src="/dist/main.js"></script>
+  </body>
+</html>
+```
+
+#### Create a Webpack configuration file
+
+Pretty much identical to the Babel section again, except we leverage the `awesome-typescript-loader` instead.
+
+```javascript
+const path = require("path");
+const { AureliaPlugin } = require("aurelia-webpack-plugin");
+
+module.exports = {
+  entry: "aurelia-bootstrapper",
+
+  output: {
+    path: path.resolve(__dirname, "dist"),
+    publicPath: "/dist/",
+    filename: "[name].js",    
+    chunkFilename: "[name].js"
+  },
+
+  resolve: {
+    extensions: [".ts", ".js"],
+    modules: ["src", "node_modules"].map(x => path.resolve(x)),
+  },
+
+  module: {
+    rules: [
+      { test: /\.css$/i, use: ["style-loader", "css-loader"] },
+      { test: /\.ts$/i, use: "awesome-typescript-loader" },
+      { test: /\.html$/i, use: "html-loader" },
+    ]
+  },  
+
+  plugins: [
+    new AureliaPlugin(),
+  ],
+};
+```
+
+#### Create a tsconfig.json file
+
+TypeScript utilizes a configuration file in the form of `tsconfig.json` which allows us to tell TypeScript how we want to compile our TypeScript.
+
+```json
+{
+  "compilerOptions": { 
+    "target": "es5",
+    "module": "es2015",
+    "moduleResolution": "node",  
+    "lib": [ "es2017", "dom" ],
+    "importHelpers": true,
+    
+    "experimentalDecorators": true
+  }
+}
+```
+
+#### Lastly, create some source files
+
+Once again, almost identical to the Babel section above except we will be creating files ending in the extension of `.ts` instead of `.js`.
+
+##### src/main.ts
+
+```typescript
+import { Aurelia, PLATFORM } from 'aurelia-framework';
+
+export async function configure(aurelia: Aurelia) {
+  aurelia.use
+         .standardConfiguration()
+         .developmentLogging();
+
+  await aurelia.start();
+  await aurelia.setRoot(PLATFORM.moduleName('app'));
+}
+```
+
+##### src/app.ts
+
+```javascript
+import { PLATFORM } from 'aurelia-framework';
+import { Router, RouterConfiguration } from 'aurelia-router';
+
+export class App {
+  private router: Router;
+
+  configureRouter(config: RouterConfiguration, router: Router) {
+    this.router = router;
+
+    config.map([
+      { route: '', name: 'home', moduleId: PLATFORM.moduleName('home', 'home') },
+    ]);
+  }
+}
+```
+
+##### src/app.html
+
+```html
+<template>
+  <h1>Aurelia Webpack</h1>
+  <router-view></router-view>
+</template>
+```
+
+A pretty basic view with a heading and `<router-view>` tags. The `router-view` element is where our routed view-model/view pairs are injected.
+
+Lastly, we need to create our `src/home.ts` and `src/home.html` files that are referenced inside of `app.ts` for our home route.
+
+##### src/home.ts
+
+```javascript
+export class Home {
+
+}
+```
+
+##### src/home.html
+
+```html
+<template>
+    <h1>Welcome home</h1>
+    <p>The homepage of your brand new Aurelia application using Webpack.</p>
+</template>
+```
+
+#### Run the application
+
+Reiterating the same conclusion from the Babel from scratch section, if you followed along you should be able to spin up your app by running `npm start` and heading to `http://localhost:8080` in your browser.
