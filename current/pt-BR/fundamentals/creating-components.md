@@ -1,9 +1,9 @@
 ---
-name: Creating Components
-description: Components are the basic building blocks of all Aurelia applications. In this article you'll learn how to build basic components using dependency injection and the component lifecycle.
+name: Criando Componentes
+description: Componentes são os elementos básicos de todas as aplicações Aurelia. Neste artigo, você aprenderá como construir componentes básicos usando injeção de dependência e o ciclo de vida dos componentes.
 author: Rob Eisenberg (http://robeisenberg.com)
 ---
-## Creating A Component
+## Criando um Componente
 
 In Aurelia, user interface components are composed of _view_ and _view-model_ pairs. The view is written with HTML and is rendered into the DOM. The view-model is written with ${context.language.name} and provides data and behavior to the view. The Templating Engine along with Dependency Injection are responsible for creating these pairs and enforcing a predictable lifecycle for the component. Once instantiated, Aurelia's powerful _databinding_ links the two pieces together allowing changes in your view-model to be reflected in the view and changes in your view to reflected in your view-model. This Separation of Concerns is great for developer/designer collaboration, maintainability, architectural flexibility, and even source control.
 
