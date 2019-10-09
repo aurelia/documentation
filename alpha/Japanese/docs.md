@@ -984,7 +984,7 @@ System.config({
 プロジェクトのルート・ディレクトリで、下記のコマンドを打ちます:
 
 ```shell
-npm install --save connect-history-api-fallback
+npm install connect-history-api-fallback
 ```
 
 これは今まで説明したことをやってくれるミドルウェアをダウンロードして、インストールします。次に、 _build/tasks_ フォルダを開き、 _serve_ タスクのファイルを開きます。ファイルの先頭かその近くのrequire文の中に、次の文を入れてください:
