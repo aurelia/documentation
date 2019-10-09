@@ -65,7 +65,7 @@ The CLI is an all-in-one package that builds, scaffolds and runs your Aurelia ap
 The most common command you'll want to run is the `run` task with `watch` flag that tells the development server to recompile your code and refresh the page when something is added or changed.
 
 ```
-$ au run --watch
+$ au run
 ```
 
 If you just want to run your application without the auto refresh feature, omit the `watch` flag and it'll just run your application as is.
@@ -77,7 +77,7 @@ $ au run
 Don't forget about environments, by default the run task will run as development but for example, if you wanted to serve your site as production, you would run the above task with the following:
 
 ```
-$ au run --watch --env prod
+$ au run --env prod
 ```
 
 ## Building and deploying your app
@@ -114,7 +114,7 @@ $ au test --watch
 
 ## Installing Npm Modules
 
-The CLI utilises a project file format in the form of `aurelia.json` which contains all of the dependencies that exist inside of your Aurelia application so that they can be traced. 
+The CLI utilises a project file format in the form of `aurelia.json` which contains all of the dependencies that exist inside of your Aurelia application so that they can be traced.
 
 ## Scaffolding application components
 
