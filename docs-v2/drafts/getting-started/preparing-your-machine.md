@@ -4,7 +4,7 @@ Much like most other modern Javascript frameworks, you will need to ensure that 
 
 ## Install Node.js
 
-You need to install Node.js v6.x on your machine and the best way to install Node is via one of the officially provided installers from [here](https://nodejs.org/en/download/).
+You need to install Node.js version 10 on your machine and the best way to install Node is via one of the officially provided installers from [here](https://nodejs.org/en/download/).
 
 It is recommended that you install one of the LTS versions as they trail the current release and are more stable. If you install one of the current versions of Node, keep in mind that some things may not work as intended.
 
