@@ -71,12 +71,12 @@ Open up a terminal window and type: `npm init` and fill out the required pieces 
 
 #### Install development dependencies
 
-Now, we need to install our required development dependencies. Namely, Babel and the Aurelia Webpack plugin. 
+Now, we need to install our required development dependencies. Namely, Babel and the Aurelia Webpack plugin.
 
 In the same directory, run:
 
 ```shell
-npm install aurelia-webpack-plugin babel-core babel-loader babel-plugin-transform-class-properties babel-plugin-transform-decorators-legacy babel-polyfill babel-preset-env css-loader html-webpack-plugin style-loader webpack webpack-dev-server --save-dev
+npm install -D aurelia-webpack-plugin babel-core babel-loader babel-plugin-transform-class-properties babel-plugin-transform-decorators-legacy babel-polyfill babel-preset-env css-loader html-webpack-plugin style-loader webpack webpack-dev-server
 ```
 
 The above long Npm install command will download and save the following dependencies into the `devDependencies` section of `package.json`:
@@ -96,10 +96,10 @@ The above long Npm install command will download and save the following dependen
 
 #### Install dependencies
 
-Lastly, we need application dependencies, which are mostly just Aurelia framework modules used for templating, routing and other aspects. 
+Lastly, we need application dependencies, which are mostly just Aurelia framework modules used for templating, routing and other aspects.
 
 ```shell
-npm install --save aurelia-bootstrapper aurelia-framework aurelia-history-browser aurelia-loader-webpack aurelia-logging-console aurelia-pal-browser aurelia-polyfills aurelia-router aurelia-templating aurelia-templating-binding aurelia-templating-resources aurelia-templating-router bluebird
+npm install aurelia-bootstrapper aurelia-framework aurelia-history-browser aurelia-loader-webpack aurelia-logging-console aurelia-pal-browser aurelia-polyfills aurelia-router aurelia-templating aurelia-templating-binding aurelia-templating-resources aurelia-templating-router bluebird
 ```
 
 We don't need to go through any of these, as they're all self-explanatory Aurelia dependencies, with exception of Bluebird.
@@ -352,12 +352,12 @@ Open up a terminal window and type: `npm init` and fill out the required pieces 
 
 #### Install development dependencies
 
-Now, we need to install our required development dependencies. The most important being TypeScript and the Aurelia Webpack plugin. 
+Now, we need to install our required development dependencies. The most important being TypeScript and the Aurelia Webpack plugin.
 
 In the same directory, run:
 
 ```shell
-npm install aurelia-webpack-plugin awesome-typescript-loader css-loader html-webpack-plugin style-loader tslib typescript webpack webpack-dev-server --save-dev
+npm install -D aurelia-webpack-plugin awesome-typescript-loader css-loader html-webpack-plugin style-loader tslib typescript webpack webpack-dev-server
 ```
 
 The above long Npm install command will download and save the following dependencies into the `devDependencies` section of `package.json`:
@@ -374,12 +374,12 @@ The above long Npm install command will download and save the following dependen
 
 #### Install dependencies
 
-Lastly, we need application dependencies, which are mostly just Aurelia framework modules used for templating, routing and other aspects. 
+Lastly, we need application dependencies, which are mostly just Aurelia framework modules used for templating, routing and other aspects.
 
 Because the application dependencies are the same regardless of whether you choose Javascript or TypeScript, we can copy and paste the install command from the Javascript instructions above in, "Webpack + Babel".
 
 ```
-npm install --save aurelia-bootstrapper aurelia-framework aurelia-history-browser aurelia-loader-webpack aurelia-logging-console aurelia-pal-browser aurelia-polyfills aurelia-router aurelia-templating aurelia-templating-binding aurelia-templating-resources aurelia-templating-router bluebird
+npm install aurelia-bootstrapper aurelia-framework aurelia-history-browser aurelia-loader-webpack aurelia-logging-console aurelia-pal-browser aurelia-polyfills aurelia-router aurelia-templating aurelia-templating-binding aurelia-templating-resources aurelia-templating-router bluebird
 ```
 
 #### Add Npm scripts for dev server and production build
@@ -423,7 +423,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, "dist"),
     publicPath: "/dist/",
-    filename: "[name].js",    
+    filename: "[name].js",
     chunkFilename: "[name].js"
   },
 
@@ -438,7 +438,7 @@ module.exports = {
       { test: /\.ts$/i, use: "awesome-typescript-loader" },
       { test: /\.html$/i, use: "html-loader" },
     ]
-  },  
+  },
 
   plugins: [
     new AureliaPlugin(),
@@ -452,13 +452,13 @@ TypeScript utilizes a configuration file in the form of `tsconfig.json` which al
 
 ```json
 {
-  "compilerOptions": { 
+  "compilerOptions": {
     "target": "es5",
     "module": "es2015",
-    "moduleResolution": "node",  
+    "moduleResolution": "node",
     "lib": [ "es2017", "dom" ],
     "importHelpers": true,
-    
+
     "experimentalDecorators": true
   }
 }

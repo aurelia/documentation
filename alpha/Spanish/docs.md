@@ -840,7 +840,7 @@ Siempre que el sistema de enrutado procesa una navegación, este ejecuta un estr
 * `canDeactivate()` - Implementa este gancho si quieres controlar si el sistema de enrutado puede irse (_can navigate away_) de tu modelo cuando nos movemos a una nueva ruta. Devuelve un valor booleano, una promesa de un valor booleano o una orden de navegación.
 * `deactivate()` - Implementa este gancho si deseas ejecutar lógica a medida cuando se navega abandonando tu modelo. Puedes optar por devolver una promesa para decirle al enrutador que espere hasta que termines tu trabajo.
 
-El objeto `params` tendrá una propiedad por cada parámetro de la ruta que fue interpretada. Cualquier parámetro de cadena de consulta también se fusionarán en el objeto `params`. El objeto `config` será el objeto original de configuración de rutas que tu montaste.  
+El objeto `params` tendrá una propiedad por cada parámetro de la ruta que fue interpretada. Cualquier parámetro de cadena de consulta también se fusionarán en el objeto `params`. El objeto `config` será el objeto original de configuración de rutas que tu montaste.
 
 > **Nota** Una _Navigation Command_ orden de navegación es cualquier objeto con un método `navigate(router)`. Cuando se encuentra uno, se cancelará la navegación y el control se transferirá a la orden de navegación. Hay una orden de navegación integrado: `Redirect`.
 
@@ -948,7 +948,7 @@ A continuación, el lado del servidor tiene que ser configurado para devolver el
 Desde la consola en la raíz del proyecto, ejecuta lo siguiente:
 
 ```shell
-npm install --save connect-history-api-fallback
+npm install connect-history-api-fallback
 ```
 
 Esto descargará e instalará el componente de intermediación -middleware- que necesitas para ello. Luego abre tu carpeta _build/tasks_ y coloca la tarea _serve_. Abre la primera y pon esta en algún sitio cerca del inicio junto a los otros sentencias `require`:
@@ -1519,7 +1519,7 @@ El `HttpResponseMessage` -mensaje de respuesta HTTP- tiene las siguientes propie
 
 > **Nota:** Por defecto, el `HttpClient` -cliente HTTP- asume que estás esperando una respuesta de tipo JSON -responseType-.
 
-Hay otras dos APIS que merecen ser destacadas. Puedes usar `configure` para acceder a una fluent API para configurar todas las peticiones enviadas por el cliente. También puedes usar `createRequest` para configurar personalmente peticiones individuales. Aquí tienes un ejemplo de configuración:  
+Hay otras dos APIS que merecen ser destacadas. Puedes usar `configure` para acceder a una fluent API para configurar todas las peticiones enviadas por el cliente. También puedes usar `createRequest` para configurar personalmente peticiones individuales. Aquí tienes un ejemplo de configuración:
 
 ```javascript
 var client = new HttpClient()

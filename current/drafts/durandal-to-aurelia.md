@@ -176,7 +176,7 @@ Let's have a look at the ```index.html```:
 Run ```npm init``` if no ````package.json``` is available. After that install the minimal required Aurelia
 modules to get started:
 ```
-npm install aurelia-bootstrapper --save
+npm install aurelia-bootstrapper
 ```
 
 Move your RequireJs configuration to an own file in the project's root directory if not
@@ -262,7 +262,7 @@ The next step of this Migration is to use and configure the Aurelia Router.
 
 If the "aurelia-router" is not already part of your dependency tree, you have to install it. If you use NPM ...
 ```
-npm install aurelia-router --save
+npm install aurelia-router
 ```
 
 or JSPM ...
@@ -354,7 +354,7 @@ Aurelia provides a plugin called "aurelia-event-aggregator" to deal with such Ev
 
 Use
 ```
-npm install aurelia-event-aggregator --save
+npm install aurelia-event-aggregator
 ```
 or
 ```
@@ -565,7 +565,7 @@ As you can see you have also the possibility to use string interpolation to bind
 Because the complete rewrite of all your views and view-models from Knockout bindings to full Aurelia syntax is
 much effort you can use the Knockout plugin for Aurelia. You have to install and configure it, like the following:
 ```
-npm install aurelia-knockout --save
+npm install aurelia-knockout
 ```
 or
 ```

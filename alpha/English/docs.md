@@ -1078,7 +1078,7 @@ Next, the server side needs to be configured to send back the same `index.html` 
 From the console in the root of your project, run the following:
 
 ```shell
-npm install --save connect-history-api-fallback
+npm install connect-history-api-fallback
 ```
 
 This will download and install the middleware plugin you need for this. Then open up your _build/tasks_ folder and locate the _serve_ task. Open that and put this somewhere near the top with the other require statements:

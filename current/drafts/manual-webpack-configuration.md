@@ -256,17 +256,17 @@ with
       * `less`:
 
       ```shell
-      npm install --save-dev less less-loader
+      npm install -D less less-loader
       ```
       * `sass`:
 
       ```shell
-      npm install --save-dev node-sass sass-loader
+      npm install -D node-sass sass-loader
       ```
       * `styl`:
 
       ```json
-      npm install --save-dev stylus stylus-loader
+      npm install -D stylus stylus-loader
       ```
 
   * Modify style loading rule by adding chosen loader and file extension, it should look like this for `less`:
@@ -349,7 +349,7 @@ with
   * To bundle plugins' dependencies properly, all sub modules of a plugin have to be put in `aurelia.build.resources` in either that plugin's `package.json` or your project's `package.json`
   This is crucial but not all aurelia plugins were aware of this matter / or built before this standard configuration. If you want to use a plugin, follow these steps:
 
-  1. Install a plugin like normal. Ex. `npm install aurelia-dialog --save`
+  1. Install a plugin like normal. Ex. `npm install aurelia-dialog`
   2. Go to your project `package.json`, look for path `"aurelia.build.resources"`, add plugin's module name (ex. "aurelia-dialog") to `resources` array
   3. Start your project to check if the plugin is properly configured
       * If webpack doesn't complain, plugin is good
