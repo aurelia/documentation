@@ -1,5 +1,5 @@
 ---
 name: Webpack
-description: Setup and bundling using the Webapck system.
+description: Setup and bundling using the Webpack system.
 ---
 # Webpack
