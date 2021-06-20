@@ -643,7 +643,7 @@ becomes
 Functionally this should work almost exactly the same as before.
 
 In order not to rewrite all compositions, you can use the Knockout plugin as described above. It handles all
-composition variants specified in the [official durandal docs](http://durandaljs.com/documentation/Using-Composition.html):
+composition variants specified in the [official durandal docs](https://durandaljs.com/documentation/Using-Composition.html):
 
 ```
 <div data-bind="compose: 'path/to/view.html'"></div>

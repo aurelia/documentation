@@ -6,29 +6,29 @@
 
 ## Konfigurasi Lingkungan Anda
 
-Mari kita mulai dengan mengatur perkakas untuk membangun aplikasi JavaScript modern. Semua perkakas kami dibangun di atas [Node.js](http://nodejs.org/). Jika Anda sudah menginstalnya, bagus! Jika belum, Anda harus pergi ke [situs web resmi](http://nodejs.org/), unduh dan instal. Segala sesuatu yang lain kita perlu akan diinstal melalui manajer paket Node ini ([NPM](https://docs.npmjs.com/getting-started/what-is-npm)). Jika Anda sudah memiliki NPM diinstal, pastikan Anda punya [versi terbaru](https://github.com/npm/npm/wiki/Troubleshooting#try-the-latest-stable-version-of-node) untuk menghindari masalah dengan perkakas lain.
+Mari kita mulai dengan mengatur perkakas untuk membangun aplikasi JavaScript modern. Semua perkakas kami dibangun di atas [Node.js](https://nodejs.org/). Jika Anda sudah menginstalnya, bagus! Jika belum, Anda harus pergi ke [situs web resmi](https://nodejs.org/), unduh dan instal. Segala sesuatu yang lain kita perlu akan diinstal melalui manajer paket Node ini ([NPM](https://docs.npmjs.com/getting-started/what-is-npm)). Jika Anda sudah memiliki NPM diinstal, pastikan Anda punya [versi terbaru](https://github.com/npm/npm/wiki/Troubleshooting#try-the-latest-stable-version-of-node) untuk menghindari masalah dengan perkakas lain.
 
-Pertama, mari kita mulai dengan menginstal [Gulp](http://gulpjs.com/) yang akan kita gunakan untuk otomatisasi *build*. Jika Anda belum memilikinya, Anda dapat menggunakan NPM untuk menginstalnya (Anda mungkin perlu menggunakan `sudo`):
+Pertama, mari kita mulai dengan menginstal [Gulp](https://gulpjs.com/) yang akan kita gunakan untuk otomatisasi *build*. Jika Anda belum memilikinya, Anda dapat menggunakan NPM untuk menginstalnya (Anda mungkin perlu menggunakan `sudo`):
 
   ```shell
   npm install -g gulp
   ```
 
-Berikutnya, kita perlu menginstal [jspm](http://jspm.io/). Ini akan berfungsi sebagai manajer paket sisi-klien kita. Anda dapat melakukannya seperti ini:
+Berikutnya, kita perlu menginstal [jspm](https://jspm.io/). Ini akan berfungsi sebagai manajer paket sisi-klien kita. Anda dapat melakukannya seperti ini:
 
   ```shell
   npm install -g jspm
   ```
 
-> ** Catatan ** jspm, seperti Bower dan Yeoman, memanfaatkan [git](http://git-scm.com/) sehingga Anda perlu menginstal bila Anda tidak memilikinya. Juga, jspm mengkueri GitHub untuk menginstal paket, namun GitHub memiliki batas tingkat untuk permintaan API anonim. Hal ini disarankan bahwa Anda mengkonfigurasi jspm dengan mandat GitHub Anda untuk menghindari masalah. Anda dapat melakukan ini dengan menjalankan `jspm registry config github` dan mengikuti petunjuknya. Jika Anda lebih memilih untuk mengotorisasi jspm oleh akses token daripada password (lihat GitHub `Pengaturan> Access Personal Tokens`), akses`public_repo` untuk token diperlukan.
+> ** Catatan ** jspm, seperti Bower dan Yeoman, memanfaatkan [git](https://git-scm.com/) sehingga Anda perlu menginstal bila Anda tidak memilikinya. Juga, jspm mengkueri GitHub untuk menginstal paket, namun GitHub memiliki batas tingkat untuk permintaan API anonim. Hal ini disarankan bahwa Anda mengkonfigurasi jspm dengan mandat GitHub Anda untuk menghindari masalah. Anda dapat melakukan ini dengan menjalankan `jspm registry config github` dan mengikuti petunjuknya. Jika Anda lebih memilih untuk mengotorisasi jspm oleh akses token daripada password (lihat GitHub `Pengaturan> Access Personal Tokens`), akses`public_repo` untuk token diperlukan.
 
-> ** Catatan:** Tidak ingin menggunakan jspm? Tidak masalah. Semua paket Aurelia juga tersedia melalui [Bower](http://bower.io/).
+> ** Catatan:** Tidak ingin menggunakan jspm? Tidak masalah. Semua paket Aurelia juga tersedia melalui [Bower](https://bower.io/).
 
 ## Menyiapkan Struktur Proyek dan Membangun
 
 Dengan perkakas terpasang, kita sekarang dapat berfokus untuk membuat sebuah struktur dasar untuk aplikasi Anda. Mulailah dengan [unduh kerangka navigasi](https://github.com/aurelia/skeleton-navigation/releases). *Unzip* dan ubah nama folder ke _navigation-app_.
 
-> ** Catatan:** Atau, Anda dapat menggunakan [Yeoman](http://yeoman.io) untuk menghasilkan kerangka proyek dalam folder target, sebagai berikut:
+> ** Catatan:** Atau, Anda dapat menggunakan [Yeoman](https://yeoman.io) untuk menghasilkan kerangka proyek dalam folder target, sebagai berikut:
 >
 >  ```
 >  npm install -g yo generator-aurelia
@@ -124,7 +124,7 @@ Apa?! Apakah itu JavaScript?
 
 Betul! Itu adalah ECMAScript 2016 (sebelumnya ES7), versi berikutnya dari JavaScript yang memperkenalkan banyak fitur baru untuk bahasa. Untungnya file Gulp Anda download di atas telah Anda mengatur dengan [Babel](https://babeljs.io/), sebuah transpiler menakjubkan yang memungkinkan Anda untuk menulis JavaScript baru dan menjalankannya pada browser jaman sekarang. Sekarang Anda dapat menggunakan modul, kelas, lambda, interpolasi string dan banyak lagi. Keren! Jadi, bagaimana Anda membuat _view-model_? Anda membuat kelas polos dan _export_ ke kerangka. Mudah!
 
-> ** Catatan: ** Anda tidak harus menggunakan Babel atau bahkan ES2016 untuk menulis sebuah aplikasi Aurelia. Anda dapat menggunakan bahasa seperti TypeScript dan CoffeeScript ... atau bahasa browser hari ini: ES5 dan ES2015. Yang harus Anda lakukan adalah mengikuti pola standar bahasa untuk menciptakan kelas dan semuanya akan bekerja dengan baik. Kami pikir ES2016 mengagumkan meskipun dan berharap Anda akan mempertimbangkan terlebih dahulu. Untuk mempelajari lebih lanjut tentang versi terbaru dari JavaScript termasuk fitur seperti ekspor modul dan kelas kami sarankan membaca [Panduan Belajar Babel] (http://babeljs.io/docs/learn-es6/).
+> ** Catatan: ** Anda tidak harus menggunakan Babel atau bahkan ES2016 untuk menulis sebuah aplikasi Aurelia. Anda dapat menggunakan bahasa seperti TypeScript dan CoffeeScript ... atau bahasa browser hari ini: ES5 dan ES2015. Yang harus Anda lakukan adalah mengikuti pola standar bahasa untuk menciptakan kelas dan semuanya akan bekerja dengan baik. Kami pikir ES2016 mengagumkan meskipun dan berharap Anda akan mempertimbangkan terlebih dahulu. Untuk mempelajari lebih lanjut tentang versi terbaru dari JavaScript termasuk fitur seperti ekspor modul dan kelas kami sarankan membaca [Panduan Belajar Babel] (https://babeljs.io/docs/learn-es6/).
 
 Oke. Sekarang bahwa kita memiliki _view-model_ dengan beberapa data dasar dan perilaku, mari kita sohibnya... _view_.
 
@@ -322,7 +322,7 @@ jspm menginstal aurelia-fetch-client
 
 Sekarang saya harap Anda melihat kekuatan manajer paket terpadu dan loader. Anda cukup menginstal paket dengan jspm dan kemudian Anda mengimpor dalam kode Anda menggunakan identifier yang sama persis. Anda dapat menginstal hampir semua hal dari GitHub atau NPM dengan cara ini.
 
-Sekarang, kita lihat dekorator `inject` ES2016. Apa yang dilakukan? Nah, Aurelia menciptakan komponen UI yang diperlukan untuk membuat aplikasi Anda. Hal ini dilakukan dengan menggunakan [Dependency Injection](http://en.wikipedia.org/wiki/Dependency_injection) kontainer yang mampu memberikan dependensi konstruktor seperti HttpClient. Bagaimana sistem DI tahu apa yang harus memberikan? Yang harus Anda lakukan adalah menambahkan bahwa ES2015 `dekorator inject` untuk kelas Anda yang melewati daftar jenis untuk memberikan contoh. Harus ada satu argumen untuk setiap parameter konstruktor. Dalam contoh di atas, kami membutuhkan HttpClient contoh, jadi kami menambahkan `HttpClient` ketik` inject` dekorator dan kemudian ditambahkan parameter yang sesuai dalam constructor.
+Sekarang, kita lihat dekorator `inject` ES2016. Apa yang dilakukan? Nah, Aurelia menciptakan komponen UI yang diperlukan untuk membuat aplikasi Anda. Hal ini dilakukan dengan menggunakan [Dependency Injection](https://en.wikipedia.org/wiki/Dependency_injection) kontainer yang mampu memberikan dependensi konstruktor seperti HttpClient. Bagaimana sistem DI tahu apa yang harus memberikan? Yang harus Anda lakukan adalah menambahkan bahwa ES2015 `dekorator inject` untuk kelas Anda yang melewati daftar jenis untuk memberikan contoh. Harus ada satu argumen untuk setiap parameter konstruktor. Dalam contoh di atas, kami membutuhkan HttpClient contoh, jadi kami menambahkan `HttpClient` ketik` inject` dekorator dan kemudian ditambahkan parameter yang sesuai dalam constructor.
 
 > ** Catatan: ** Jika Anda tidak suka menggunakan dekorator dalam hal ini, Anda juga dapat menambahkan metode `inject` statis atau properti untuk kelas yang mengembalikan sebuah array dari jenis untuk menyuntikkan.
 
@@ -347,7 +347,7 @@ Router Aurelia menegakkan siklus hidup pada view-model setiap kali rute berubah.
 
 > **Catatan:** The siklus hidup navigasi lengkap termasuk `canActivate`,`activate`, `canDeactivate`, dan `deactivate`. Metode can* dapat mengembalikan boolean (atau promise boolean) untuk menerima atau menolak transisi ke dalam atau keluar dari layar saat ini.
 
-> **Catatan:** Jika Anda tidak akrab dengan [Promise] (http://www.html5rocks.com/en/tutorials/es6/promises/), ini adalah fitur baru dari ES2015 yang dirancang untuk meningkatkan pemrograman asinkron. Sebuah `Promise` adalah sebuah objek yang merupakan hasil masa depan. Pada dasarnya, itu merupakan "promise" untuk menyelesaikan beberapa pekerjaan atau untuk menyediakan beberapa data di masa depan.
+> **Catatan:** Jika Anda tidak akrab dengan [Promise] (https://www.html5rocks.com/en/tutorials/es6/promises/), ini adalah fitur baru dari ES2015 yang dirancang untuk meningkatkan pemrograman asinkron. Sebuah `Promise` adalah sebuah objek yang merupakan hasil masa depan. Pada dasarnya, itu merupakan "promise" untuk menyelesaikan beberapa pekerjaan atau untuk menyediakan beberapa data di masa depan.
 
 ### users.html
 

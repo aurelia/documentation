@@ -94,7 +94,7 @@ aurelia.use.feature('feature-folder-name-here');
 
 <h4 id="promises"><a href="#promises">Promise</a></h4>
 
-デフォルトでは、AureliaはES6ネイティブ実装のPromise、もしくはポリフィルのPromiseを使います。一方、この挙動を置き換えて、素晴らしい [Bluebird](https://github.com/petkaantonov/bluebird) Promiseライブラリを使うようにすることもできます。ページで他のスクリプトを読み込む前にこのライブラリを読み込むだけです。このライブラリは独自の標準準拠のPromise実装を持ち、現在のところ言語ネイティブの実装より高速で、デバッグサポートも良いものです。それにくわえて、Babelトランスパイラと組み合わせて使う際には、 [コルーチン](http://babeljs.io/docs/usage/transformers/other/bluebird-coroutines/) を非同期処理の改善に利用できます。
+デフォルトでは、AureliaはES6ネイティブ実装のPromise、もしくはポリフィルのPromiseを使います。一方、この挙動を置き換えて、素晴らしい [Bluebird](https://github.com/petkaantonov/bluebird) Promiseライブラリを使うようにすることもできます。ページで他のスクリプトを読み込む前にこのライブラリを読み込むだけです。このライブラリは独自の標準準拠のPromise実装を持ち、現在のところ言語ネイティブの実装より高速で、デバッグサポートも良いものです。それにくわえて、Babelトランスパイラと組み合わせて使う際には、 [コルーチン](https://babeljs.io/docs/usage/transformers/other/bluebird-coroutines/) を非同期処理の改善に利用できます。
 
 <h3 id="the-aurelia-object"><a href="#the-aurelia-object">Aureliaオブジェクト</a></h3>
 
@@ -590,7 +590,7 @@ export class Foo {
 
 <h4 id="adaptive-binding"><a href="#adaptive-binding">適応バインディング</a></h4>
 
-Aureliaは変更を監視するのに最適なストラテジを決定する、適応バインディングシステムを持っています。適応バインディングの詳細については、 [このポスト](http://blog.durandal.io/2015/04/03/aurelia-adaptive-binding/) を読んで下さい。ほとんどの場合このような詳細について考える必要はありませんが、バインディングシステムの非効率な利用につながるシナリオについて知っておくことは有益だと思います。
+Aureliaは変更を監視するのに最適なストラテジを決定する、適応バインディングシステムを持っています。適応バインディングの詳細については、 [このポスト](https://blog.durandal.io/2015/04/03/aurelia-adaptive-binding/) を読んで下さい。ほとんどの場合このような詳細について考える必要はありませんが、バインディングシステムの非効率な利用につながるシナリオについて知っておくことは有益だと思います。
 
 **一番に知っておくべきことは、計算プロパティ(getter関数経由のプロパティ)は、ダーティチェック方式で監視されるということです。** より効率のよい、Object.observe や、プロパティ書き換えといった方法は、この種類のプロパティには適用できません。
 
@@ -672,7 +672,7 @@ export class IssueSearch {
 
 データバインディングに加え、ビューの中でAurelia HTML 拡張の能力を使うことができます。HTML拡張には、次の二つがあります:
 
-* カスタムエレメント - HTMLを新しいタグで拡張します。あなたのカスタムエレメントは独自のビューを持つことができます (その中ではデータバインディングや、他のカスタムエレメントも使えます)。また、 [ShadowDOM](http://www.html5rocks.com/en/tutorials/webcomponents/shadowdom/) も活用できます。(それがサポートしていないブラウザであってもです)
+* カスタムエレメント - HTMLを新しいタグで拡張します。あなたのカスタムエレメントは独自のビューを持つことができます (その中ではデータバインディングや、他のカスタムエレメントも使えます)。また、 [ShadowDOM](https://www.html5rocks.com/en/tutorials/webcomponents/shadowdom/) も活用できます。(それがサポートしていないブラウザであってもです)
 * カスタム属性 - 新しい属性を既存のエレメント、もしくはカスタムエレメントに追加して、HTMLを拡張できます。このような属性はエレメントに振る舞いを追加します。
 
 もちろん、これらの全てはデータバインディングと一体となって動作します。Aureliaが提供するカスタムエレメントとカスタム属性を見てみましょう。すべてのビューで使えます。
@@ -790,7 +790,7 @@ export class IssueSearch {
 <div jquery.modal="show: true; keyboard.bind: allowKeyboard">...</div>
 ```
 
-このサンプルは [Bootstrap modal widget](http://getbootstrap.com/javascript/#modals) をベースにしています。この例は、 `modal` jQueryヴィジェットがdiv要素に付与され、その `show` オプションを `true` にセットし、 `keyboard` オプションをビューモデルの `allowKeyboard` プロパティの値にセットします。このビューとの結びつきが解除されると、jQueryヴィジェットは破棄されます。
+このサンプルは [Bootstrap modal widget](https://getbootstrap.com/javascript/#modals) をベースにしています。この例は、 `modal` jQueryヴィジェットがdiv要素に付与され、その `show` オプションを `true` にセットし、 `keyboard` オプションをビューモデルの `allowKeyboard` プロパティの値にセットします。このビューとの結びつきが解除されると、jQueryヴィジェットは破棄されます。
 
 `global-behavior` とカスタムシンタックスを組み合わせ、このような動的な挙動を可能にしています。この例のように、プロパティと値を上記のように区切るシンタックスは `style` 属性のシンタックスをベースにしたものです。バインディングコマンドも利用できることを覚えておきましょう。 `.bind` を使ってビューモデルのデータを直接プラグインに渡したり、 `.call` を使ってコールバック関数をプラグインに渡すこともできます。
 
@@ -1036,9 +1036,9 @@ context.MapRoute(
   defaults: new { controller = "Application", action = "Index" }
 );
 ```
-上記ではRazorビューファイルを使わなければならないことに注意してください。もし通常のHTMLファイルが使いたければ、いくつか方法があります。 [このStackOverflow記事が役立ちます](http://stackoverflow.com/questions/20871938/render-html-file-in-asp-net-mvc-view) 。
+上記ではRazorビューファイルを使わなければならないことに注意してください。もし通常のHTMLファイルが使いたければ、いくつか方法があります。 [このStackOverflow記事が役立ちます](https://stackoverflow.com/questions/20871938/render-html-file-in-asp-net-mvc-view) 。
 
-もし [Nancy FX](http://nancyfx.org) を使っているなら、設定は簡単です。 `IndexModule.cs` か、そのような適当な名前のファイルを作成し、次のように書けば良いです:
+もし [Nancy FX](https://nancyfx.org) を使っているなら、設定は簡単です。 `IndexModule.cs` か、そのような適当な名前のファイルを作成し、次のように書けば良いです:
 
 ``` csharp
 public class IndexModule : NancyModule {
@@ -1732,21 +1732,21 @@ var client = new HttpClient();
 ```javascript
 var client = new HttpClient()
   .configure(x => {
-    x.withBaseUrl('http://aurelia.io');
+    x.withBaseUrl('https://aurelia.io');
     x.withHeader('Authorization', 'bearer 123');
   });
 
 client.get('some/cool/path');
 ```
 
-この例では、クライアントから送るすべてのリクエストには baseUrlとして 'http://aurelia.io' が設定され、またAutorizationヘッダが追加されます。同じAPIがリクエストビルダでも提供されるので、同様のことを個別のリクエストに対しても実現可能です:
+この例では、クライアントから送るすべてのリクエストには baseUrlとして 'https://aurelia.io' が設定され、またAutorizationヘッダが追加されます。同じAPIがリクエストビルダでも提供されるので、同様のことを個別のリクエストに対しても実現可能です:
 
 ```javascript
 var client = new HttpClient();
 
 client.createRequest('some/cool/path')
   .asGet()
-  .withBaseUrl('http://aurelia.io')
+  .withBaseUrl('https://aurelia.io')
   .withHeader('Authorization', 'bearer 123')
   .send();
 ```
