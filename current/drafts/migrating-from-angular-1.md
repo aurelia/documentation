@@ -6,7 +6,7 @@
   "engines" : { "aurelia-doc" : "^1.0.0" },
   "author": {
   	"name": "Jedd Ahyoung",
-  	"url": "http://www.jedd-ahyoung.com"
+  	"url": "https://www.jedd-ahyoung.com"
   },
   "contributors": [],
   "translators": [],
@@ -49,7 +49,7 @@ Second, we'll bootstrap and configure our application in Aurelia. Angular applic
 		<!DOCTYPE html>
 		<html lang="en" data-ng-app="myApp">
 		<head>
-		
+
 		    <title>Skeleton Navigation</title>
 
 		</head>
@@ -65,9 +65,9 @@ Aurelia uses a similar attribute that should feel familiar, like so:
 		<!DOCTYPE html>
 		<html lang="en">
 		<head>
-		
+
 		    <title>Skeleton Navigation</title>
-		
+
 		</head>
 		<body aurelia-app="main">
 		 ...
@@ -82,7 +82,7 @@ Instead of a module name, the `aurelia-app` attribute takes a filename as its va
 
 Configuring an Aurelia application at startup is slightly different than its Angular equivalent. In Angular, the application is configured with a static set of options - Angular configuration, application controllers, services, etc. As such, service configuration in Angular only occurs before Angular bootstraps the applicaiton. Services in Aurelia can be configured at any time - not just at startup.
 
-Angular might look something like this. 
+Angular might look something like this.
 
 <code-listing heading="Angular Configuration Example">
 	<source-code lang="ES 2015/2016">
@@ -106,7 +106,7 @@ Aurelia uses a similar configuration model, but services don't have to be config
 		    .plugin('aurelia-animator-css')
 		    .feature('someFeature')
 		    .globalResources('resources/my-element', 'resources/my-other-element');
-		
+
 		  aurelia.start().then(a => a.setRoot());
 		}
 	</source-code>
@@ -124,17 +124,17 @@ Third step - we'll migrate our modules from Angular to Aurelia. Like Aurelia, An
 			.service('myService', ['$q', '$http',function ($q, $http) {
 				...
 			}]);
-		
+
 		angular.module('myModule')
 			.service('anotherService', ['$q', '$router',function ($q, $router) {
 				...
 			}]);
-		
+
 		angular.module('myModule')
 			.factory('myFactory, ['$storage', function ($storage) {
-		
+
 			}]);
-		
+
 		angular.module('myModule')
 			.value('myValue', "value")
 			... // and so on
@@ -152,21 +152,21 @@ So, the angular code above might end up looking more like this:
 				...
 			}
 		}
-		
+
 		@inject(Q, Router)
 		export class anotherService {
 			constructor (Q, router) {
-		
+
 			}
 		}
-		
+
 		@inject(Storage)
 		export class myFactory {
 			constructor (storage) {
-		
+
 			}
 		}
-		
+
 		export var myValue = value;
 	</source-code>
 </code-listing>
@@ -186,7 +186,7 @@ In Angular, a controller must be registered with a specific name, using the `ang
 		function Users ($http, $scope) {
 			...
 		}
-		
+
 		angular.controller('users', ['$scope', '$http', Users]);
 	</source-code>
 </code-listing>
@@ -221,7 +221,7 @@ Alternatively, an Aurelia router is configured inside the viewmodel that uses it
 		      { route: ['', 'welcome'], name: 'welcome',      moduleId: 'welcome',      nav: true, title: 'Welcome' },
 		      { route: 'users',         name: 'users',        moduleId: 'users',        nav: true, title: 'Users' }
 		    ]);
-		
+
 		    this.router = router;
 		  }
 		}
@@ -243,11 +243,11 @@ A typical controller might yield something like this:
 			$scope.heading = 'Welcome to the Angular Navigation App!';	$scope.firstName = 'John';
 			$scope.lastName = 'Doe';
 			$scope.previousValue = $scope.fullName();
-			
+
 			$scope.fullName = function () {
 				return $scope.firstName + ' ' + $scope.lastName;
 			};
-			
+
 			$scope.submit = function () {
 				$scope.previousValue = $scope.fullName();
 				alert('Welcome, ' + $scope.fullName());
@@ -266,11 +266,11 @@ The Aurelia version of our typical Angular controller might look like this:
 		  firstName = 'John';
 		  lastName = 'Doe';
 		  previousValue = this.fullName;
-		
+
 		  get fullName() {
 		    return `${this.firstName} ${this.lastName}`;
 		  }
-		
+
 		  submit() {
 		    this.previousValue = this.fullName;
 		    alert(`Welcome, ${this.fullName}!`);
@@ -397,15 +397,15 @@ An Angular directive may have looked like this:
 				templateUrl: 'myTemplate.html',
 				link: function (scope, element, attrs) {
 					var windowheight = angular.element($window).height();
-		
+
 					scope.holeHeight = function (depth) {
 						return (depth * 0.2) < windowheight ? (depth * 0.2) + 'px' : undefined;
 					};
-		
+
 					scope.bgPos = function (depth) {
 						return (depth * 0.2) < windowheight ? 0 : (depth - windowheight) * 0.2;
 					};
-		
+
 					scope.holeWidth = function () {
 						return Math.min(700, Math.max(350, _(scope.shop)
 							.reduce(function (p, c) {
@@ -413,13 +413,13 @@ An Angular directive may have looked like this:
 							}, 0)
 						));
 					};
-		
+
 					scope.displayArray = [];
-		
+
 					scope.$watch('shop', function () {
 						scope.displayArray = _.values(scope.shop).reverse();
 					});
-		
+
 					(function tick(timestamp) {
 						angular.element($window).scrollTop($document.height());
 						animate(tick);
@@ -439,7 +439,7 @@ Converting this directive to an Aurelia custom element requires us to remove the
 				this.document = document;
 				this.animate = animate;
 			}
-			
+
 			attached () {
 
 			}

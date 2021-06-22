@@ -569,7 +569,7 @@ Usa el alias del atributo `style`, `css`, cuando hagas interpolación de cadenas
 
 <h4 id="adaptive-binding"><a href="#adaptive-binding">Enlazado adaptable -Adaptive Binding-</a></h4>
 
-Aurelia incorpora un sistema de enlazado adaptable, que escoge entre cierto número de estrategias a la hora de determinar como observar los cambios de la manera más eficiente. Para más información acerca de como funciona esto lee [esta entrada](http://blog.durandal.io/2015/04/03/aurelia-adaptive-binding/). En la mayoría de las situaciones no necesitarás ocuparte de estos detalles, pero en cualquier caso nos ayudará a ser consciente de escenarios que nos conduzcan a usos ineficientes del sistema de enlazado de datos.
+Aurelia incorpora un sistema de enlazado adaptable, que escoge entre cierto número de estrategias a la hora de determinar como observar los cambios de la manera más eficiente. Para más información acerca de como funciona esto lee [esta entrada](https://blog.durandal.io/2015/04/03/aurelia-adaptive-binding/). En la mayoría de las situaciones no necesitarás ocuparte de estos detalles, pero en cualquier caso nos ayudará a ser consciente de escenarios que nos conduzcan a usos ineficientes del sistema de enlazado de datos.
 
 **Lo primero de lo que hay que ser conscientes es que las propiedades computadas (propiedades con funciones accesoras -getter functions-) se observan usando dirty-checking (N.T.: revisión cíclica y automática de todas las variables en todos los ámbitos -"comprobación bruta"-).** Otras estrategias más eficientes como `Object.observe` y la reescritura de propiedades no son compatibles con estos tipos de propiedades.
 
@@ -651,7 +651,7 @@ export class IssueSearch {
 
 Junto al enlazado de datos -databinding-, cuentas con el poder de las extensiones al HTML de Aurelia para usarlos en tus vistas. Son dos los tipos:
 
-* Elementos a medida -Custom Elements- ¡Amplía HTML mediante nuevas etiquetas! Tus elementos a medida pueden tener sus propias vistas (que usan el enlazado de datos y otros comportamientos) y, opcionalmente, hacer uso del [ShadowDOM](http://www.html5rocks.com/en/tutorials/webcomponents/shadowdom/) (incluso aunque el navegador no lo soporte).
+* Elementos a medida -Custom Elements- ¡Amplía HTML mediante nuevas etiquetas! Tus elementos a medida pueden tener sus propias vistas (que usan el enlazado de datos y otros comportamientos) y, opcionalmente, hacer uso del [ShadowDOM](https://www.html5rocks.com/en/tutorials/webcomponents/shadowdom/) (incluso aunque el navegador no lo soporte).
 * Atributos a media -Custom Attributes- Amplía HTML con atributos nuevos que pueden añadirse elementos estándar o a medida. Estos atributos "añaden" -attach- nuevo comportamiento a los elementos.
 
 Naturalmente, todos funcionan sin problemas con el enlazado de datos. Echemos un vistazo a los comportamientos que te proporciona Aurelia y que están disponibles globalmente en todas las vistas.
@@ -767,7 +767,7 @@ Este no es unq mejora HTML que vayas a usar directamente. En lugar de eso, este 
 <div jquery.modal="show: true; keyboard.bind: allowKeyboard">...</div>
 ```
 
-Este ejemplo está basado en el complemento [Bootstrap modal widget](http://getbootstrap.com/javascript/#modals). En este caso, el complemento `modal` de jQuery será añadido al `div` y será configurado con su opción `show` puesta a `true` y su opción `keyboard` puesta al valor de la propiedad `allowKeyboard` del modelo. Cuando la vista contenedora esté desenlazada, el complemento jQuery será destruido.
+Este ejemplo está basado en el complemento [Bootstrap modal widget](https://getbootstrap.com/javascript/#modals). En este caso, el complemento `modal` de jQuery será añadido al `div` y será configurado con su opción `show` puesta a `true` y su opción `keyboard` puesta al valor de la propiedad `allowKeyboard` del modelo. Cuando la vista contenedora esté desenlazada, el complemento jQuery será destruido.
 
 Esta capacidad combina el especial `global-behaviour` con sintaxis a medida para habilitar estas capacidades. La sintaxis que ves aquí está basada en la sintaxis del atributo nativo (HTML) `style` que lista las propiedades y los valores separados de la misma manera que en el ejemplo. Ten en cuenta que puedes usar órdenes de enlace como `.bind`, para pasar datos de tu modelo directamente al complemento, o `.call`, para pasar una función de retrollamada directamente al complemento.
 
@@ -1000,9 +1000,9 @@ context.MapRoute(
   defaults: new { controller = "Application", action = "Index" }
 );
 ```
-Ten en cuenta que lo anterior te obliga a usar un archivo de vista Razor. Si quieres usar un archivo HTML convencional, hay diferentes maneras de hacerlo. [Este artículo de SO te ayudará a hacerlo](http://stackoverflow.com/questions/20871938/render-html-file-in-asp-net-mvc-view).
+Ten en cuenta que lo anterior te obliga a usar un archivo de vista Razor. Si quieres usar un archivo HTML convencional, hay diferentes maneras de hacerlo. [Este artículo de SO te ayudará a hacerlo](https://stackoverflow.com/questions/20871938/render-html-file-in-asp-net-mvc-view).
 
-Si estás usando [Nancy FX](http://nancyfx.org), entonces la configuración es así de simple. Localiza tu `IndexModule.cs` o comoquiera que lo hayas llamado y asegúrate de que se asemeja a esto y todo irá bien:
+Si estás usando [Nancy FX](https://nancyfx.org), entonces la configuración es así de simple. Localiza tu `IndexModule.cs` o comoquiera que lo hayas llamado y asegúrate de que se asemeja a esto y todo irá bien:
 
 ```csharp
 public class IndexModule : NancyModule {
@@ -1524,21 +1524,21 @@ Hay otras dos APIS que merecen ser destacadas. Puedes usar `configure` para acce
 ```javascript
 var client = new HttpClient()
   .configure(x => {
-    x.withBaseUrl('http://aurelia.io');
+    x.withBaseUrl('https://aurelia.io');
     x.withHeader('Authorization', 'bearer 123');
   });
 
 client.get('some/cool/path');
 ```
 
-En este caso, todas las peticiones del cliente tendrán la baseUrl de 'http://aurelia.io' y tendrán el encabezamiento de autorización especificado. La misma API está disponible por medio del constructor de peticiones. Así que puedes hacer lo mismo con una petición individual de esta manera:
+En este caso, todas las peticiones del cliente tendrán la baseUrl de 'https://aurelia.io' y tendrán el encabezamiento de autorización especificado. La misma API está disponible por medio del constructor de peticiones. Así que puedes hacer lo mismo con una petición individual de esta manera:
 
 ```javascript
 var client = new HttpClient();
 
 client.createRequest('some/cool/path')
   .asGet()
-  .withBaseUrl('http://aurelia.io')
+  .withBaseUrl('https://aurelia.io')
   .withHeader('Authorization', 'bearer 123')
   .send();
 `````

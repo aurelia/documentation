@@ -4,28 +4,28 @@
 > **Note:** Looking for this guide in another language? Have a look in our [documentation repo](https://github.com/aurelia/documentation).
 
 ## Configurando Seu Ambiente
-Vamos começar configurando um grande conjunto de ferramentas que você pode usar para construir aplicações modernas em JavaScript. Todas as ferramentas que usaremos são construídas sobre [Node.js] (http://nodejs.org/). Se você já o tiver instalado, ótimo! Se não, você deve ir ao [site oficial] (http://nodejs.org/), faça o download e instale-o. Todo o resto que iremos precisar será instalado via gerenciador de pacotes do Node ([npm] (https://docs.npmjs.com/getting-started/what-is-npm)). Se você já tiver o npm instalado, certifique-se que você tem a [última versão] (https://github.com/npm/npm/wiki/Troubleshooting#try-the-latest-stable-version-of-node) para evitar quaisquer problemas com as outras ferramentas.
+Vamos começar configurando um grande conjunto de ferramentas que você pode usar para construir aplicações modernas em JavaScript. Todas as ferramentas que usaremos são construídas sobre [Node.js] (https://nodejs.org/). Se você já o tiver instalado, ótimo! Se não, você deve ir ao [site oficial] (https://nodejs.org/), faça o download e instale-o. Todo o resto que iremos precisar será instalado via gerenciador de pacotes do Node ([npm] (https://docs.npmjs.com/getting-started/what-is-npm)). Se você já tiver o npm instalado, certifique-se que você tem a [última versão] (https://github.com/npm/npm/wiki/Troubleshooting#try-the-latest-stable-version-of-node) para evitar quaisquer problemas com as outras ferramentas.
 
-Primeiro, vamos começar instalando o [Gulp] (http://gulpjs.com/) que iremos usar para automação de compilação. Se você ainda não o tem, vamos utilizar o npm para instala-lo, usando os comandos abaixo (pode ser que você precise usar `sudo`):
+Primeiro, vamos começar instalando o [Gulp] (https://gulpjs.com/) que iremos usar para automação de compilação. Se você ainda não o tem, vamos utilizar o npm para instala-lo, usando os comandos abaixo (pode ser que você precise usar `sudo`):
 
   ```shell
   npm install -g gulp
   ```
 
-Em seguida, é preciso instalar o [jspm] (http://jspm.io/). Ele irá servir como o nosso gerenciador de pacotes client-side. Você pode instala-lo desta forma:
+Em seguida, é preciso instalar o [jspm] (https://jspm.io/). Ele irá servir como o nosso gerenciador de pacotes client-side. Você pode instala-lo desta forma:
   ```shell
   npm install -g jspm
   ```
 
-> **Nota:** jspm, assim como Bower e Yeoman, funcionam via [git] (http://git-scm.com/), isso quer dizer você deve instala-lo caso ainda não o tenha. Além disso, o jspm consulta o GitHub para instalar pacotes, mas o GitHub tem um limite de pedidos anônimos na API. É aconselhável que você configure o jspm utilizando suas credenciais GitHub a fim de evitar problemas. Você pode fazer isso executando o comando `jspm registry config github` e então seguir as instruções. Você também pode autorizar o jspm através de um token, caso não queira utilizar suas credenciais GitHub. Para isso, no GitHub, navegue até `Settings > Personal Access Tokens`, e crie um token com o escopo `public_repo`.
+> **Nota:** jspm, assim como Bower e Yeoman, funcionam via [git] (https://git-scm.com/), isso quer dizer você deve instala-lo caso ainda não o tenha. Além disso, o jspm consulta o GitHub para instalar pacotes, mas o GitHub tem um limite de pedidos anônimos na API. É aconselhável que você configure o jspm utilizando suas credenciais GitHub a fim de evitar problemas. Você pode fazer isso executando o comando `jspm registry config github` e então seguir as instruções. Você também pode autorizar o jspm através de um token, caso não queira utilizar suas credenciais GitHub. Para isso, no GitHub, navegue até `Settings > Personal Access Tokens`, e crie um token com o escopo `public_repo`.
 >
-> **Nota:** Não quer usar o jspm? Sem problemas! Todos os pacotes do Aurelia estão disponíveis através do [Bower] (http://bower.io/) também.
+> **Nota:** Não quer usar o jspm? Sem problemas! Todos os pacotes do Aurelia estão disponíveis através do [Bower] (https://bower.io/) também.
 
 ## Configurando a Estrutura do Projeto
 
 Com o conjunto de ferramentas instalada, podemos voltar a nossa atenção para a criação de uma estrutura básica para seu aplicativo. Comece [baixando o esqueleto de navegação] (https://github.com/aurelia/skeleton-navigation/releases). Descompacte-o e mude o nome da pasta para _navigation-app_.
 
-> **Nota:** Como alternativa, você pode usar o [Yeoman] (http://yeoman.io) para "gerar" o projeto esqueleto de navegação na pasta de destino, desta forma:
+> **Nota:** Como alternativa, você pode usar o [Yeoman] (https://yeoman.io) para "gerar" o projeto esqueleto de navegação na pasta de destino, desta forma:
 >
 > ```
 > npm install -g yo generator-aurelia
@@ -123,7 +123,7 @@ O que ... isso aí é JavaScript mesmo?
 
 Sim, isso é JavaScript. Na verdade, é ECMAScript 2016 (formalmente ES7), a próxima versão do JavaScript que introduz muitos recursos novos para a linguagem. Felizmente o arquivo do Gulp que você baixou está configurado com o [Babel] (https://babeljs.io/), um transpilador incrível que lhe permite escrever usando o JavaScript do futuro e executá-lo em navegadores atuais. Agora você pode usar módulos, classes, lambdas, interpolação de string e muito mais. Muito massa não é mesmo!? Então, como você cria uma _view-model_? Você cria uma simples classe usando _export_ para que fique acessível ao framework. Mel na chupeta!
 
-> **Nota:** Você não tem que necessariamente usar o Babel ou mesmo ES2016 para desenvolver um aplicativo usando o Aurelia. Você pode usar linguagens como TypeSript e CoffeeScript ... ou a linguagem dos navegadores de hoje: ES5 e ES2015. Tudo que você tem a fazer é seguir o padrão da linguagem para a criação de classes e tudo irá funcionar. Nós achamos o ES7 incrível, e esperamos que você o considere como primeira opção. Para saber mais sobre esta nova versão do JavaScript incluindo recursos como exportações e classes, recomendamos a leitura do seguinte artigo: [The Babel Learning Guide] (http://babeljs.io/docs/learn-es6/).
+> **Nota:** Você não tem que necessariamente usar o Babel ou mesmo ES2016 para desenvolver um aplicativo usando o Aurelia. Você pode usar linguagens como TypeSript e CoffeeScript ... ou a linguagem dos navegadores de hoje: ES5 e ES2015. Tudo que você tem a fazer é seguir o padrão da linguagem para a criação de classes e tudo irá funcionar. Nós achamos o ES7 incrível, e esperamos que você o considere como primeira opção. Para saber mais sobre esta nova versão do JavaScript incluindo recursos como exportações e classes, recomendamos a leitura do seguinte artigo: [The Babel Learning Guide] (https://babeljs.io/docs/learn-es6/).
 Ok. Agora que temos nossa _view-model_ com alguns dados e comportamentos básicos, vamos dar uma olhada na sua parceira de crimes... a _view_.
 
 ### app.html
@@ -250,7 +250,7 @@ Levando em conta que você já viu a interpolação de string, vamos focar nas c
 
 > **Nota:** A propriedade `navigation` no router é um array preenchido com todas as rotas marcadas como `nav:true` na sua configuração. A sintaxe `repeat.for` do Aurelia funciona como o `for..of` do padrão ES2015. Assim, você pode pensar em um loop sobre a array de rotas, gerando o código necessário para cada uma delas.
 
-Ainda sobre os `li` você pode ver uma demonstração de como usar interpolação de string para adicionar/remover dinamicamente as classes CSSs. Mais abaixo, há uma segunda `ul`. Viu o binding em sua única filha `li`? `if.bind="router.isNavigating"` Isto condicionalmente adiciona/remove o `li` com base no valor da expressão. 
+Ainda sobre os `li` você pode ver uma demonstração de como usar interpolação de string para adicionar/remover dinamicamente as classes CSSs. Mais abaixo, há uma segunda `ul`. Viu o binding em sua única filha `li`? `if.bind="router.isNavigating"` Isto condicionalmente adiciona/remove o `li` com base no valor da expressão.
 Convenientemente, o roteador irá atualizar sua propriedade `isNavigating` sempre que estiver no processo de carregamento da rota.
 
 A última que queremos falar é o elemento `router-view` perto da parte inferior da view. Este representa o local no DOM onde a "página" atual será processada, com base no estado do router configurado.
@@ -324,7 +324,7 @@ jspm install aurelia-fetch-client
 
 Agora eu imagino que você esteja vendo o poder do gerenciador e carregador de pacotes. Você simplesmente instala um pacote com o jspm e depois o importa em seu código usando exatamente o mesmo identificador. Você pode instalar quase todas as coisas do GitHub ou NPM desta forma.
 
-Agora, dê uma olhada no decorador `inject` do ES2016. O que isso faz? Bem, o Aurélia cria os componentes de interface do usuário conforme são necessários para processar a aplicação. Ele faz isso usando um container de [Dependency Injection] (http://en.wikipedia.org/wiki/Dependency_injection) (Injeção de Dependência) capaz de fornecer dependências do construtor, como por exemplo, o HttpClient. Como é que o sistema de DI sabe o que deve fornecer? Tudo que você tem a fazer é acrescentar o decorador do ES7 `inject` para sua classe, passando uma lista de "types" do qual o qual seu construtor necessita. Deve haver um "type" para cada parâmetro do construtor. No exemplo acima, nós precisávamos de uma instância do HttpClient, por isso, acrescentamos o type `HttpClient` no decorador `inject`, em seguida, adicionamos um parâmetro correspondente no construtor da classe.
+Agora, dê uma olhada no decorador `inject` do ES2016. O que isso faz? Bem, o Aurélia cria os componentes de interface do usuário conforme são necessários para processar a aplicação. Ele faz isso usando um container de [Dependency Injection] (https://en.wikipedia.org/wiki/Dependency_injection) (Injeção de Dependência) capaz de fornecer dependências do construtor, como por exemplo, o HttpClient. Como é que o sistema de DI sabe o que deve fornecer? Tudo que você tem a fazer é acrescentar o decorador do ES7 `inject` para sua classe, passando uma lista de "types" do qual o qual seu construtor necessita. Deve haver um "type" para cada parâmetro do construtor. No exemplo acima, nós precisávamos de uma instância do HttpClient, por isso, acrescentamos o type `HttpClient` no decorador `inject`, em seguida, adicionamos um parâmetro correspondente no construtor da classe.
 
 > **Nota:** Se você não gosta de usar um decorador, neste caso, você também pode utilizar um método estático `inject` ou uma propriedade da classe que retorna um array de types que deverão ser injetados.
 
@@ -347,9 +347,9 @@ export class Users{
 
 O Router do Aurélia reinicia um ciclo de vida na view-model sempre que as rotas mudam. Isto é chamado de "Screen Activation Lifecycle". As view-models podem, opcionalmente, chamar métodos de dentro e fora da rota, controlando o fluxo de várias partes do ciclo de vida da aplicação. Quando o router estiver pronto, ele irá chamar o método `activate`, caso este esteja presente. No código acima, nós usamos este método para chamar a API do GitHub e obter alguns usuários. Observe que nós retornamos o resultado do pedido http através do método `activate`. Todos as APIs `HttpClient` retornam um `Promise`. O router irá detectar um `Promise` e esperar para concluir a navegação até que a consulta tenha retornado. Assim, desta forma você pode, opcionalmente, forçar o router a atrasar a exibição da página até que ela esteja preenchida com dados.
 
-> **Nota:** O ciclo de vida completo inclui os métodos `canActivate`, `activate`, `canDeactivate` e `deactivate`. Os can* podem retornar um valor booleano (ou Promise booleana) para aceitar ou rejeitar a transição de uma página para a outra. 
+> **Nota:** O ciclo de vida completo inclui os métodos `canActivate`, `activate`, `canDeactivate` e `deactivate`. Os can* podem retornar um valor booleano (ou Promise booleana) para aceitar ou rejeitar a transição de uma página para a outra.
 >
-> **Nota:** Se você não estiver familiarizado com [Promises] (http://www.html5rocks.com/en/tutorials/es6/promises/), este é um novo recurso do ES2015 que foi projetado para melhorar a programação assíncrona. A `Promise` é um objeto que representa um resultado futuro. Essencialmente, ele representa uma "promessa" para concluir algum trabalho ou para fornecer alguns dados em algum momento no futuro.
+> **Nota:** Se você não estiver familiarizado com [Promises] (https://www.html5rocks.com/en/tutorials/es6/promises/), este é um novo recurso do ES2015 que foi projetado para melhorar a programação assíncrona. A `Promise` é um objeto que representa um resultado futuro. Essencialmente, ele representa uma "promessa" para concluir algum trabalho ou para fornecer alguns dados em algum momento no futuro.
 
 ### users.html
 
@@ -459,9 +459,9 @@ Para criar um elemento personalizado, você cria e exporta uma classe. Uma vez q
 </template>
 ```
 
-Isto é praticamente idêntico ao HTML do navbar orginal que estava em nosso arquivo _app.html_. Nós basicamente extraímos o código e colocamos dentro de um "template". Ao invés de fazer o "bind" com o _app.js_, estamos fazendo no _nav-bar.js_. 
+Isto é praticamente idêntico ao HTML do navbar orginal que estava em nosso arquivo _app.html_. Nós basicamente extraímos o código e colocamos dentro de um "template". Ao invés de fazer o "bind" com o _app.js_, estamos fazendo no _nav-bar.js_.
 
-Este é um elemento personalizado muito simples com nenhum comportamento real, mas é completo e utilizável como mostrado acima. 
+Este é um elemento personalizado muito simples com nenhum comportamento real, mas é completo e utilizável como mostrado acima.
 
 Espere! Eu sei o que você está pensando. Este elemento customizado é muito simples...é muito estranho ter que requerer uma classe JavaScript só para identificar uma simples propriedade router. Não podemos nos safar disso de alguma forma? Bem, a resposta é SIM!. Para elementos muitos simples, que não necessitam de comportamentos, apenas forneça a view que deve ser bindada ao conjunto de propriedades, assim poderemos omitir o arquivo JavaScript. Vamos ver como funciona.
 

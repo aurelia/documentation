@@ -94,7 +94,7 @@ aurelia.use.feature('feature-folder-name-here');
 
 <h4 id="promises"><a href="#promises">Promises</a></h4>
 
-By default, Aurelia uses ES6 native Promises or a polyfill. However, you can replace this with the excellent [Bluebird](https://github.com/petkaantonov/bluebird) Promise library. Simply include it in your page before you reference the other scripts. It will provide its own standards-compliant Promise implementation which is currently faster than native and has better debugging support. Additionally, when used in combination with the Babel transpiler, you can use [coroutines](http://babeljs.io/docs/usage/transformers/other/bluebird-coroutines/) for improved async code.
+By default, Aurelia uses ES6 native Promises or a polyfill. However, you can replace this with the excellent [Bluebird](https://github.com/petkaantonov/bluebird) Promise library. Simply include it in your page before you reference the other scripts. It will provide its own standards-compliant Promise implementation which is currently faster than native and has better debugging support. Additionally, when used in combination with the Babel transpiler, you can use [coroutines](https://babeljs.io/docs/usage/transformers/other/bluebird-coroutines/) for improved async code.
 
 <h3 id="framework-configuration"><a href="#framework-configuration">Framework Configuration</a></h3>
 
@@ -699,7 +699,7 @@ Use the `style` attribute's alias, `css` when doing string interpolation to ensu
 
 <h4 id="adaptive-binding"><a href="#adaptive-binding">Adaptive Binding</a></h4>
 
-Aurelia has an adaptive binding system that chooses from a number of strategies when determining how to most efficiently observe changes.  For more info on how this works checkout [this post](http://blog.durandal.io/2015/04/03/aurelia-adaptive-binding/).  For the most part you don't need to think about these details however it does help to be aware of scenarios that lead to inefficient use of the binding system.
+Aurelia has an adaptive binding system that chooses from a number of strategies when determining how to most efficiently observe changes.  For more info on how this works checkout [this post](https://blog.durandal.io/2015/04/03/aurelia-adaptive-binding/).  For the most part you don't need to think about these details however it does help to be aware of scenarios that lead to inefficient use of the binding system.
 
 **The #1 thing to be aware of is that computed properties (properties with getter functions) are observed using dirty-checking.**  More efficient strategies such as Object.observe and property rewriting are not compatible with these types of properties.
 
@@ -783,7 +783,7 @@ export class IssueSearch {
 
 In addition to databinding, you also have the power of Aurelia's HTML extensions. There are two types:
 
-* Custom Elements - Extend HTML with new tags! Your custom elements can have their own views (which use databinding and other html extensions) and optionally leverage [ShadowDOM](http://www.html5rocks.com/en/tutorials/webcomponents/shadowdom/) (even if the browser doesn't support it).
+* Custom Elements - Extend HTML with new tags! Your custom elements can have their own views (which use databinding and other html extensions) and optionally leverage [ShadowDOM](https://www.html5rocks.com/en/tutorials/webcomponents/shadowdom/) (even if the browser doesn't support it).
 * Custom Attributes - Extend HTML with new attributes which can be added to existing or custom elements. These attributes add new behavior to the elements.
 
 Naturally, all of this works seamlessly with databinding. Let's look at the set of Custom Elements and Attributes that Aurelia provides for you and which are available globally in every view.
@@ -1130,9 +1130,9 @@ context.MapRoute(
   defaults: new { controller = "Application", action = "Index" }
 );
 ```
-Note that with the above you will be forced to use a Razor view file. If you want to use a regular HTML file, there are different ways to do it. [This SO article might help you](http://stackoverflow.com/questions/20871938/render-html-file-in-asp-net-mvc-view).
+Note that with the above you will be forced to use a Razor view file. If you want to use a regular HTML file, there are different ways to do it. [This SO article might help you](https://stackoverflow.com/questions/20871938/render-html-file-in-asp-net-mvc-view).
 
-If you are using [Nancy FX](http://nancyfx.org), then the config is just as simple. Locate your `IndexModule.cs` or whatever you called it and make sure it looks something like this and all will be well:
+If you are using [Nancy FX](https://nancyfx.org), then the config is just as simple. Locate your `IndexModule.cs` or whatever you called it and make sure it looks something like this and all will be well:
 
 ``` csharp
 public class IndexModule : NancyModule {
@@ -1829,21 +1829,21 @@ There are two other apis that are worth noting. You can use `configure` to acces
 ```javascript
 var client = new HttpClient()
   .configure(x => {
-    x.withBaseUrl('http://aurelia.io');
+    x.withBaseUrl('https://aurelia.io');
     x.withHeader('Authorization', 'bearer 123');
   });
 
 client.get('some/cool/path');
 ```
 
-In this case, all requests from the client will have the baseUrl of 'http://aurelia.io' and will have the specified Authorization header. The same API is available via the request builder. So, you can accomplish the same thing on an individual request like this:
+In this case, all requests from the client will have the baseUrl of 'https://aurelia.io' and will have the specified Authorization header. The same API is available via the request builder. So, you can accomplish the same thing on an individual request like this:
 
 ```javascript
 var client = new HttpClient();
 
 client.createRequest('some/cool/path')
   .asGet()
-  .withBaseUrl('http://aurelia.io')
+  .withBaseUrl('https://aurelia.io')
   .withHeader('Authorization', 'bearer 123')
   .send();
 ```

@@ -6,31 +6,31 @@
 
 ## Configuring Your Environment
 
-Let's start by getting you set up with a great set of tools that you can use to build modern JavaScript applications. All our tooling is built on [Node.js](http://nodejs.org/). If you have that installed already, great! If not, you should go to [the official web site](http://nodejs.org/), download and install it. Everything else we need will be installed via Node's package manager ([npm](https://docs.npmjs.com/getting-started/what-is-npm)). If you already have npm installed, make sure you've got the [latest version](https://github.com/npm/npm/wiki/Troubleshooting#try-the-latest-stable-version-of-node) to avoid any issues with the other tools.
+Let's start by getting you set up with a great set of tools that you can use to build modern JavaScript applications. All our tooling is built on [Node.js](https://nodejs.org/). If you have that installed already, great! If not, you should go to [the official web site](https://nodejs.org/), download and install it. Everything else we need will be installed via Node's package manager ([npm](https://docs.npmjs.com/getting-started/what-is-npm)). If you already have npm installed, make sure you've got the [latest version](https://github.com/npm/npm/wiki/Troubleshooting#try-the-latest-stable-version-of-node) to avoid any issues with the other tools.
 
 > **Note:** For command-line operations, Windows users recommended to use Git Bash or Git Shell.
 
-First, let's begin by installing [Gulp](http://gulpjs.com/) which we'll be using for build automation. If you don't have it already, you can use npm to set it up like this (you may need to use `sudo`):
+First, let's begin by installing [Gulp](https://gulpjs.com/) which we'll be using for build automation. If you don't have it already, you can use npm to set it up like this (you may need to use `sudo`):
 
   ```shell
   npm install -g gulp
   ```
 
-Next, we need to install [jspm](http://jspm.io/). This will serve as our client-side package manager. You can do that like this:
+Next, we need to install [jspm](https://jspm.io/). This will serve as our client-side package manager. You can do that like this:
 
   ```shell
   npm install -g jspm
   ```
 
-> **Note:** jspm, like Bower and Yeoman, leverages [git](http://git-scm.com/) so you need to install that if you don't have it. Also, jspm queries GitHub to install packages, but GitHub has a rate limit on anonymous API requests. It is advised that you configure jspm with your GitHub credentials in order to avoid problems. You can do this by executing `jspm registry config github` and following the prompts. If you choose to authorize jspm by an access token instead of giving your password (see GitHub `Settings > Personal Access Tokens`), `public_repo` access for the token is required.
+> **Note:** jspm, like Bower and Yeoman, leverages [git](https://git-scm.com/) so you need to install that if you don't have it. Also, jspm queries GitHub to install packages, but GitHub has a rate limit on anonymous API requests. It is advised that you configure jspm with your GitHub credentials in order to avoid problems. You can do this by executing `jspm registry config github` and following the prompts. If you choose to authorize jspm by an access token instead of giving your password (see GitHub `Settings > Personal Access Tokens`), `public_repo` access for the token is required.
 
-> **Note:** Don't want to use jspm? No problem. All Aurelia packages are available via [Bower](http://bower.io/) as well.
+> **Note:** Don't want to use jspm? No problem. All Aurelia packages are available via [Bower](https://bower.io/) as well.
 
 ## Setting up the Project Structure and Build
 
 With the tooling installed, we can now turn our attention to setting up a basic structure for your app. Begin by [downloading the navigation skeleton](https://github.com/aurelia/skeleton-navigation/releases). Unzip it and rename the folder to _navigation-app_.
 
-> **Note:** Alternatively, you can use [Yeoman](http://yeoman.io) to "generate" the skeleton project in the target folder, as follows:
+> **Note:** Alternatively, you can use [Yeoman](https://yeoman.io) to "generate" the skeleton project in the target folder, as follows:
 >
 >  ```
 >  npm install -g yo generator-aurelia
@@ -126,7 +126,7 @@ What...is that JavaScript?
 
 Yes. Yes it is. In fact it's ECMAScript 2016 (formerly ES7), the next version of JavaScript which introduces many new features to the language. Fortunately the Gulp file you downloaded above has you set up with [Babel](https://babeljs.io/), an amazing transpiler that allows you to write tomorrow's JavaScript and run it on today's browsers. Now you can use modules, classes, lambdas, string interpolation and more. Sweet! So, how do you create a _view-model_? You create a plain class and _export_ it to the framework. Piece. Of. Cake.
 
-> **Note:** You don't have to use Babel or even ES2016 to write an Aurelia app. You can use languages like TypeScript and CoffeeScript...or today's browser language: ES5 and ES2015. All you have to do is follow the language's standard pattern for creating classes and everything will work fine. We think ES2016 is awesome though and hope you will consider it first. To learn more about the newest version of JavaScript including features like module exports and classes we recommend reading through [The Babel Learning Guide](http://babeljs.io/docs/learn-es6/).
+> **Note:** You don't have to use Babel or even ES2016 to write an Aurelia app. You can use languages like TypeScript and CoffeeScript...or today's browser language: ES5 and ES2015. All you have to do is follow the language's standard pattern for creating classes and everything will work fine. We think ES2016 is awesome though and hope you will consider it first. To learn more about the newest version of JavaScript including features like module exports and classes we recommend reading through [The Babel Learning Guide](https://babeljs.io/docs/learn-es6/).
 
 Ok. Now that we have a _view-model_ with some basic data and behavior, let's have a look at its partner in crime...the _view_.
 
@@ -324,7 +324,7 @@ jspm install aurelia-fetch-client
 
 Now I hope you see the power of the integrated package manager and loader. You simply install a package with jspm and then you import it in your code using the same exact identifier. You can install almost anything from GitHub or NPM in this way.
 
-Now, take a look at that ES2016 `inject` decorator. What does that do? Well, Aurelia creates the UI components as needed to render your app. It does this by using a [Dependency Injection](http://en.wikipedia.org/wiki/Dependency_injection) container capable of providing constructor dependencies like HttpClient. How does the DI system know what to provide? All you have to do is add that ES2015 `inject` decorator to your class that passes a list of types to provide instances of. There should be one argument for each constructor parameter. In the above example, we needed an HttpClient instance, so we added the `HttpClient` type in the `inject` decorator and then added a corresponding parameter in the constructor.
+Now, take a look at that ES2016 `inject` decorator. What does that do? Well, Aurelia creates the UI components as needed to render your app. It does this by using a [Dependency Injection](https://en.wikipedia.org/wiki/Dependency_injection) container capable of providing constructor dependencies like HttpClient. How does the DI system know what to provide? All you have to do is add that ES2015 `inject` decorator to your class that passes a list of types to provide instances of. There should be one argument for each constructor parameter. In the above example, we needed an HttpClient instance, so we added the `HttpClient` type in the `inject` decorator and then added a corresponding parameter in the constructor.
 
 > **Note:** If you don't like using a decorator in this case, you can also add a static `inject` method or property to the class that returns an array of types to inject.
 
@@ -349,7 +349,7 @@ Aurelia's router enforces a lifecycle on view-models whenever routes change. Thi
 
 >**Note:** The full navigation lifecycle includes `canActivate`, `activate`, `canDeactivate` and `deactivate` hooks. The can* methods can return a boolean (or Promise of boolean) to accept or reject the transition into or out of the current screen.
 
->**Note:** If you aren't familiar with [Promises](http://www.html5rocks.com/en/tutorials/es6/promises/), these are a new feature of ES2015 designed to improve asynchronous programming. A `Promise` is an object that represents a future result. Essentially, it represents a "promise" to complete some work or to provide some data at some point in the future.
+>**Note:** If you aren't familiar with [Promises](https://www.html5rocks.com/en/tutorials/es6/promises/), these are a new feature of ES2015 designed to improve asynchronous programming. A `Promise` is an object that represents a future result. Essentially, it represents a "promise" to complete some work or to provide some data at some point in the future.
 
 ### users.html
 

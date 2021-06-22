@@ -6,27 +6,27 @@
 
 ## Configurar tu entorno
 
-Empecemos configurando un gran conjunto de herramientas que podrás usar para crear aplicaciones Javascript modernas. Todo nuestro equipamiento está basado en [Node.js](http://nodejs.org/). Si ya lo tienes instalado, estupendo! Si no es así, vete a la [página web oficial](http://nodejs.org/), descárgatelo e instálalo. Todo lo demás que vamos a necesitar lo instalaremos usando el gestor de paquetes de Node ([npm](https://docs.npmjs.com/getting-started/what-is-npm)). Si ya tienes npm instalado, asegúrate de contar con la [última versión](https://github.com/npm/npm/wiki/Troubleshooting#try-the-latest-stable-version-of-node) para evitar cualquier problema con las otras herramientas.
+Empecemos configurando un gran conjunto de herramientas que podrás usar para crear aplicaciones Javascript modernas. Todo nuestro equipamiento está basado en [Node.js](https://nodejs.org/). Si ya lo tienes instalado, estupendo! Si no es así, vete a la [página web oficial](https://nodejs.org/), descárgatelo e instálalo. Todo lo demás que vamos a necesitar lo instalaremos usando el gestor de paquetes de Node ([npm](https://docs.npmjs.com/getting-started/what-is-npm)). Si ya tienes npm instalado, asegúrate de contar con la [última versión](https://github.com/npm/npm/wiki/Troubleshooting#try-the-latest-stable-version-of-node) para evitar cualquier problema con las otras herramientas.
 
-Primero, empecemos por instalar [Gulp](http://gulpjs.com/), que vamos a utilizar para automatizar el montaje. Si aún no lo tienes, puedes usar npm de esta manera para configurarlo (es posible que necesites usar `sudo`):
+Primero, empecemos por instalar [Gulp](https://gulpjs.com/), que vamos a utilizar para automatizar el montaje. Si aún no lo tienes, puedes usar npm de esta manera para configurarlo (es posible que necesites usar `sudo`):
 
  ```shell
   npm install -g gulp
  ```
 
-A continuación, necesitamos instalar [jspm](http://jspm.io/). Este nos servirá de gestor de paquetes del lado del cliente. Puedes hacerlo de así:
+A continuación, necesitamos instalar [jspm](https://jspm.io/). Este nos servirá de gestor de paquetes del lado del cliente. Puedes hacerlo de así:
 
   ```shell
   npm install -g jspm
   ```
 
-> **Nota:** Igual que Bower y Yeoman, jspm aprovecha [git](http://git-scm.com/), así que necesitas instalarlo si no lo tuvieras. Además, jspm busca en Github para instalar paquetes, pero Github admite un número limitado de peticiones anónimas de la API. Te recomendamos que configures jspm con tus credenciales de Github para evitarte problemas. Puedes hacerlo ejecutando `jspm registry config github` y respondiendo a la linea de comandos. ¿Que no quieres usar jspm? No hay problema. Todos los paquetes de Aurelia están también disponibles vía [Bower](http://bower.io/).
+> **Nota:** Igual que Bower y Yeoman, jspm aprovecha [git](https://git-scm.com/), así que necesitas instalarlo si no lo tuvieras. Además, jspm busca en Github para instalar paquetes, pero Github admite un número limitado de peticiones anónimas de la API. Te recomendamos que configures jspm con tus credenciales de Github para evitarte problemas. Puedes hacerlo ejecutando `jspm registry config github` y respondiendo a la linea de comandos. ¿Que no quieres usar jspm? No hay problema. Todos los paquetes de Aurelia están también disponibles vía [Bower](https://bower.io/).
 
 ## Configurar la estructura y el montaje del proyecto
 
 Con las herramientas ya instaladas, podemos ocuparnos ahora de la creación de una estructura básica para tu aplicación. Empieza [descargándote el esqueleto de navegación](https://github.com/aurelia/skeleton-navigation/releases). Descomprímelo y renombra la carpeta a _navigation-app_.
 
-> **Nota:** Disponemos de la alternativa de usar [Yeoman](http://yeoman.io) para generar el esqueleto del proyecto en la carpeta de destino, de la siguiente manera:
+> **Nota:** Disponemos de la alternativa de usar [Yeoman](https://yeoman.io) para generar el esqueleto del proyecto en la carpeta de destino, de la siguiente manera:
 >
 >  ```
 >  npm install -g yo generator-aurelia
@@ -102,7 +102,7 @@ Un momento... si no tenemos ningún modelo (de la vista) ni vista de nuestra _ap
 
 ## Creación de nuestra primera pantalla
 
-En Aurelia, los elementos de la interfaz de usuario están compuestos por parejas de vista (_view_) y modelo (de vista) (_view-model_). La vista se escribe en HTML y se muestra en el DOM. El modelo (de vista) está escrito en Javascript y provee de datos y comportamiento (lógica) a la vista. El potente enlazado de datos (_databinding_) vincula las dos partes permitiendo que los cambios en tus datos se reflejen en la vista y viceversa. Esta separación de asuntos es magnífica para la colaboración desarrollador/diseñador, para facilitar el mantenimiento, para la flexibilidad de la arquitectura e incluso para el control del código fuente. 
+En Aurelia, los elementos de la interfaz de usuario están compuestos por parejas de vista (_view_) y modelo (de vista) (_view-model_). La vista se escribe en HTML y se muestra en el DOM. El modelo (de vista) está escrito en Javascript y provee de datos y comportamiento (lógica) a la vista. El potente enlazado de datos (_databinding_) vincula las dos partes permitiendo que los cambios en tus datos se reflejen en la vista y viceversa. Esta separación de asuntos es magnífica para la colaboración desarrollador/diseñador, para facilitar el mantenimiento, para la flexibilidad de la arquitectura e incluso para el control del código fuente.
 
 Veamos como funciona esto...
 
@@ -129,7 +129,7 @@ export class Welcome{
 
 Si. Lo es. De hecho se trata de ECMAScript 7 (ES7), la próxima "próxima versión" de Javascript que incorpora numerosas características nuevas al lenguaje. Afortunadamente el archivo Gulp que te descargaste más arriba te ha equipado con [Babel](https://babeljs.io/), un sorprendente transpilador (transpiler) -compilador de código fuente a código fuente- que nos permite escribir Javascript del futuro y ejecutarlo en navegadores actuales. De esta manera podemos utilizar módulos, clases, lambdas, interpolación de cadenas y otros. ¡Que bueno! Bien, como se crea un modelo (de vista) _view-model_? Creamos una simple clase y la exportamos con _export_ al marco de trabajo (framework). Pedazo. De. Tarta.
 
-> **Nota:** No tienes que usar Babel ni ES 7 necesariamente para escribir una aplicación con Aurelia. Puedes usar lenguajes como Typescript, CoffeScript,... o el lenguaje de los navegadores actuales: ES5. Todo lo que tienes que hacer es seguir los patrones estándar del lenguaje para crear clases y todo irá bien. Nosotros pensamos que ES7 es alucinante y confiamos en que lo tomes en consideración en primer lugar. Para aprender más acerca de las versión más reciente de Javascript incluyendo características como exportación de módulos y clases te recomendamos la lectura de [The Babel Learning Guide](http://babeljs.io/docs/learn-es6/), La guía de estudio Babel.
+> **Nota:** No tienes que usar Babel ni ES 7 necesariamente para escribir una aplicación con Aurelia. Puedes usar lenguajes como Typescript, CoffeScript,... o el lenguaje de los navegadores actuales: ES5. Todo lo que tienes que hacer es seguir los patrones estándar del lenguaje para crear clases y todo irá bien. Nosotros pensamos que ES7 es alucinante y confiamos en que lo tomes en consideración en primer lugar. Para aprender más acerca de las versión más reciente de Javascript incluyendo características como exportación de módulos y clases te recomendamos la lectura de [The Babel Learning Guide](https://babeljs.io/docs/learn-es6/), La guía de estudio Babel.
 
 Bien. Ahora que tenemos un modelo (de vista) con algunos datos y comportamiento básicos, echemos un vistazo a su cómplice... la vista.
 
@@ -207,7 +207,7 @@ Bien, aquí hay algunas cosas nuevas realmente interesantes. Queremos usar el en
 * `title`: You can optionally provide a title to be used in generating the document's title.
 * `nav`: If this route should be included in the _navigation model_ because you want to generate a UI with it, set this to true (or a number indicating order).
 
-> **Note:** ¿Te diste cuenta de como usamos ES6 imports para cargar el Javascript y el CSS de inicio (bootstrap). 
+> **Note:** ¿Te diste cuenta de como usamos ES6 imports para cargar el Javascript y el CSS de inicio (bootstrap).
 
 ### app.html
 
@@ -290,7 +290,7 @@ import {HttpClient} from 'aurelia-http-client';
 export class Flickr{
   heading = 'Flickr';
   images = [];
-  url = 'http://api.flickr.com/services/feeds/photos_public.gne?tags=rainier&tagmode=any&format=json';
+  url = 'https://api.flickr.com/services/feeds/photos_public.gne?tags=rainier&tagmode=any&format=json';
 
   constructor(http){
     this.http = http;
@@ -316,7 +316,7 @@ jspm install aurelia-http-client
 
 Ahora espero que hayas visto la potencia del gestor y cargador de paquetes integrado. Simplemente instalas un paquete con jspm y luego los importas a tu código usando exactamente el mismo identificador. De esta manera puedes instalar cualquier cosa desde Github o NPM.
 
-Ahora echa un vistazo a ese decorador de ES7 `inject`. ¿Que es lo que hace? Bien, Aurelia crea los componentes de la interfaz de usuario (UI) a demanda para visualizar tu aplicación. Esto lo hace usando un contenedor de [inyección de dependencias](http://en.wikipedia.org/wiki/Dependency_injection) capaz de proveer dependencias del constructor como HttpClient. ¿Como sabe el sistema de inyección de dependencias (DI) que es lo que tiene que proporcionar? Todo lo que tienes que hacer es añadir decorador `inject` a tu clase que pasa una lista de tipos de los que hay que proporcionar objetos. Debe haber un argumento por cada parámetro del constructor. En el ejemplo de arriba, necesitabamos un objeto HttpClient, así que añadimos el tipo `HttpClient` en el decorador `inject` y luego añadimos un parámetro correspondiente en el constructor.
+Ahora echa un vistazo a ese decorador de ES7 `inject`. ¿Que es lo que hace? Bien, Aurelia crea los componentes de la interfaz de usuario (UI) a demanda para visualizar tu aplicación. Esto lo hace usando un contenedor de [inyección de dependencias](https://en.wikipedia.org/wiki/Dependency_injection) capaz de proveer dependencias del constructor como HttpClient. ¿Como sabe el sistema de inyección de dependencias (DI) que es lo que tiene que proporcionar? Todo lo que tienes que hacer es añadir decorador `inject` a tu clase que pasa una lista de tipos de los que hay que proporcionar objetos. Debe haber un argumento por cada parámetro del constructor. En el ejemplo de arriba, necesitabamos un objeto HttpClient, así que añadimos el tipo `HttpClient` en el decorador `inject` y luego añadimos un parámetro correspondiente en el constructor.
 
 > **Nota:** Si no quieres usar un decorador en este caso, también puedes añadir un método estático o propiedad a la clase que devuelve un vector de tipos a inyectar.
 
@@ -340,7 +340,7 @@ El enrutador de Aurelia inicia un ciclo de vida en los modelos siempre que las r
 
 Hay un segundo gancho en el ciclo de vida que aparece aquí: `canDeactive`. El enrutador lo llama antes de que la navegación se aparte de la ruta. Esto te da la oportunidad de permitir o no que continúe la navegación devolviendo un booleano. También puedes devolver un objeto `Promise` en lugar de ese valor. El ciclo completo incluye los ganchos `canActivate`, `activate`, `canDeactivate` y `deactivate`.
 
-> **Nota:** Si no estás familiarizado con el tipo [Promises](http://www.html5rocks.com/en/tutorials/es6/promises/), es una nueva característica de ES6 diseñada para mejorar la programación asíncrona. Un objeto `Promise` representa un resultado futuro. Esencialmente, representa una "promesa" de completar cierta tarea o de proporcionar algunos datos en cierto momento del futuro.
+> **Nota:** Si no estás familiarizado con el tipo [Promises](https://www.html5rocks.com/en/tutorials/es6/promises/), es una nueva característica de ES6 diseñada para mejorar la programación asíncrona. Un objeto `Promise` representa un resultado futuro. Esencialmente, representa una "promesa" de completar cierta tarea o de proporcionar algunos datos en cierto momento del futuro.
 
 ### flickr.html
 
@@ -459,7 +459,7 @@ Este es un elemento a medida muy simple sin ningún comportamiento real, pero es
 
 Para recapitular: primero tenemos un elemento `require`. Aurelia lo utiliza para cargar el elemento a medida a través de la fuente relativa indicada en el atributo `from`. Este sigue nuestras sencillas convenciones así que este sabrá como cargar nuestros archivos _nav-bar.js_ y _nav-bar.html_. Cualquier cosa requerida para una vista de esta manera es local a la vista. Como resultado, no tienes que preocuparte por los conflictos entre nombres. Lo segundo es el uso real del elemento que usa el enlace de datos con el enrutador de `App`. Estamos conectando (piping) la instancia del enrutador de nuestra clase `App` a la correspondiente propiedad del elemento `NavBar` para su representación interna. ¡Que bueno!
 
-> **Nota:** También puedes cargar elementos de la aplicación y otros comportamientos por conveniencia, de manera que no necesites requerir recursos comunes en cada vista.  
+> **Nota:** También puedes cargar elementos de la aplicación y otros comportamientos por conveniencia, de manera que no necesites requerir recursos comunes en cada vista.
 
 Puede que desees saber como determina Aurelia el nombre del elemento a medida. Por convención, usara el nombre de exportación, en minúscula y con guión. De todas maneras, siempre puedes ser explícito. Para ello, añade más metadatos encadenando `.customElement('nav-bar')` a `Behavior`. ¿Que pasa si tu elemento a medida no tiene una plantilla para la vista, porque está implementado enteramente con código? No hay problema, encadena `.noView`. ¿Deseas usar ShadowDOM para tu elemento a medida? Hazlo como un profesional encadenando `.useShadowDOM()`. No te preocupes de si el navegador lo soporta o no. Tenemos una implementación de reserva eficiente y muy fiel para ShadowDOM.
 
@@ -541,6 +541,6 @@ Lanza la aplicación y contempla la magia... y ruega para que el universo no exp
 
 ## Conclusión
 
-Con su gran atención a la experiencia de desarrollador, Aurelia te puede capacitar no solo para crear aplicaciones sorprendentes, sino también para disfrutar en ese proceso. Lo hemos diseñado con reglas simples en mente de manera que no necesitas perder tiempo con toneladas de configuración o en escribir código modelo solo para satisfacer un marco de trabajo complejo o restrictivo. Nunca chocarás con Aurelia contra barrera alguna. Ha sido cuidadosamente diseñado para que admita complementos y personalizaciones.  
+Con su gran atención a la experiencia de desarrollador, Aurelia te puede capacitar no solo para crear aplicaciones sorprendentes, sino también para disfrutar en ese proceso. Lo hemos diseñado con reglas simples en mente de manera que no necesitas perder tiempo con toneladas de configuración o en escribir código modelo solo para satisfacer un marco de trabajo complejo o restrictivo. Nunca chocarás con Aurelia contra barrera alguna. Ha sido cuidadosamente diseñado para que admita complementos y personalizaciones.
 
 Gracias por tomarte el tiempo de leer nuestra guía. Esperamos que explores la documentación y que construyas algo sorprendente. Estaremos atentos para ver todo lo que hagas.

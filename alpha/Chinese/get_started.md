@@ -6,21 +6,21 @@
 
 ## 配置环境
 
-构建现代 JavaScript 应用依赖于一系列很优秀的工具，我们就从配置这些工具开始。本教程所用的工具都基于 [Node.js](http://nodejs.org/) 。如果你已经安装了 Node.js ，那很好！如果没装，到 [Node.js 官网](http://nodejs.org/) 下载安装就行了。所有其他工具都将通过 Node 的包管理器（[npm](https://docs.npmjs.com/getting-started/what-is-npm)）来安装。
+构建现代 JavaScript 应用依赖于一系列很优秀的工具，我们就从配置这些工具开始。本教程所用的工具都基于 [Node.js](https://nodejs.org/) 。如果你已经安装了 Node.js ，那很好！如果没装，到 [Node.js 官网](https://nodejs.org/) 下载安装就行了。所有其他工具都将通过 Node 的包管理器（[npm](https://docs.npmjs.com/getting-started/what-is-npm)）来安装。
 
-首先要安装的是 [Gulp](http://gulpjs.com/) ，用来进行组建自动化（build automation）。如果你还没装 Gulp，那你可以用 npm 安装，像下面这样（可能要用到 `sudo`）：
+首先要安装的是 [Gulp](https://gulpjs.com/) ，用来进行组建自动化（build automation）。如果你还没装 Gulp，那你可以用 npm 安装，像下面这样（可能要用到 `sudo`）：
 
   ```shell
   npm install -g gulp
   ```
 
-其次需要安装 [jspm](http://jspm.io/) 作为客户端包管理器。可以这样做：
+其次需要安装 [jspm](https://jspm.io/) 作为客户端包管理器。可以这样做：
 
   ```shell
   npm install -g jspm
   ```
 
-> **Note:** 跟 Bower 和 Yeoman 一样，jspm 也基于 [git](http://git-scm.com/)，所以如果你没有 git 的话，也需要安装它。另外，jspm 通过查询 GitHub 来安装包，而 GitHub 对匿名的 API 请求做了速度限制。所以我们建议在 jspm 配置里设置好 GitHub，以免出现问题。执行命令 `jspm registry config github` 然后按照提示进行操作即可。不想使用 jspm？没问题，所有 Aurelia 相关的包也都可以通过 [Bower](http://bower.io/) 安装。
+> **Note:** 跟 Bower 和 Yeoman 一样，jspm 也基于 [git](https://git-scm.com/)，所以如果你没有 git 的话，也需要安装它。另外，jspm 通过查询 GitHub 来安装包，而 GitHub 对匿名的 API 请求做了速度限制。所以我们建议在 jspm 配置里设置好 GitHub，以免出现问题。执行命令 `jspm registry config github` 然后按照提示进行操作即可。不想使用 jspm？没问题，所有 Aurelia 相关的包也都可以通过 [Bower](https://bower.io/) 安装。
 
 ## 设置项目结构及组建
 
@@ -191,7 +191,7 @@ export class App {
 
 好了，这下能看到一些有趣的新东西了。我们想用路由表，所以在文件开头引入（import）了 _aurelia-router_。这又是 ES6 的强大之处。然后创建 _App_ 类保存数据和行为。看一下 constructor 函数，在 App 类创建的时候，constructor 函数在等待接收一个 _router_ 实例作为参数。这是怎么来的？
 
-Aurelia 是按需创建 UI 组件来渲染页面的。这是通过使用一个能够为 constructor 提供依赖的[依赖注入](http://en.wikipedia.org/wiki/Dependency_injection)（Dependency Injection）容器实现的。依赖注入系统是怎么知道要提供什么的呢？只需要添加一个名为 _inject_ 的静态方法就行了，这个方法返回一个数组，包含所有要提供的类实例的 type。在上面的例子中，我们需要一个 router 实例，所以就把 `Router` 类加到这个数组里。
+Aurelia 是按需创建 UI 组件来渲染页面的。这是通过使用一个能够为 constructor 提供依赖的[依赖注入](https://en.wikipedia.org/wiki/Dependency_injection)（Dependency Injection）容器实现的。依赖注入系统是怎么知道要提供什么的呢？只需要添加一个名为 _inject_ 的静态方法就行了，这个方法返回一个数组，包含所有要提供的类实例的 type。在上面的例子中，我们需要一个 router 实例，所以就把 `Router` 类加到这个数组里。
 
 > **注：** 如果你恰好使用了 AtScript，我们很高兴告诉你 Aurelia 能够理解 AtScript 的类型注解（type annotations）并在依赖注入中使用它们。至于其他主流的采用类型或者注解元数据的 JavaScript 编译器，我们将会继续强化这个平台使之能够理解你所选择的语言的格式。
 
@@ -283,7 +283,7 @@ export class App {
 ```javascript
 import {HttpClient} from 'aurelia-http-client';
 
-var url = 'http://api.flickr.com/services/feeds/photos_public.gne?tags=rainier&tagmode=any&format=json';
+var url = 'https://api.flickr.com/services/feeds/photos_public.gne?tags=rainier&tagmode=any&format=json';
 
 export class Flickr{
   static inject() { return [HttpClient]; }
@@ -319,7 +319,7 @@ jspm install aurelia-http-client
 
 这里还有第二个生命周期钩子：`canDeactivate`。路由在导航离开一个路由之前调用这个钩子。通过返回一个布尔值，`canDeactivate` 钩子提供一个机会决定是否允许导航继续下去。同样也可以返回一个 `Promise`。完整的生命周期包括 `canActivate`、`activate`、`canDeactivate` 和 `deactivate` 钩子。
 
-> **注：**  如果你不熟悉 [Promise](http://www.html5rocks.com/en/tutorials/es6/promises/)，它是 ES6 用来改善异步编程的新特性。一个 `Promise` 代表了一个将来的结果。本质上来讲，它相当于一个在未来某个时间点完成某项工作或者提供某些数据的“承诺”（promise）。
+> **注：**  如果你不熟悉 [Promise](https://www.html5rocks.com/en/tutorials/es6/promises/)，它是 ES6 用来改善异步编程的新特性。一个 `Promise` 代表了一个将来的结果。本质上来讲，它相当于一个在未来某个时间点完成某项工作或者提供某些数据的“承诺”（promise）。
 
 ### flickr.html
 

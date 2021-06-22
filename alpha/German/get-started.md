@@ -7,27 +7,27 @@
 
 ## Konfiguration der Systemumgebung
 
-Wir beginnen mit dem Installieren unserer Tools für moderne Javascript Anwendungen, welche allesamt auf  [Node.js](http://nodejs.org/) basieren. Alles, was wir benötigen, wird mittels Node's Paketmanager ([npm](https://docs.npmjs.com/getting-started/what-is-npm)) installiert. Fall Node.js bereits auf Deinem System ist - perfekt! Ansonsten besuche [die offizielle Webseite](http://nodejs.org/) und installiere es. Um etwaigen Problemen von vorn herein aus dem Weg zu gehen, stelle bitte sicher, dass Du die [allerneuste stabile Version](https://github.com/npm/npm/wiki/Troubleshooting#try-the-latest-stable-version-of-node) auf Deinem System hast.
+Wir beginnen mit dem Installieren unserer Tools für moderne Javascript Anwendungen, welche allesamt auf  [Node.js](https://nodejs.org/) basieren. Alles, was wir benötigen, wird mittels Node's Paketmanager ([npm](https://docs.npmjs.com/getting-started/what-is-npm)) installiert. Fall Node.js bereits auf Deinem System ist - perfekt! Ansonsten besuche [die offizielle Webseite](https://nodejs.org/) und installiere es. Um etwaigen Problemen von vorn herein aus dem Weg zu gehen, stelle bitte sicher, dass Du die [allerneuste stabile Version](https://github.com/npm/npm/wiki/Troubleshooting#try-the-latest-stable-version-of-node) auf Deinem System hast.
 
-Zuerst installieren wir das Build Automatisierungstool [Gulp](http://gulpjs.com/). Falls Du es noch nicht installiert hast, verwende den `npm` Manager, um es global verfügbar zu machen. (Du solltest es mittels `sudo` als root ausführen):
+Zuerst installieren wir das Build Automatisierungstool [Gulp](https://gulpjs.com/). Falls Du es noch nicht installiert hast, verwende den `npm` Manager, um es global verfügbar zu machen. (Du solltest es mittels `sudo` als root ausführen):
 
   ```shell
   npm install -g gulp
   ```
 
-Nun ist [jspm](http://jspm.io/) an der Reihe (das ist unser clientseitiger Paketmanager). Du kannst ihn folgendermassen einrichten:
+Nun ist [jspm](https://jspm.io/) an der Reihe (das ist unser clientseitiger Paketmanager). Du kannst ihn folgendermassen einrichten:
 
   ```shell
   npm install -g jspm
   ```
 
-> **Hinweis:** `jspm` unterstützt wie Bower und Yeoman [git](http://git-scm.com/). `jspm` installiert direkt von GitHub, allerdings schränkt GitHub die Anzahl anonymer Anfragen ein. Um Probleme zu vermeiden, empfehlen wir Dir dringendst, dass Du jspm mit Deinen GitHub Zugangsdaten konfigurierst. Dazu musst Du nur `jspm registry config github` ausführen und die englischsprachigen Anweisungen befolgen. Falls Du jspm nicht verwenden magst - kein Problem: Alle Aurelia Pakete sind auch via [Bower](http://bower.io/) verfügbar.
+> **Hinweis:** `jspm` unterstützt wie Bower und Yeoman [git](https://git-scm.com/). `jspm` installiert direkt von GitHub, allerdings schränkt GitHub die Anzahl anonymer Anfragen ein. Um Probleme zu vermeiden, empfehlen wir Dir dringendst, dass Du jspm mit Deinen GitHub Zugangsdaten konfigurierst. Dazu musst Du nur `jspm registry config github` ausführen und die englischsprachigen Anweisungen befolgen. Falls Du jspm nicht verwenden magst - kein Problem: Alle Aurelia Pakete sind auch via [Bower](https://bower.io/) verfügbar.
 
 ## Aufsetzen der Projekt Struktur und des Build-Prozesses
 
 Wenn alle Werkzeuge installiert sind, können wir mit dem Aufsetzen unserer Beispielanwendungung beginnen. Dazu lade zunächst das [Navigationsgerüst herunter](https://github.com/aurelia/skeleton-navigation/releases). Entpacke es und bennene den Ordner um in _navigation-app_.
 
-> **Hinweis:** Um das Navigationsgerüst zu "generieren", kannst Du alternativ [Yeoman](http://yeoman.io) folgendermassen verwenden:
+> **Hinweis:** Um das Navigationsgerüst zu "generieren", kannst Du alternativ [Yeoman](https://yeoman.io) folgendermassen verwenden:
 >
 >  ```
 >  npm install -g yo generator-aurelia
@@ -42,7 +42,7 @@ Du kannst das Dir die _index.html_ Datei sowie alle anderen Ressourcen im _src_ 
 OK, wir beginnen mit einigen Kommandos:
 
 1. Öffne eine Konsole und wechsle in den Ordner _navigation-app_.
-2. Installiere alle Gulp Plugins, welche im Abschnitt _devDependencies_ des Package Manifest _package.json_ aufgeführt sind: 
+2. Installiere alle Gulp Plugins, welche im Abschnitt _devDependencies_ des Package Manifest _package.json_ aufgeführt sind:
 
   ```shell
   npm install
@@ -128,7 +128,7 @@ Was...ist das etwa Javascript?
 
 Ja. Ja und Ja, es ist Javascript. Tatsächlich ist es ECMAScript 7 (ES7), die folgende der nächsten Version von  Javascript, welche viele neue und spannende Features enthalten wird. Glücklicherweise wurde unser automatisierter Build (Gulp) mit [Babel](https://babeljs.io/) konfiguriert. Babel ist ein Transpiler, der Features aus kommenden Javascript Versionen zurückportiert und somit ermöglicht, dass moderner Code auch in heute aktuellen Browsern ablaufen kann. So kannst Du auch heute schon Module, Klassen, Lambdas, String Interpolation und vieles mehr verwenden. Genial! Aber wie genau muss man nun das _View-Model_ erstellen? Wir erstellen einfach eine Klasse und exportieren diese ins Framework.
 
-> **Hinweis:** Du musst nicht Babel oder ES7 Features verwenden, um eine Aurelia Anwendung zu erstellen. Alternativ kannst Du auch Sprachen wie TypeScript / CoffeeScript oder einfach heute aktuelles ES5 Javascript benutzen. Du musst Dich einzig an die Standardmuster für's Erstellen von Klassen halten und alles ist perfekt. Trotzdem halten wir ES7 für genial und hoffen, Du siehst es genauso. Um mehr über die neueste Version von Javascript und deren geniale Features wie Module und Klassen zu erfahren, empfehlen wir [Babel Learning Guide](http://babeljs.io/docs/learn-es2015/).
+> **Hinweis:** Du musst nicht Babel oder ES7 Features verwenden, um eine Aurelia Anwendung zu erstellen. Alternativ kannst Du auch Sprachen wie TypeScript / CoffeeScript oder einfach heute aktuelles ES5 Javascript benutzen. Du musst Dich einzig an die Standardmuster für's Erstellen von Klassen halten und alles ist perfekt. Trotzdem halten wir ES7 für genial und hoffen, Du siehst es genauso. Um mehr über die neueste Version von Javascript und deren geniale Features wie Module und Klassen zu erfahren, empfehlen wir [Babel Learning Guide](https://babeljs.io/docs/learn-es2015/).
 
 OK. Nun haben wir das _View-Model_ mit einigen Basisdaten und etwas Verhaltenslogik implementiert, schauen wir uns nun dessen Gegenspieler an - die _View_.
 
@@ -290,7 +290,7 @@ import {HttpClient} from 'aurelia-http-client';
 export class Flickr{
   heading = 'Flickr';
   images = [];
-  url = 'http://api.flickr.com/services/feeds/photos_public.gne?tags=rainier&tagmode=any&format=json';
+  url = 'https://api.flickr.com/services/feeds/photos_public.gne?tags=rainier&tagmode=any&format=json';
 
   constructor(http){
     this.http = http;
